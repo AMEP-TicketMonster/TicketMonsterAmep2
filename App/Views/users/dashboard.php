@@ -1,0 +1,26 @@
+<?php
+//echo json_decode($_SESSION['user']);
+
+$user = isset($_SESSION['user']) ? $_SESSION['user'] : null;
+
+$concerts = isset($_SESSION['concerts']) ? $_SESSION['concerts'] : null;
+var_dump($concerts);
+?>
+
+
+
+<p id="userInfo"></p><br>
+<p id="concerts"></p>
+
+
+<script>
+    //pasar php->json a js
+    let datosUser = <?php echo json_encode($user); ?>;
+    //let datosConcerts <?php echo $concerts ?>
+    document.getElementById("userInfo").innerHTML = `
+            idUsuari: ${datosUser.idUsuari} <br>
+            Nom: ${datosUser.nom} <br>
+            Email: ${datosUser.email} <br>
+            Contrasenya: ${datosUser.contrasenya} <br>
+        `;
+</script>
