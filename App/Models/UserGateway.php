@@ -109,6 +109,7 @@ class UserGateway
         WHERE e.idEntrada = ?"
         );
         $stmt->execute([$idEntrada]);
+        //cambiar a fetch
         $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $users;
     }
