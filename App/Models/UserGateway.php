@@ -97,4 +97,9 @@ class UserGateway
     {
         return $this->email;
     }
+
+    public function getTickets()
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM Entrades");
+    }
 }
