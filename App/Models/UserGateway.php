@@ -97,9 +97,19 @@ class UserGateway
     {
         return $this->email;
     }
-
-    public function getTickets()
+    
+    //Devuelve el usuario que tiene la entrada = idEntrada 
+    public function getByTicketId($idEntrada)
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM Entrades");
+        $stmt = $this->pdo->prepare(
+        "SELECT u.idUsuari, u.nom, u.cognom, u.email, u.contrasenya 
+        FROM Entrades e 
+        INNER JOIN Usuaris u 
+        ON e.idUsuari = u.idUsuari 
+        WHERE e.idEntrada = ?"
+        );
+        $stmt->execute([$idEntrada]);
+        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $users;
     }
 }
