@@ -3,6 +3,7 @@
 namespace Core;
 
 use App\Controllers\UserController;
+use App\Controllers\ConcertController;
 use App\Core\Auth;
 
 class Route
@@ -62,6 +63,7 @@ class Route
                     return __DIR__ . '/../Views/404.php'; // Si el archivo no existe, mostrar 404
                 }
             }
+
             if ($requestUri == 'logout') {
                 $controller = new UserController();
                 $controller->logout();
@@ -70,7 +72,11 @@ class Route
         } else if ($requestMethod === 'POST') {
             if ($requestUri === 'login') {
                 $controller = new UserController();
-                $controller->login();
+                if($controller->login()){
+                    //si ha podido iniciar sesión carga datos del dashboard
+                    $concerts = new ConcertController();
+                    $concerts->mostraConcerts();
+                }
             }
 
             if ($requestUri === 'register') {
@@ -83,7 +89,7 @@ class Route
                 if (isset($_POST['idUsuari']) && !empty($_POST['idUsuari'])) {
                     $id = $_POST['idUsuari'];
                     $controller = new UserController();
-                    $controller->delete($id); 
+                    $controller->delete($id);
                 } else {
                     header("Location: /login");
                     exit();
@@ -92,7 +98,5 @@ class Route
         }
 
         return __DIR__ . '/../Views/404.php'; // Si la ruta no está en la lista, mostrar 404
-
-
     }
 }
