@@ -7,6 +7,8 @@
     <title>TicketMonster</title>
 
     <link rel="stylesheet" href="/public/bootstrap-5.3.3/css/bootstrap.min.css">
+    <!-- Aquí van los css propios que no pertenecen a la librería de bootstrap -->
+    <link rel="stylesheet" href="/public/css/styles.css">
     <script src="/public/bootstrap-5.3.3/js/bootstrap.bundle.min.js"></script>
 </head>
 
@@ -25,7 +27,8 @@
     }
     ?>
 
-    <div class="container mt-4">
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+
         <?php //más adelante me interasará hacer componentes //include __DIR__ . "/partials/navbar.php"; 
         ?>
 

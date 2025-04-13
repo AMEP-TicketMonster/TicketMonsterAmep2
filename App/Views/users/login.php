@@ -1,63 +1,56 @@
-<!-- Esto es un código sphagetti, así que queda para cambiar -->
-<!-- está sacado de aquí: 
-  https://mdbootstrap.com/docs/standard/extended/login/
--->
+
 <?php
 $retry_login = isset($_SESSION['bad_login_data']) ? $_SESSION['bad_login_data'] : null;
 ?>
 
+<!-- Bootstrap Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+  <div>
+    <!-- Tarjeta del login -->
+    <div class="card shadow-sm p-4" style="max-width:100%; width: 600px;">
 
+      <div class="text-center mb-5">
+        <i class="bi bi-person-circle fs-1 text-primary mb-3"></i>
+      <br>
+      <br>
+        <h5 class="fw-bold">Accede a tu cuenta</h5>
+      </div>
 
+      <form>
+        <div class="mb-4">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" name="email" class="form-control" id="email" placeholder="Introduce tu email" required>
+        </div>
 
-<div class="d-flex justify-content-center align-items-center vh-100 bg-light">
-  <form action="/login" method="POST">
-    <!-- Email input -->
-    <div data-mdb-input-init class="form-outline mb-4">
-      <label class="form-label" for="form2Example1">Email</label>
-      <input type="email" name="email" id="form2Example1" class="form-control" />
+        <div class="mb-4">
+          <label for="password" class="form-label">Contraseña</label>
+          <div class="input-group">
+            <input type="password" class="form-control" name="password" id="password" placeholder="Introduce tu contraseña" required>
+            <button class="btn btn-outline-secondary" type="button">
+              <i class="bi bi-eye"></i>
+            </button>
+          </div>
+          <br>
+        </div>
 
-    </div>
-
-    <!-- Password input -->
-    <div data-mdb-input-init class="form-outline mb-4">
-      <label class="form-label" for="form2Example2">Contrasenya</label>
-      <input type="password" name="password" id="form2Example2" class="form-control" />
+        <div class="d-grid mb-2">
+          <button type="submit" class="btn btn-primary" style="background-color:#624DE3;">Accede</button>
+        </div>
+      </form>
     </div>
     <br>
-    <!-- 2 column grid layout for inline styling -->
-    <!--
-    <div class="row mb-4">
-      <div class="col d-flex justify-content-center">
-       
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" id="form2Example31" checked />
-          <label class="form-check-label" for="form2Example31"> Remember me </label>
-        </div>
-      </div>
-
-      <div class="col">
-       Simple link 
-        <a href="#!">Forgot password?</a>
-      </div>
+    <div class="text-center mt-3">
+      <small class="text-muted">No tienes cuenta? <a href="/register">Regístrate</a></small>
     </div>
-  -->
-    <!-- Submit button -->
-    <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">Log in</button>
-
-    <!-- Register buttons -->
-    <div class="text-center">
-      <p>Crea un compte? <a href="/register">Registra</a></p>
-    </div>
-  </form>
+  </div>
 </div>
 
 <script>
-  //pasar php->json a js
   let datos = <?php echo json_encode($retry_login); ?>;
-  if (datos) { //si ha habido otro intento de sesió fallido
+  if (datos) {
     alert("Datos incorrectos");
-    //solo mostrará el mensaje una vez cuando se produzca e fallo y no lo volverá a mostrar hasta que vuelva a haber otro intento
     <?php $_SESSION['bad_login_data'] = false; ?>
   }
 </script>
