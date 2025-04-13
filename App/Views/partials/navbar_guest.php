@@ -12,7 +12,7 @@
                     <a class="nav-link" href="#">CONCIERTOS</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">GALAS</a>
+                    <a class="nav-link" href="#">SALAS</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">INFORMACIÓN</a>
