@@ -4,6 +4,7 @@ namespace Core;
 
 use App\Controllers\UserController;
 use App\Controllers\ConcertController;
+use App\Controllers\EntradaController;
 use App\Core\Auth;
 
 class Route
@@ -72,10 +73,13 @@ class Route
         } else if ($requestMethod === 'POST') {
             if ($requestUri === 'login') {
                 $controller = new UserController();
-                if($controller->login()){
+                $entrades = new EntradaController();
+                $entrades->consultarEntrades();
+                if ($controller->login()) {
                     //si ha podido iniciar sesión carga datos del dashboard
-                    $concerts = new ConcertController();
-                    $concerts->mostraConcerts();
+                    //$concerts = new ConcertController();
+                    //$concerts->mostraConcerts();
+
                 }
             }
 
