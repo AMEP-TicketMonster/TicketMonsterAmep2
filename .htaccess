@@ -1,0 +1,16 @@
+RewriteEngine On
+Options All -Indexes
+
+# esto es para las rutas de public:
+RewriteCond %{REQUEST_URI} !^/public/
+#prevenir acceso al htaccess
+<files .htaccess>
+order allow, deny
+deny from all
+</files>
+
+RewriteRule ^([a-zA-Z0-9/_-]+])$ index.php?route=$1
+# Si no es un archivo o directorio real, redirige a index.php
+#RewriteCond %{REQUEST_FILENAME} !-f
+#RewriteCond %{REQUEST_FILENAME} !-d
+#RewriteRule ^(.*)$ /index.php [QSA,L]
