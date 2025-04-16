@@ -10,9 +10,11 @@
         private string $id;
         private float $preu;
         private string $estat;
+        private $entradaGateway;
 
         public function __construct()
         {
+            
             $this->entradaGateway = new EntradaGateway();
             if (session_status() === PHP_SESSION_NONE)
             {
@@ -23,8 +25,8 @@
 
 
         /**
-        * Compra una entrada si está disponible y el usuario tiene saldo suficiente.
-        * Métodos necesarios en EntradaGateway:
+        * Compra una entrada si estï¿½ disponible y el usuario tiene saldo suficiente.
+        * Mï¿½todos necesarios en EntradaGateway:
         * - getById($idEntrada)
         * - getSaldoUsuari($idUsuari)
         * - actualizarSaldo($idUsuari, $nouSaldo)
@@ -39,7 +41,7 @@
             // Obtener la entrada que se quiere comprar (por ejemplo, desde un formulario)
             $idEntrada = $_POST['idEntrada'] ?? null;
 
-            // Validación básica
+            // Validaciï¿½n bï¿½sica
             if (!$idUsuari || !$idEntrada)
             {
                 echo "Error: Falten dades necessaris per realitzar la compra.";
@@ -47,7 +49,7 @@
             }
 
             // Obtener la entrada desde la base de datos
-            $entrada = $this->entradaGateway->getById($idEntrada);
+            $entrada = $this->entradaGateway->getByEntradaId($idEntrada);
 
             if (!$entrada)
             {
@@ -57,10 +59,10 @@
 
             if ($entrada['estat'] !== 'Disponible')
             {
-                echo "Error: La entrada ha sigut comprada  o no està disponible.";
+                echo "Error: La entrada ha sigut comprada  o no estï¿½ disponible.";
                 return;
             }
-
+                //tal vez getSaldoUsuari deberÃ­a ser una funciÃ³n de el modelo Usuaris, es decir $this->usuariGateway->getSaldo($idUsuari);
                 $saldo = $this->entradaGateway->getSaldoUsuari($idUsuari);
                 $preu = $entrada['preu'];
 
@@ -81,7 +83,7 @@
             $idConcierto = $entrada['idConcierto'];
             $this->entradaGateway->decrementarAforament($idConcierto);
 
-            echo "Compra realitzada amb éxit.";
+            echo "Compra realitzada amb ï¿½xit.";
   
         }
         
@@ -89,7 +91,7 @@
 
         /**
         * Reserva una entrada disponible.
-        * Métodos necesarios en EntradaGateway:
+        * Mï¿½todos necesarios en EntradaGateway:
         * - getById($idEntrada)
         * - assignarEntrada($idEntrada, $idUsuari, $estat)
         * - decrementarAforament($idConcert)
@@ -115,7 +117,7 @@
 
             if ($entrada['estat'] !== 'Disponible')
             {
-                echo "Error: La entrada ja està reservada o comprada.";
+                echo "Error: La entrada ja estï¿½ reservada o comprada.";
                 return;
             }
 
@@ -124,14 +126,14 @@
             $idConcert = $entrada['idConcert'];
             $this->entradaGateway->decrementarAforament(idConcert);
 
-            echo "Reserva realitzada amb éxit.";
+            echo "Reserva realitzada amb ï¿½xit.";
         }
 
 
 
         /**
         * Consulta todas las entradas.
-        *  Método necesario en EntradaGateway:
+        *  Mï¿½todo necesario en EntradaGateway:
         * - getAllEntrades()
         */
         public function consultarEntrades()
@@ -148,10 +150,10 @@
             foreach ($entrades as $entrada)
             {
                 echo "ID: " . $entrada['idEntrada'] . "<br>";
-                echo "Preu: " . $entrada['preu'] . " €<br>";
+                echo "Preu: " . $entrada['preu'] . " ï¿½<br>";
                 echo "Estat: " . $entrada['estat'] . "<br>";
                 echo "ID Concert: " . $entrada['idConcert'] . "<br>";
-                echo "Data d'adquisició: " . $entrada['data_adquisicio'] . "<br>";
+                echo "Data d'adquisiciï¿½: " . $entrada['data_adquisicio'] . "<br>";
                 echo "<hr>";
             }
         }
@@ -161,7 +163,7 @@
         /**
         * Cancela una reserva del usuario actual.
         * Reembolsa el preu i actualitza aforament.
-        *  Métodos necesarios en EntradaGateway:
+        *  Mï¿½todos necesarios en EntradaGateway:
         * - getById($idEntrada)
         * - getSaldoUsuari($idUsuari)
         * - actualizarSaldo($idUsuari, $nouSaldo)
@@ -193,7 +195,7 @@
             $this->entradaGateway->actualizarSaldo($idUsuari, $nouSaldo);
 
             // Cancelar la reserva
-            $this->entradaGateway->cancelarReserva($idEntrada, $idUsuari);ç
+            $this->entradaGateway->cancelarReserva($idEntrada, $idUsuari);
             
 
             if ($resultat > 0)

@@ -18,7 +18,7 @@ $retry_login = isset($_SESSION['bad_login_data']) ? $_SESSION['bad_login_data'] 
         <h5 class="fw-bold">Accede a tu cuenta</h5>
       </div>
 
-      <form>
+      <form method="POST" action="/login">
         <div class="mb-4">
           <label for="email" class="form-label">Email</label>
           <input type="email" name="email" class="form-control" id="email" placeholder="Introduce tu email" required>
