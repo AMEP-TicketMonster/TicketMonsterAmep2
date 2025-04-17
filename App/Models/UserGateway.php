@@ -34,16 +34,26 @@ class UserGateway
         return $user;
     }
 
-    public function createUser($nom, $cognoms, $email, $contrasenya)
+
+    // Crear un nuevo usuario (con rol y contraseña encriptada)
+    public function createUser($nom, $cognoms, $email, $contrasenya, $rol = 'client')
+      {
+          $hashedPassword = password_hash($contrasenya, PASSWORD_DEFAULT);
+  
+          $sql = "INSERT INTO Usuaris (nom, cognom, email, contrasenya, rol) VALUES (?, ?, ?, ?, ?)";
+          $stmt = $this->pdo->prepare($sql);
+          $stmt->execute([$nom, $cognoms, $email, $hashedPassword, $rol]);
+  
+          return $this->pdo->lastInsertId();
+      }
+    
+       // Actualizar datos de perfil
+    public function updateUser($id, $nom, $cognoms, $email)
     {
-        $sql = "INSERT INTO Usuaris (nom, cognom, email, contrasenya) VALUES (?, ?, ?, ?)";
+        $sql = "UPDATE Usuaris SET nom = ?, cognom = ?, email = ? WHERE idUsuari = ?";
         $stmt = $this->pdo->prepare($sql);
-    
-        $stmt->execute([$nom, $cognoms, $email, $contrasenya]);
-    
-        return $this->pdo->lastInsertId();
+        return $stmt->execute([$nom, $cognoms, $email, $id]);
     }
-    
 
 
     public function getByUserId($id)
