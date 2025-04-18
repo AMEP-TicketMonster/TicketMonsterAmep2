@@ -1,3 +1,37 @@
 /vendor/
 .env
 .env_test
+.vscode
+.vs
+# Compiled binary files
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Compiler intermediate files
+*.obj
+*.o
+*.idb
+*.pdb
+*.ilk
+
+
+# Build directories
+Debug/
+Release/
+x64/
+x86/
+bin/
+obj/
+
+# Visual Studio workspace files
+*.suo
+*.user
+*.ncb
+*.sdf
+*.VC.db
+
+# Logs, temporary files
+*.log
+*.tmp

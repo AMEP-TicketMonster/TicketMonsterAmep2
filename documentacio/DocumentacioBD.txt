@@ -1,0 +1,7 @@
+Com afegir Disponibilitat de sala
+*********************************
+
+Per afegir una disponibilitat de sala necessitem un nom de sala, un dia, una hora d'inici i una hora de fi.
+Primer fem una query a la taula Sales per obtenir el idSala. Després afegim una entrada a la taula DataSala i obtenim el ID d'aquesta entrada (idDataSala).
+Si aquesta entrada a DataSala ja existeix, no fem res i sortim.
+Llavors afegim una disponibilitat amb idSala, idDataSala i estat Disponible.
