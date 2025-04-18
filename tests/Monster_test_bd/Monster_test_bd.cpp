@@ -90,7 +90,12 @@ void comprar_entrada_assaig() {
         for (int i = 0; i < assajos.size(); i++) {
             // TODO: falta dia i hora assaig
             cout << to_string(i + 1) << " grup: " << assajos[i].nom_grup_musical
-                 << " sala: " << assajos[i].nom_sala << endl;
+                << " sala: " << assajos[i].nom_sala 
+                << " dia: " << assajos[i].dia
+                << " hora_inici: " << assajos[i].hora_inici
+                << " hora_fi: " << assajos[i].hora_fi
+                << " preu: " << assajos[i].preu_entrada_public
+                << endl;
         }
         int assaig_escollit;
         cin >> assaig_escollit;

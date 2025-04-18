@@ -104,12 +104,13 @@ void Dades::afegeix_assaig(const Assaig& assaig) {
     int idGrupMusical = get_IDGrupMusical(assaig.nom_grup_musical);
     if (idGrupMusical != -1) {
         int idSala = get_IDSala(assaig.nom_sala);
+        int entrades_disponibles = get_CapacitatSala(assaig.nom_sala);
         if (idSala != -1) {
             int idDataSala = get_IDDataSala(idSala, assaig.dia, assaig.hora_inici, assaig.hora_fi);
             if (idDataSala != -1) {
                 bool salaDisponible = estaSalaDisponible(idSala, idDataSala);
                 if (salaDisponible) {
-                    do_afegeix_assaig(idGrupMusical, idSala, idDataSala, assaig.preu_entrada_public);
+                    do_afegeix_assaig(idGrupMusical, idSala, idDataSala, assaig.preu_entrada_public, entrades_disponibles);
                     modifica_disponibilitat(EstatSala::Reservada, idSala, idDataSala);
                 }
             }
@@ -161,6 +162,22 @@ int Dades::get_IDSala(const string& nom) {
         sql::ResultSet* res = bd_.consulta(sql);
         if (res->next()) {
             ret = res->getInt("idSala");
+        }
+    }
+    catch (sql::SQLException& e) {
+        cerr << "SQL Error: " << e.what() << endl;
+    }
+    return ret;
+}
+
+
+int Dades::get_CapacitatSala(const string& nom) {
+    int ret = -1;
+    try {
+        string sql = "SELECT capacitat FROM Sales WHERE nom = '" + nom + "'";
+        sql::ResultSet* res = bd_.consulta(sql);
+        if (res->next()) {
+            ret = res->getInt("capacitat");
         }
     }
     catch (sql::SQLException& e) {
@@ -256,12 +273,13 @@ bool Dades::estaSalaDisponible(const int idSala, const int idDataSala) {
 }
 
 
-void Dades::do_afegeix_assaig(const int idGrupMusical, const int idSala, const int idDataSala, double preu_entrada_public) {
+void Dades::do_afegeix_assaig(const int idGrupMusical, const int idSala, const int idDataSala, const double preu_entrada_public, const int entrades_disponibles) {
     try {
-        string sql = "INSERT INTO Assajos(idGrup, idSala, idDataSala, preu_entrada_public) VALUES ("
+        string sql = "INSERT INTO Assajos(idGrup, idSala, idDataSala, entrades_disponibles, preu_entrada_public) VALUES ("
             + to_string(idGrupMusical)
             + "," + to_string(idSala)
             + "," + to_string(idDataSala) 
+            + "," + to_string(entrades_disponibles)
             + "," + to_string(preu_entrada_public)
             + ")";
         bd_.executa(sql);
@@ -342,12 +360,13 @@ void Dades::compra_entrades_assaig(const Assaig& assaig, int numero_entrades) {
             // TODO: ojo idUsuari està hardcoded a 1
             // idEstatEntrada 5 és Comprada
             for (int i = 0; i < numero_entrades; i++) {
-                values += "(1," + to_string(info.idAssaig) + ", 30, " + to_string(assaig.preu_entrada_public) + ")";
+                values += "(1," + to_string(info.idAssaig) + "," + to_string(assaig.preu_entrada_public) + ",5)";
                 if (i < numero_entrades - 1)
                     values += ",";
             }
             string sql = "INSERT INTO EntradesAssaig (idUsuari, idAssaig, preu, idEstatEntrada) VALUES "
                 + values;
+            cout << sql << endl;
             bd_.executa(sql);
         }
         catch (sql::SQLException& e) {
