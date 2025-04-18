@@ -15,27 +15,66 @@ Dades::Dades() {
 // Post: Registra un nou usuari a la base de dades
 void Dades::crea_usuari(const Usuari& usuari) {
     try {
-        string sql = "INSERT INTO Usuaris (nom, cognom, email, contrasenya) VALUES ('"
-            + usuari.nom
-            + "','" + usuari.cognom
-            + "','" + usuari.email
-            + "','" + usuari.contrasenya + "')";
-        bd_.executa(sql);
+        Usuari dummy;
+        if (!get_usuari(usuari.email, dummy)) {
+            string sql = "INSERT INTO Usuaris (nom, cognom, email, contrasenya, saldo) VALUES ('"
+                + usuari.nom
+                + "','" + usuari.cognom
+                + "','" + usuari.email
+                + "','" + usuari.contrasenya
+                + "','" + to_string(usuari.saldo) + "')";
+            bd_.executa(sql);
+        }
+        else {
+            cout << "Error: email existent" << endl;
+        }
     }
     catch (sql::SQLException& e) {
         cerr << "SQL Error: " << e.what() << endl;
     }
 }
 
+int Dades::get_IdUsuari(const string& email, const string& contrasenya) {
+    try {
+        int ret = -1;
+        string sql = "SELECT idUsuari "
+            "FROM Usuaris WHERE email = '" + email + "' AND contrasenya = '" + contrasenya + "'";
+        sql::ResultSet* res = bd_.consulta(sql);
+        if (res->next()) {
+            ret = res->getInt("idUsuari");
+        }
+        return ret;
+    }
+    catch (sql::SQLException& e) {
+        cerr << "SQL Error: " << e.what() << endl;
+        return false;
+    }
+}
+
+float Dades::get_SaldoUsuari(const int id_usuari) {
+    try {
+        float ret = -1.0;
+        string sql = "SELECT saldo "
+            "FROM Usuaris WHERE idUsuari = '" + to_string(id_usuari) + "'";
+        sql::ResultSet* res = bd_.consulta(sql);
+        if (res->next()) {
+            ret = res->getDouble("saldo");
+        }
+        return ret;
+    }
+    catch (sql::SQLException& e) {
+        cerr << "SQL Error: " << e.what() << endl;
+        return false;
+    }
+}
 
 // PRE: cert
 // POST: retorna true si nom existeix a la taula Usuaris i omple l´estructura usuari
-bool Dades::get_usuari(const string& nom, Usuari& usuari) {
+bool Dades::get_usuari(const string& email, Usuari& usuari) {
     try {
         bool ret = false;
         string sql = "SELECT * "
-                     "FROM Usuaris WHERE BINARY nom = '" + nom + "'";
-        // la keyword "BINARY" al WHERE de la SELECT fa que la cerca sigui sensible a majúscules
+                     "FROM Usuaris WHERE email = '" + email + "'";
         sql::ResultSet* res = bd_.consulta(sql);
         if (res->next()) {
             usuari.nom = res->getString("nom");
@@ -51,6 +90,8 @@ bool Dades::get_usuari(const string& nom, Usuari& usuari) {
         return false;
     }
 }
+
+
 
 bool Dades::get_sales(const std::string& ciutat, std::vector<Sala>& sales) {
     try {
@@ -300,6 +341,17 @@ void Dades::modifica_disponibilitat(const EstatSala estat, const int idSala, con
     }
 }
 
+void Dades::set_SaldoUsuari(const int id_usuari, const float saldo) {
+    try {
+        string sql = "UPDATE Usuaris SET saldo = " + to_string(saldo)
+            + " WHERE idUsuari = " + to_string(id_usuari);
+        bd_.executa(sql);
+    }
+    catch (sql::SQLException& e) {
+        cerr << "SQL Error: " << e.what() << endl;
+    }
+}
+
 void Dades::get_assajos(vector<Assaig> &assajos) {
     try {
         bool ret = false;
@@ -346,34 +398,43 @@ void Dades::omple_dia_i_hores_data_sala(const int idDataSala, std::string& dia, 
 
 }
 
-void Dades::compra_entrades_assaig(const Assaig& assaig, int numero_entrades) {
+void Dades::compra_entrades_assaig(const int id_usuari, const Assaig& assaig, int numero_entrades) {
     Id_Entrades_Assaig info = get_ID_i_entrades_Assaig(assaig);
     if (numero_entrades > info.entrades_disponibles) {
-        cout << "Ho sento no queden suficients entrades" << endl;
+        cout << "Error: ho sento no queden suficients entrades" << endl;
     }
     else {
         cout << "Tenim suficients entrades" << endl;
-        info.entrades_disponibles -= numero_entrades;
-        actualitza_entrades_disponibles_assaig(info.idAssaig, info.entrades_disponibles);
-        try {
-            string values;
-            // TODO: ojo idUsuari està hardcoded a 1
-            // idEstatEntrada 5 és Comprada
-            for (int i = 0; i < numero_entrades; i++) {
-                values += "(1," + to_string(info.idAssaig) + "," + to_string(assaig.preu_entrada_public) + ",5)";
-                if (i < numero_entrades - 1)
-                    values += ",";
+        float saldo = get_SaldoUsuari(id_usuari);
+        if (saldo >= numero_entrades * assaig.preu_entrada_public) {
+            cout << "Tens suficient saldo" << endl;
+            info.entrades_disponibles -= numero_entrades;
+            actualitza_entrades_disponibles_assaig(info.idAssaig, info.entrades_disponibles);
+            try {
+                string values;
+                // idEstatEntrada 5 és Comprada
+                for (int i = 0; i < numero_entrades; i++) {
+                    values += "(" + to_string(id_usuari) + "," + to_string(info.idAssaig) + "," + to_string(assaig.preu_entrada_public) + ",5)";
+                    if (i < numero_entrades - 1)
+                        values += ",";
+                }
+                string sql = "INSERT INTO EntradesAssaig (idUsuari, idAssaig, preu, idEstatEntrada) VALUES "
+                    + values;
+                bd_.executa(sql);
+
+                set_SaldoUsuari(id_usuari, saldo - numero_entrades * assaig.preu_entrada_public);
             }
-            string sql = "INSERT INTO EntradesAssaig (idUsuari, idAssaig, preu, idEstatEntrada) VALUES "
-                + values;
-            cout << sql << endl;
-            bd_.executa(sql);
+            catch (sql::SQLException& e) {
+                cerr << "SQL Error: " << e.what() << endl;
+            }
         }
-        catch (sql::SQLException& e) {
-            cerr << "SQL Error: " << e.what() << endl;
+        else {
+            cout << "Error: no tens prou saldo" << endl;
         }
     }
 }
+
+
 
 Id_Entrades_Assaig Dades::get_ID_i_entrades_Assaig(const Assaig& assaig) {
     Id_Entrades_Assaig ret = { -1,0 };

@@ -15,6 +15,7 @@ public:
     void crea_usuari(const Usuari& usuari);
     bool get_usuari(const std::string& nom, Usuari& usuari);
     void esborra_usuari(const std::string& nom);
+    int get_IdUsuari(const std::string& email, const std::string& contrasenya);
 
 
     // Assatjos
@@ -23,7 +24,7 @@ public:
 
     void afegeix_assaig(const Assaig& assaig);
     void get_assajos(std::vector<Assaig>& assajos);
-    void compra_entrades_assaig(const Assaig& assaig, int numero_entrades);
+    void compra_entrades_assaig(const int id_usuari, const Assaig & assaig, int numero_entrades);
 
 private:
     ConnexioBD bd_;
@@ -41,5 +42,7 @@ private:
     Id_Entrades_Assaig get_ID_i_entrades_Assaig(const Assaig& assaig);
     void actualitza_entrades_disponibles_assaig(const int assaig_id, const int entrades_disponibles);
     void omple_dia_i_hores_data_sala(const int idDataSala, std::string& dia, std::string& hora_inici, std::string& hora_fi);
+    float get_SaldoUsuari(const int id_usuari);
+    void set_SaldoUsuari(const int id_usuari, const float saldo);
 };
 

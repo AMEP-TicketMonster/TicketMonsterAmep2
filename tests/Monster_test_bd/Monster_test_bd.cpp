@@ -8,6 +8,7 @@
 
 using namespace std;
 
+int id_usuari_logat = -1;
 Dades dades;
 
 void disponibilitat_sala() {
@@ -80,32 +81,73 @@ void reservar_sala() {
 }
 
 void comprar_entrada_assaig() {
-    vector<Assaig> assajos;
-    dades.get_assajos(assajos);
-    if (assajos.size() == 0) {
-        cout << "Ho sento no hi ha assajos per comprar entrades" << endl;
+    if (id_usuari_logat == -1) {
+        cout << "Error: usuari no loggejat" << endl;
     }
     else {
-        cout << "Quin assaig vols?" << endl;
-        for (int i = 0; i < assajos.size(); i++) {
-            // TODO: falta dia i hora assaig
-            cout << to_string(i + 1) << " grup: " << assajos[i].nom_grup_musical
-                << " sala: " << assajos[i].nom_sala 
-                << " dia: " << assajos[i].dia
-                << " hora_inici: " << assajos[i].hora_inici
-                << " hora_fi: " << assajos[i].hora_fi
-                << " preu: " << assajos[i].preu_entrada_public
-                << endl;
+        vector<Assaig> assajos;
+        dades.get_assajos(assajos);
+        if (assajos.size() == 0) {
+            cout << "Ho sento no hi ha assajos per comprar entrades" << endl;
         }
-        int assaig_escollit;
-        cin >> assaig_escollit;
-        cout << "Quantes entrades?";
-        int entrades;
-        cin >> entrades;
-        cin.ignore(1000, '\n');
-        dades.compra_entrades_assaig(assajos[assaig_escollit - 1], entrades);
-
+        else {
+            cout << "Quin assaig vols?" << endl;
+            for (int i = 0; i < assajos.size(); i++) {
+                // TODO: falta dia i hora assaig
+                cout << to_string(i + 1) << " grup: " << assajos[i].nom_grup_musical
+                    << " sala: " << assajos[i].nom_sala
+                    << " dia: " << assajos[i].dia
+                    << " hora_inici: " << assajos[i].hora_inici
+                    << " hora_fi: " << assajos[i].hora_fi
+                    << " preu: " << assajos[i].preu_entrada_public
+                    << endl;
+            }
+            int assaig_escollit;
+            cin >> assaig_escollit;
+            cout << "Quantes entrades?";
+            int entrades;
+            cin >> entrades;
+            cin.ignore(1000, '\n');
+            dades.compra_entrades_assaig(id_usuari_logat, assajos[assaig_escollit - 1], entrades);
+        }
     }
+}
+
+void crear_usuari() {
+    std::string nom;
+    std::string cognom;
+    std::string email;
+    std::string contrasenya;
+    float saldo;
+
+    Usuari usuari;
+    cout << "Entra el nom de l'usuari: " << endl;
+    getline(cin, usuari.nom);
+    cout << "Entra el cognnom de l'usuari: " << endl;
+    getline(cin, usuari.cognom);
+    cout << "Entra el email de l'usuari: " << endl;
+    getline(cin, usuari.email);
+    cout << "Entra la contrasenya de l'usuari: " << endl;
+    getline(cin, usuari.contrasenya);
+    cout << "Entra el saldo de l'usuari: " << endl;
+    cin >> usuari.saldo;
+    cin.ignore(1000, '\n');
+    dades.crea_usuari(usuari);
+}
+
+void login() {
+    string email, contrasenya;
+    cout << "Entra el email de l'usuari: " << endl;
+    getline(cin, email);
+    cout << "Entra la contrasenya de l'usuari: " << endl;
+    getline(cin, contrasenya);
+    id_usuari_logat = dades.get_IdUsuari(email, contrasenya);
+    if (id_usuari_logat == -1)
+        cout << "Error: usuari no existeix o contrasenya no vàlida" << endl;
+}
+
+void logout() {
+    id_usuari_logat = -1;
 }
 
 void show_menu(const vector<string>& opcions) {
@@ -125,7 +167,7 @@ int main()
         cout << "*********************" << endl;
 
         vector<string> opcions = { "Afegir disponibilitat sala", "Reservar sala", 
-            "Comprar entrada assaig", "Sortir" };
+            "Comprar entrada assaig", "Crear usuari", "Login", "Logout", "Sortir" };
         show_menu(opcions);
         string opcio_menu;
         getline(cin, opcio_menu);
@@ -140,6 +182,18 @@ int main()
         else if (opcio_menu == "3") {
             cout << "comprar entrada assaig" << endl;
             comprar_entrada_assaig();
+        }
+        else if (opcio_menu == "4") {
+            cout << "crear usuari" << endl;
+            crear_usuari();
+        }
+        else if (opcio_menu == "5") {
+            cout << "login" << endl;
+            login();
+        }
+        else if (opcio_menu == "6") {
+            cout << "logout" << endl;
+            logout();
         }
         else {
             cout << "sortim" << endl;
