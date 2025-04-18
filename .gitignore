@@ -16,6 +16,8 @@
 *.pdb
 *.ilk
 
+# Astah
+*.lock
 
 # Build directories
 Debug/
