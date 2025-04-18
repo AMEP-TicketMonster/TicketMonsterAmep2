@@ -26,7 +26,8 @@ class Route
             'dashboard',
             'logout',
             'profile',
-            'delete-user'
+            'delete-user',
+            'edit-user'
         ];
 
 
@@ -98,6 +99,11 @@ class Route
                     header("Location: /login");
                     exit();
                 }
+            }
+            if ($requestUri == 'edit-user') {
+                $controller = new UserController();
+                $controller->updateProfile();
+                exit();
             }
         }
 

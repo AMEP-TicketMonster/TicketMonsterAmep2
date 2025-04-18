@@ -12,38 +12,37 @@
     <script src="/public/bootstrap-5.3.3/js/bootstrap.bundle.min.js"></script>
 </head>
 
-<body class ="bg-light">
-    <!-- Navbar -->
-    <?php
-    //antes de nada, comprobar si estamos autenticados
-    use App\Core\Auth;
+<!-- Navbar -->
+<?php
+//antes de nada, comprobar si estamos autenticados
+use App\Core\Auth;
 
-    require_once __DIR__ . '/partials/footer.php';
-    // Incluir navbar según si el usuario está logueado
-    if (Auth::isLogged()) {
-        require_once __DIR__ . '/partials/navbar_user.php';
-    } else {
-        require_once __DIR__ . '/partials/navbar_guest.php';
-    }
+require_once __DIR__ . '/partials/footer.php';
+// Incluir navbar según si el usuario está logueado
+if (Auth::isLogged()) {
+    require_once __DIR__ . '/partials/navbar_user.php';
+} else {
+    require_once __DIR__ . '/partials/navbar_guest.php';
+}
+?>
+
+<body class="bg-light">
+
+    <?php //más adelante me interasará hacer componentes //include __DIR__ . "/partials/navbar.php"; 
     ?>
 
-<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
-
-        <?php //más adelante me interasará hacer componentes //include __DIR__ . "/partials/navbar.php"; 
+    <!-- Contenido dinámico -->
+    <main>
+        <?php
+        require_once $view;
         ?>
+    </main>
 
-        <!-- Contenido dinámico -->
-        <main>
-            <?php
-            require_once $view;
-            ?>
-        </main>
+    <!-- Footer -->
+    <?php //  include __DIR__ . "/partials/footer.php"; 
+    ?>
 
-        <!-- Footer -->
-        <?php //  include __DIR__ . "/partials/footer.php"; 
-        ?>
 
-    </div>
 </body>
 
 </html>
