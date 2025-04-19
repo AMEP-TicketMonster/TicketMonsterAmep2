@@ -94,7 +94,7 @@ class UserGateway
     {
         //echo"<br>esto es verifyPassword";
         //return password_verify($password, $this->password);
-        return ($password == $this->password);
+        return password_verify($password,$this->password);
     }
 
     // Obtener datos del usuario autenticado

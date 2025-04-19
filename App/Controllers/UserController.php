@@ -32,7 +32,7 @@ class UserController
         // Obtener el usuario por email
         $user = $this->userGateway->getByEmail($email);
 
-        //var_dump($this->userGateway->verifyPassword($contrasenya, $user['contrasenya']), $contrasenya, $user['contrasenya']);
+        // var_dump($this->userGateway->verifyPassword($contrasenya, $user['contrasenya']), $contrasenya, $user['contrasenya']);
         //var_dump();
         //die();
 
@@ -43,6 +43,7 @@ class UserController
             header("Location: /dashboard");
             //exit();
         } else {
+
             $_SESSION['bad_login_data'] = true;
             header("Location: /login");
         }
@@ -61,7 +62,7 @@ class UserController
             exit;
         }
         if ($contrasenya !== $confirma_contrasenya) {
-            $_SESSION['bad_registration_data'] = "Las contraseñas no coinciden.";
+            $_SESSION['bad_registration_data'] = "Ldie();as contraseñas no coinciden.";
             header("Location: /register");
             exit;
         }
