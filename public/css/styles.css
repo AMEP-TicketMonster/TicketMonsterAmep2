@@ -25,3 +25,15 @@
   }
   
 
+  .custom-container {
+    max-width: 1200px;  /* Ancho máximo */
+    width: 100%;  /* Ocupa todo el espacio disponible hasta el máximo */
+    margin: 0 auto;  /* Centrado horizontal */
+}
+
+/* Adaptar el ancho para pantallas más pequeñas */
+@media (max-width: 768px) {
+    .custom-container {
+        padding: 0 15px;  /* Un poco de espacio en los bordes para pantallas pequeñas */
+    }
+}

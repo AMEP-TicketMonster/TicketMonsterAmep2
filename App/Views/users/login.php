@@ -1,4 +1,3 @@
-
 <?php
 $retry_login = isset($_SESSION['bad_login_data']) ? $_SESSION['bad_login_data'] : null;
 ?>
@@ -7,14 +6,13 @@ $retry_login = isset($_SESSION['bad_login_data']) ? $_SESSION['bad_login_data'] 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
 <div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
-  <div>
+  <div class="container">
     <!-- Tarjeta del login -->
-    <div class="card shadow-sm p-4" style="max-width:100%; width: 600px;">
+    <div class="card shadow-sm p-4 mx-auto" style="max-width: 100%; width: 100%; max-width: 500px;">
 
       <div class="text-center mb-5">
         <i class="bi bi-person-circle fs-1 text-primary mb-3"></i>
-      <br>
-      <br>
+        <br><br>
         <h5 class="fw-bold">Accede a tu cuenta</h5>
       </div>
 

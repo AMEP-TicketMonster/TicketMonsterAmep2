@@ -103,27 +103,25 @@ class UserController
             exit;
         }
 
-        $userId = $_SESSION['user']['id'];
+        $userId = $_SESSION['user']['idUsuari'];
         $nom = trim($_POST['nom'] ?? '');
         $cognoms = trim($_POST['cognoms'] ?? '');
         $email = trim($_POST['email'] ?? '');
-
         // Validaciones simples
         if (empty($nom) || empty($cognoms) || empty($email)) {
             $_SESSION['bad_update_data'] = "Tots els camps són obligatoris.";
-            header("Location: /profile");
+
             exit;
         }
 
         if (!$this->isValidEmail($email)) {
             $_SESSION['bad_update_data'] = "Correu electrònic no vàlid.";
-            header("Location: /profile");
             exit;
         }
 
         // Comprobar si el nuevo email está usado por otro usuario
         $existingUser = $this->userGateway->getByEmail($email);
-        if ($existingUser && $existingUser['id'] != $userId) {
+        if ($existingUser && $existingUser['idUsuari'] != $userId) {
             $_SESSION['bad_update_data'] = "Aquest correu ja està en ús per un altre compte.";
             header("Location: /profile");
             exit;
@@ -142,7 +140,7 @@ class UserController
         header("Location: /profile");
         exit;
     }
-    
+
     public function logout()
     {
         Session::closeSession();
