@@ -50,13 +50,19 @@ class Route
             'register'   => 'users/register.php',
             'dashboard'  => 'users/dashboard.php',
             'profile'    => 'users/perfil.php',
-            'conciertos' => 'conciertos.php',
+            'conciertos' => 'concerts/concerts.php',
             'salas'      => 'salas.php'
         ];
 
         if ($requestMethod === 'GET') {
+
             //Para el caso de las vistas
             if (array_key_exists($requestUri, $routes)) {
+                if ($requestUri == 'conciertos') {
+                    //Si visita esta dirección cargamos los conciertos
+                    $concerts = new ConcertController();
+                    $concerts->mostraConcerts();
+                }
                 $file = __DIR__ . "/../Views/" . $routes[$requestUri];
 
                 if (is_readable($file)) {
@@ -74,8 +80,8 @@ class Route
         } else if ($requestMethod === 'POST') {
             if ($requestUri === 'login') {
                 $controller = new UserController();
-                $entrades = new EntradaController();
-                $entrades->consultarEntrades();
+                //$entrades = new EntradaController();
+                //$entrades->consultarEntrades();
                 if ($controller->login()) {
                     //si ha podido iniciar sesión carga datos del dashboard
                     //$concerts = new ConcertController();

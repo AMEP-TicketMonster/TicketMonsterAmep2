@@ -25,8 +25,9 @@ class ConcertGateway
         //Habría que poner un LIMIT 'int, sin las comillas'
         $stmt = $this->pdo->prepare("SELECT * FROM Concerts WHERE data > CURDATE()");
         $stmt->execute();
-        $concerts = $stmt->fetch();
+        $concerts = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         return $concerts;
+        
     }
 
     public function getByConcertId($id)

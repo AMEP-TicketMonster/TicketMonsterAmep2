@@ -22,9 +22,7 @@ class ConcertController
     public function mostraConcerts()
     {
         $concerts = $this->concertGateway->getConcertList();
-        var_dump($concerts);
-        die();
         //pasar a json y ya lo tratará el frontend.
-        $_SESSION['concerts'] = json_encode($concerts);
+        $_SESSION['concerts'] = $concerts;
     }
 }

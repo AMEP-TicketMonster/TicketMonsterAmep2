@@ -5,9 +5,6 @@ use App\Controllers\EntradaController;
 
 $user = isset($_SESSION['user']) ? $_SESSION['user'] : null;
 
-$concerts = isset($_SESSION['concerts']) ? $_SESSION['concerts'] : null;
-var_dump($concerts);
-
 $entrades = isset($_SESSION['entrades']) ? $_SESSION['entrades'] : null;
 var_dump($entrades);
 
