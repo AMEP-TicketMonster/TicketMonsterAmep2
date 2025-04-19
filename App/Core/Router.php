@@ -22,6 +22,7 @@ class Route
 
         $privateRoutes = [
             'conciertos',
+            'concierto',
             'salas',
             'dashboard',
             'logout',
@@ -51,8 +52,11 @@ class Route
             'dashboard'  => 'users/dashboard.php',
             'profile'    => 'users/perfil.php',
             'conciertos' => 'concerts/concerts.php',
+            'concierto'  => 'concerts/details.php',
             'salas'      => 'salas.php'
         ];
+
+    
 
         if ($requestMethod === 'GET') {
 
@@ -61,8 +65,22 @@ class Route
                 if ($requestUri == 'conciertos') {
                     //Si visita esta dirección cargamos los conciertos
                     $concerts = new ConcertController();
-                    $concerts->mostraConcerts();
+                    $concerts->carregaConcerts();
                 }
+                if ($requestUri === 'concierto') {
+                    $id = $_GET['id'] ?? $_COOKIE['concert_id'] ?? null;
+                    if ($id !== null) {
+                        setcookie('concert_id', $id, time() + 3600, "/");
+                        $concertController = new ConcertController();
+                        $concertController->showConcert($id);
+                    }
+                }
+
+
+
+
+
+
                 $file = __DIR__ . "/../Views/" . $routes[$requestUri];
 
                 if (is_readable($file)) {

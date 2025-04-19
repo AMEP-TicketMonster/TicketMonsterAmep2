@@ -28,7 +28,7 @@ $concerts = isset($_SESSION['concerts']) ? $_SESSION['concerts'] : '[]';
           <p class="card-text mb-1"><i class="bi bi-geo-alt"></i> Ubicación: ${concert.ubicacio}</p>
           <p class="card-text mb-3"><i class="bi bi-currency-euro"></i> Precio: ${concert.preu} €</p>
           <div class="mt-auto">
-            <a href="/concert?id=${concert.idConcert}" class="btn btn-primary w-100" style="background-color:#624DE3;">
+            <a href="/concierto?id=${concert.idConcert}" class="btn btn-primary w-100" style="background-color:#624DE3;">
               Ver detalles
             </a>
           </div>

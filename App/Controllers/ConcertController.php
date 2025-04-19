@@ -19,10 +19,19 @@ class ConcertController
         }
     }
 
-    public function mostraConcerts()
+    public function carregaConcerts()
     {
         $concerts = $this->concertGateway->getConcertList();
         //pasar a json y ya lo tratará el frontend.
         $_SESSION['concerts'] = $concerts;
     }
-}
+
+    public function showConcert($id)
+    {
+        $concert = $this->concertGateway->getByConcertId($id);
+
+        $_SESSION['concert'] = $concert;
+        setcookie('concert_id', $id, time() + 3600, '/');
+        //header("Location: /concierto");
+    }
+}   
