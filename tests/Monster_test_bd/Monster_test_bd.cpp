@@ -93,7 +93,6 @@ void comprar_entrada_assaig() {
         else {
             cout << "Quin assaig vols?" << endl;
             for (int i = 0; i < assajos.size(); i++) {
-                // TODO: falta dia i hora assaig
                 cout << to_string(i + 1) << " grup: " << assajos[i].nom_grup_musical
                     << " sala: " << assajos[i].nom_sala
                     << " dia: " << assajos[i].dia
@@ -109,6 +108,40 @@ void comprar_entrada_assaig() {
             cin >> entrades;
             cin.ignore(1000, '\n');
             dades.compra_entrades_assaig(id_usuari_logat, assajos[assaig_escollit - 1], entrades);
+        }
+    }
+}
+
+void comprar_entrada_concert() {
+    if (id_usuari_logat == -1) {
+        cout << "Error: usuari no loggejat" << endl;
+    }
+    else {
+        vector<Concert> concerts;
+        dades.get_concerts(concerts);
+        if (concerts.size() == 0) {
+            cout << "Ho sento no hi ha concerts per comprar entrades" << endl;
+        }
+        else {
+            cout << "Quin concert vols?" << endl;
+            for (int i = 0; i < concerts.size(); i++) {
+                cout << to_string(i + 1) << " grup: " << concerts[i].nom_grup_musical
+                    << " nom concert: " << concerts[i].nom_concert
+                    << " nom sala: " << concerts[i].nom_sala
+                    << " dia: " << concerts[i].dia
+                    << " hora: " << concerts[i].hora
+                    << " emtrades disponibles: " << concerts[i].entrades_disponibles
+                    << " preu: " << concerts[i].preu
+                    << " genere: " << concerts[i].genere
+                    << endl;
+            }
+            int concert_escollit;
+            cin >> concert_escollit;
+            cout << "Quantes entrades?";
+            int entrades;
+            cin >> entrades;
+            cin.ignore(1000, '\n');
+            dades.compra_entrades_concert(id_usuari_logat, concerts[concert_escollit - 1], entrades);
         }
     }
 }
@@ -167,7 +200,7 @@ int main()
         cout << "*********************" << endl;
 
         vector<string> opcions = { "Afegir disponibilitat sala", "Reservar sala", 
-            "Comprar entrada assaig", "Crear usuari", "Login", "Logout", "Sortir" };
+            "Comprar entrada assaig", "Crear usuari", "Login", "Logout", "Comprar entrada concert", "Sortir" };
         show_menu(opcions);
         string opcio_menu;
         getline(cin, opcio_menu);
@@ -194,6 +227,10 @@ int main()
         else if (opcio_menu == "6") {
             cout << "logout" << endl;
             logout();
+        }
+        else if (opcio_menu == "7") {
+            cout << "comprar entrada concert" << endl;
+            comprar_entrada_concert();
         }
         else {
             cout << "sortim" << endl;

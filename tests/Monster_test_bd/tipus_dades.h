@@ -64,3 +64,13 @@ struct Id_Entrades_Assaig {
     int entrades_disponibles;
 };
 
+struct Concert {
+    std::string nom_grup_musical;
+    std::string nom_sala;
+    std::string nom_concert;
+    std::string dia;
+    std::string hora;
+    int entrades_disponibles;
+    double preu;
+    std::string genere;
+};
