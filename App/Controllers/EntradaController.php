@@ -133,7 +133,10 @@ class EntradaController
     public function consultarEntrades()
     {
         $entrades = $this->entradaGateway->getAllEntrades();
-        $_SESSION["entrades"] = json_encode($entrades);
+
+        var_dump($entrades); // TODO: debe haber algun error de encoding UTF8 en $entrades
+                             //       si no hago el var_dump json_encode falla
+        $_SESSION["entrades"] = json_encode($entrades, JSON_PRETTY_PRINT);
         if (empty($entrades)) {
             echo "No hi ha entrades disponibles.";
             return;
@@ -142,10 +145,10 @@ class EntradaController
         // Mostrar en HTML simple 
         foreach ($entrades as $entrada) {
             echo "ID: " . $entrada['idEntrada'] . "<br>";
-            echo "Preu: " . $entrada['preu'] . " �<br>";
-            echo "Estat: " . $entrada['estat'] . "<br>";
-            echo "ID Concert: " . $entrada['idConcert'] . "<br>";
-            echo "Data d'adquisici�: " . $entrada['data_adquisicio'] . "<br>";
+            echo "IDUsuari: " . $entrada['idUsuari'] . "<br>";
+            echo "Preu: " . $entrada['preu'] . " &euro;<br>";
+            echo "Estat: " . $entrada['idEstatEntrada'] . "<br>";
+            echo "ID assaig: " . $entrada['idAssaig'] . "<br>";
             echo "<hr>";
         }
     }

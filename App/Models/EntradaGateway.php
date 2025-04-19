@@ -22,11 +22,12 @@ class EntradaGateway
         $stmt->execute([$id]);
         return  $stmt->fetch();
     }
+    
     public function getAllEntrades()
     {
         $stmt = $this->pdo->prepare("SELECT * FROM EntradesAssaig");
         $stmt->execute();
-        return  $stmt->fetch();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
     
 }
