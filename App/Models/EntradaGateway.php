@@ -16,14 +16,14 @@ class EntradaGateway
     }
 
     //cargar entradas
-    public function getByEntradaId($id)
+    public function getEntradaAssaigById($id)
     {
         $stmt = $this->pdo->prepare("SELECT * FROM EntradesAssaig WHERE idEntrada = ?");
         $stmt->execute([$id]);
         return  $stmt->fetch();
     }
     
-    public function getAllEntrades()
+    public function getAllEntradesAssaig()
     {
         $stmt = $this->pdo->prepare("SELECT * FROM EntradesAssaig");
         $stmt->execute();

@@ -34,7 +34,7 @@ class EntradaController
      * - assignarEntrada($idEntrada, $idUsuari, $estat)
      * - decrementarAforament($idConcert)
      */
-    public function comprarEntrada()
+    public function comprarEntradaAssaig()
     {
 
         $idUsuari = $_SESSION['user']['id'] ?? null;
@@ -49,7 +49,7 @@ class EntradaController
         }
 
         // Obtener la entrada desde la base de datos
-        $entrada = $this->entradaGateway->getByEntradaId($idEntrada);
+        $entrada = $this->entradaGateway->getEntradaAssaigById($idEntrada);
 
         if (!$entrada) {
             echo "Error: La entrada no existeix.";
@@ -130,9 +130,9 @@ class EntradaController
      * - getAllEntrades()
      */
     //deberíamos hacer una función que muestre todas las entradas que tiene compradas un usuario?
-    public function consultarEntrades()
+    public function consultarEntradesAssaig()
     {
-        $entrades = $this->entradaGateway->getAllEntrades();
+        $entrades = $this->entradaGateway->getAllEntradesAssaig();
 
         var_dump($entrades); // TODO: debe haber algun error de encoding UTF8 en $entrades
                              //       si no hago el var_dump json_encode falla
