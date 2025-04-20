@@ -98,8 +98,10 @@ class Route
         } else if ($requestMethod === 'POST') {
             if ($requestUri === 'login') {
                 $controller = new UserController();
-                //$entrades = new EntradaController();
-                //$entrades->consultarEntrades();
+
+                $entrades = new EntradaController();
+                $entrades->consultarEntradesAssaig();
+
                 if ($controller->login()) {
                     //si ha podido iniciar sesión carga datos del dashboard
                     //$concerts = new ConcertController();

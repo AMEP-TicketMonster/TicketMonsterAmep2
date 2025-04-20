@@ -123,4 +123,11 @@ class UserGateway
         $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $users;
     }
+
+    public function actualizarSaldo($idUsuari, $nouSaldo)
+    {
+        $sql = "UPDATE Usuaris SET saldo = ? WHERE idUsuari = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$nouSaldo, $idUsuari]);
+    }
 }
