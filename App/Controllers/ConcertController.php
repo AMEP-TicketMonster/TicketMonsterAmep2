@@ -28,8 +28,8 @@ class ConcertController
         $_SESSION['concerts'] = json_encode($concerts);
     }
 
-    public function createConcert($idGrup, $idSala, $nomConcert, $dia, $hora, $entrades_disponibles, $preu, $idGenere)
+    public function createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere)
     {
-        $this->concertGateway->createConcert($idGrup, $idSala, $nomConcert, $dia, $hora, $entrades_disponibles, $preu, $idGenere);
+        $this->concertGateway->createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere);
     }    
 }
