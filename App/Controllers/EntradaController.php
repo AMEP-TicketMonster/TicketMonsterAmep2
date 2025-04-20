@@ -26,13 +26,7 @@ class EntradaController
     }
 
     /**
-     * Compra una entrada si est� disponible y el usuario tiene saldo suficiente.
-     * M�todos necesarios en EntradaGateway:
-     * - getById($idEntrada)
-     * - getSaldoUsuari($idUsuari)
-     * - actualizarSaldo($idUsuari, $nouSaldo)
-     * - assignarEntrada($idEntrada, $idUsuari, $estat)
-     * - decrementarAforament($idConcert)
+     * Compra una entrada assaig si est� disponible y el usuario tiene saldo suficiente.
      */
     public function comprarEntradaAssaig()
     {
@@ -86,6 +80,61 @@ class EntradaController
         echo "Compra realitzada amb �xit.";
     }
 
+
+    /**
+     * Compra una entrada concert si est� disponible y el usuario tiene saldo suficiente.
+     */
+    public function comprarEntradaConcert()
+    {
+        // TODO: creo que deberíamos tener un idEntradaConcert y un idEntradaAssaig
+        //       no he podido probar estas dos _SESSION y _POST pq creo que no está cableado todavía
+        //       pero he probado el resto de la función poniendo valores válidos en $idUsuari y $idEntrada
+        $idUsuari = $_SESSION['user']['id'] ?? null;
+        // Obtener la entrada que se quiere comprar (por ejemplo, desde un formulario)
+        $idEntrada = $_POST['idEntrada'] ?? null;
+
+        // Validaci�n b�sica
+        if (!$idUsuari || !$idEntrada) {
+            echo "Error: Falten dades necessaris per realitzar la compra.";
+            return;
+        }
+
+        // Obtener la entrada desde la base de datos
+        $entrada = $this->entradaGateway->getEntradaConcertById($idEntrada);
+
+        if (!$entrada) {
+            echo "Error: La entrada no existeix.";
+            return;
+        }
+
+        $estatEntrada = $this->entradaGateway->getStringFromEntradaId($entrada['idEstatEntrada']);
+        
+        if ($estatEntrada !== "Disponible") {
+            echo "Error: La entrada ja est� reservada o comprada.";
+            return;
+        }
+
+        $saldo = $this->usuariGateway->getByUserId($idUsuari)['saldo'];
+        
+        $preu = $entrada['preu'];
+
+        if ($saldo < $preu) {
+            echo "Error: Saldo insuficient.";
+            return;
+        }
+
+        // Actualizar saldo del usuario
+        $nouSaldo = $saldo - $preu;
+        $this->usuariGateway->actualizarSaldo($idUsuari, $nouSaldo);
+
+        // Asignar la entrada al usuario y cambiar el estado
+        $this->entradaGateway->assignarEntradaConcert($idEntrada, $idUsuari, "Comprada");
+
+        $idConcert = $entrada['idConcert'];
+        $this->entradaGateway->decrementarEntradesDisponiblesConcert($idConcert);
+
+        echo "Compra realitzada amb �xit.";
+    }
 
     
 
