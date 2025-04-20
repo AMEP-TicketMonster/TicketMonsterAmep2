@@ -19,14 +19,22 @@ class ConcertController
         }
     }
 
-    public function mostraConcerts()
+    public function carregaConcerts()
     {
         $concerts = $this->concertGateway->getConcertList();
-        var_dump($concerts);
-        die();
         //pasar a json y ya lo tratará el frontend.
-        $_SESSION['concerts'] = json_encode($concerts);
+        $_SESSION['concerts'] = $concerts;
     }
+
+    public function showConcert($id)
+    {
+        $concert = $this->concertGateway->getByConcertId($id);
+
+        $_SESSION['concert'] = $concert;
+        setcookie('concert_id', $id, time() + 3600, '/');
+        //header("Location: /concierto");
+    }
+}   
 
     // Aquest mètode crea tantes entrades disponibles com capacitat té la sala
     public function createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere)
@@ -41,3 +49,4 @@ class ConcertController
                                                $idGenere);
     }
 }
+
