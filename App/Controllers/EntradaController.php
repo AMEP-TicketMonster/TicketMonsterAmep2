@@ -73,9 +73,8 @@ class EntradaController
         $nouSaldo = $saldo - $preu;
         $this->entradaGateway->actualizarSaldo($idUsuari, $nouSaldo);
 
-
         // Asignar la entrada al usuario y cambiar el estado
-        $this->entradaGateway->assignarEntrada($idEntrada, $idUsuari, "Comprada");
+        $this->entradaGateway->assignarEntradaAssaig($idEntrada, $idUsuari, "Comprada");
 
         $idConcierto = $entrada['idConcierto'];
         $this->entradaGateway->decrementarAforament($idConcierto);
@@ -83,16 +82,15 @@ class EntradaController
         echo "Compra realitzada amb �xit.";
     }
 
-
-
     /**
      * Reserva una entrada disponible.
      * M�todos necesarios en EntradaGateway:
-     * - getById($idEntrada)
-     * - assignarEntrada($idEntrada, $idUsuari, $estat)
-     * - decrementarAforament($idConcert)
+     * - getEntradaAssaigById
+     * - getStringFromEntradaId
+     * - assignarEntradaAssaig
+     * - decrementarEntradesDisponiblesAssaig
      */
-    public function reservarEntrada()
+    public function reservarEntradaAssaig()
     {
         $idUsuari = $_SESSION['user']['id'] ?? null;
         $idEntrada = $_POST['idEntrada'] ?? null;
@@ -102,22 +100,23 @@ class EntradaController
             return;
         }
 
-        $entrada = $this->entradaGateway->getById($idEntrada);
+        $entrada = $this->entradaGateway->getEntradaAssaigById($idEntrada);
 
         if (!$entrada) {
             echo "Error: La entrada no existeix.";
             return;
         }
-
-        if ($entrada['estat'] !== 'Disponible') {
+        $estatEntrada = $this->entradaGateway->getStringFromEntradaId($entrada['idEstatEntrada']);
+        
+        if ($estatEntrada !== "Disponible") {
             echo "Error: La entrada ja est� reservada o comprada.";
             return;
         }
 
-        $this->entradaGateway->assignarEntrada($idEntrada, $idUsuari, "Reservada");
+        $this->entradaGateway->assignarEntradaAssaig($idEntrada, $idUsuari, "Reservada");
 
-        $idConcert = $entrada['idConcert'];
-        $this->entradaGateway->decrementarAforament(idConcert);
+        $idAssaig = $entrada['idAssaig'];
+        $this->entradaGateway->decrementarEntradesDisponiblesAssaig($idAssaig);
 
         echo "Reserva realitzada amb �xit.";
     }
