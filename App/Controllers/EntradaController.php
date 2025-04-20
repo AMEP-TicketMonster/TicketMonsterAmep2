@@ -82,6 +82,9 @@ class EntradaController
         echo "Compra realitzada amb �xit.";
     }
 
+
+    
+
     /**
      * Reserva una entrada disponible.
      * M�todos necesarios en EntradaGateway:
@@ -92,6 +95,9 @@ class EntradaController
      */
     public function reservarEntradaAssaig()
     {
+        // TODO: creo que deberíamos tener un idEntradaConcert y un idEntradaAssaig
+        //       no he podido probar estas dos _SESSION y _POST pq creo que no está cableado todavía
+        //       pero he probado el resto de la función poniendo valores válidos en $idUsuari y $idEntrada
         $idUsuari = $_SESSION['user']['id'] ?? null;
         $idEntrada = $_POST['idEntrada'] ?? null;
 
@@ -121,7 +127,47 @@ class EntradaController
         echo "Reserva realitzada amb �xit.";
     }
 
+    /**
+     * Reserva una entrada disponible.
+     * M�todos necesarios en EntradaGateway:
+     * - getEntradaConcertById
+     * - getStringFromEntradaId
+     * - assignarEntradaConcert
+     * - decrementarEntradesDisponiblesConcert
+     */
+    public function reservarEntradaConcert()
+    {
+        // TODO: creo que deberíamos tener un idEntradaConcert y un idEntradaAssaig
+        //       no he podido probar estas dos _SESSION y _POST pq creo que no está cableado todavía
+        //       pero he probado el resto de la función poniendo valores válidos en $idUsuari y $idEntrada
+        $idUsuari = $_SESSION['user']['id'] ?? null;
+        $idEntrada = $_POST['idEntrada'] ?? null;
 
+        if (!$idUsuari || !$idEntrada) {
+            echo "Error: Falten dades necessaris per realitzar la reserva.";
+            return;
+        }
+
+        $entrada = $this->entradaGateway->getEntradaConcertById($idEntrada);
+
+        if (!$entrada) {
+            echo "Error: La entrada no existeix.";
+            return;
+        }
+        $estatEntrada = $this->entradaGateway->getStringFromEntradaId($entrada['idEstatEntrada']);
+        
+        if ($estatEntrada !== "Disponible") {
+            echo "Error: La entrada ja est� reservada o comprada.";
+            return;
+        }
+
+        $this->entradaGateway->assignarEntradaConcert($idEntrada, $idUsuari, "Reservada");
+
+        $idConcert = $entrada['idConcert'];
+        $this->entradaGateway->decrementarEntradesDisponiblesConcert($idConcert);
+
+        echo "Reserva realitzada amb �xit.";
+    }
 
     /**
      * Consulta todas las entradas.

@@ -22,6 +22,13 @@ class EntradaGateway
         $stmt->execute([$id]);
         return  $stmt->fetch();
     }
+
+    public function getEntradaConcertById($id)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM EntradesConcert WHERE idEntrada = ?");
+        $stmt->execute([$id]);
+        return  $stmt->fetch();
+    }
     
     public function getAllEntradesAssaig()
     {
@@ -52,11 +59,32 @@ class EntradaGateway
         $stmt->execute([$idUsuari, $nou_estat_id, $idEntrada]);
     }
 
+    public function assignarEntradaConcert($idEntrada, $idUsuari, $nou_estat)
+    {
+        // Obtenim el id del estat a partir del seu string
+        $stmt = $this->pdo->prepare("SELECT idEstatEntrada FROM EstatEntrada WHERE estat = ?");
+        $stmt->execute([$nou_estat]);
+        $nou_estat_id = $stmt->fetch(\PDO::FETCH_ASSOC)['idEstatEntrada'];
+
+        $sql = "UPDATE EntradesConcert 
+                SET idUsuari = ?, idEstatEntrada = ?
+                WHERE idEntrada = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$idUsuari, $nou_estat_id, $idEntrada]);
+    }
+
     public function decrementarEntradesDisponiblesAssaig($idAssaig)
     {
-        $stmt = $this->pdo->prepare("UPDATE Assajos SET entrades_disponibles = entrades_disponibles - 1 
+        $stmt = $this->pdo->prepare("UPDATE Assajos SET entrades_disponibles = entrades_disponibles - 1
                                      WHERE idAssajos = ? AND entrades_disponibles > 0");
         $stmt->execute([$idAssaig]);
+    }
+
+    public function decrementarEntradesDisponiblesConcert($idConcert)
+    {
+        $stmt = $this->pdo->prepare("UPDATE Concerts SET entrades_disponibles = entrades_disponibles - 1
+                                     WHERE idConcert = ? AND entrades_disponibles > 0");
+        $stmt->execute([$idConcert]);
     }
     
 }
