@@ -144,6 +144,4 @@ class EntradaGateway
             throw new RuntimeException("Error en la consulta a la base de datos: " . $e->getMessage());
         }
     }
-
-    
 }
