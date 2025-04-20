@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\EntradaGateway;
+use App\Models\UserGateway;
 use Core\Route;
 use Core\Auth;
 use Core\Session;
@@ -13,17 +14,16 @@ class EntradaController
     private float $preu;
     private string $estat;
     private $entradaGateway;
+    private $usuariGateway;
 
     public function __construct()
     {
-
         $this->entradaGateway = new EntradaGateway();
+        $this->usuariGateway = new UserGateway();
         if (session_status() === PHP_SESSION_NONE) {
             Session::sessionStart("ticketmonster_session");
         }
     }
-
-
 
     /**
      * Compra una entrada si est� disponible y el usuario tiene saldo suficiente.
@@ -36,9 +36,10 @@ class EntradaController
      */
     public function comprarEntradaAssaig()
     {
-
+        // TODO: creo que deberíamos tener un idEntradaConcert y un idEntradaAssaig
+        //       no he podido probar estas dos _SESSION y _POST pq creo que no está cableado todavía
+        //       pero he probado el resto de la función poniendo valores válidos en $idUsuari y $idEntrada
         $idUsuari = $_SESSION['user']['id'] ?? null;
-
         // Obtener la entrada que se quiere comprar (por ejemplo, desde un formulario)
         $idEntrada = $_POST['idEntrada'] ?? null;
 
@@ -56,12 +57,15 @@ class EntradaController
             return;
         }
 
-        if ($entrada['estat'] !== 'Disponible') {
-            echo "Error: La entrada ha sigut comprada  o no est� disponible.";
+        $estatEntrada = $this->entradaGateway->getStringFromEntradaId($entrada['idEstatEntrada']);
+        
+        if ($estatEntrada !== "Disponible") {
+            echo "Error: La entrada ja est� reservada o comprada.";
             return;
         }
-        //tal vez getSaldoUsuari debería ser una función de el modelo Usuaris, es decir $this->usuariGateway->getSaldo($idUsuari);
-        $saldo = $this->entradaGateway->getSaldoUsuari($idUsuari);
+
+        $saldo = $this->usuariGateway->getByUserId($idUsuari)['saldo'];
+        
         $preu = $entrada['preu'];
 
         if ($saldo < $preu) {
@@ -71,13 +75,13 @@ class EntradaController
 
         // Actualizar saldo del usuario
         $nouSaldo = $saldo - $preu;
-        $this->entradaGateway->actualizarSaldo($idUsuari, $nouSaldo);
+        $this->usuariGateway->actualizarSaldo($idUsuari, $nouSaldo);
 
         // Asignar la entrada al usuario y cambiar el estado
         $this->entradaGateway->assignarEntradaAssaig($idEntrada, $idUsuari, "Comprada");
 
-        $idConcierto = $entrada['idConcierto'];
-        $this->entradaGateway->decrementarAforament($idConcierto);
+        $idAssaig = $entrada['idAssaig'];
+        $this->entradaGateway->decrementarEntradesDisponiblesAssaig($idAssaig);
 
         echo "Compra realitzada amb �xit.";
     }
