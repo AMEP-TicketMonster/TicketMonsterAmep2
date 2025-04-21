@@ -33,7 +33,10 @@ class EntradaController
         // TODO: creo que deberíamos tener un idEntradaConcert y un idEntradaAssaig
         //       no he podido probar estas dos _SESSION y _POST pq creo que no está cableado todavía
         //       pero he probado el resto de la función poniendo valores válidos en $idUsuari y $idEntrada
-        $idUsuari = $_SESSION['user']['id'] ?? null;
+
+        //obtener la id del usuario por la variable de sesión no es seguro:
+        //$idUsuari = $_SESSION['user']['id'] ?? null;
+        $idUsuari = $this->usuariGateway->getId();
         // Obtener la entrada que se quiere comprar (por ejemplo, desde un formulario)
         $idEntrada = $_POST['idEntrada'] ?? null;
 
@@ -89,10 +92,10 @@ class EntradaController
         // TODO: creo que deberíamos tener un idEntradaConcert y un idEntradaAssaig
         //       no he podido probar estas dos _SESSION y _POST pq creo que no está cableado todavía
         //       pero he probado el resto de la función poniendo valores válidos en $idUsuari y $idEntrada
-        $idUsuari = $_SESSION['user']['id'] ?? null;
+        $idUsuari = $_SESSION['idUsuari'] ?? null;
         // Obtener la entrada que se quiere comprar (por ejemplo, desde un formulario)
-        $idEntrada = $_POST['idEntrada'] ?? null;
-
+        $idEntrada = $_POST['idConcert'] ?? null;
+        var_dump($idUsuari, $idEntrada);
         // Validaci�n b�sica
         if (!$idUsuari || !$idEntrada) {
             echo "Error: Falten dades necessaris per realitzar la compra.";

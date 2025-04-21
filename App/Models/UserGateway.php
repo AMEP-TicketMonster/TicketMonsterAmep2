@@ -40,11 +40,16 @@ class UserGateway
       {
           $hashedPassword = password_hash($contrasenya, PASSWORD_DEFAULT);
   
-          $sql = "INSERT INTO Usuaris (nom, cognom, email, contrasenya, rol) VALUES (?, ?, ?, ?, ?)";
+          $sql = "INSERT INTO Usuaris (nom, cognom, email, contrasenya, saldo) VALUES (?, ?, ?, ?, ?)";
           $stmt = $this->pdo->prepare($sql);
-          $stmt->execute([$nom, $cognoms, $email, $hashedPassword, $rol]);
-  
-          return $this->pdo->lastInsertId();
+          $stmt->execute([$nom, $cognoms, $email, $hashedPassword, 0.0]);
+          
+          $id = $this->pdo->lastInsertId();
+          $sql = "INSERT INTO UsuariRoles (idUsuari, idRol) VALUES (?, ?)";
+          $stmt = $this->pdo->prepare($sql);
+          $stmt->execute([$id, 0]);
+
+          return $id;
       }
     
        // Actualizar datos de perfil

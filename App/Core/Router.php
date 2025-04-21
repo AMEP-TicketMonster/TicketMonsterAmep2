@@ -28,7 +28,9 @@ class Route
             'logout',
             'profile',
             'delete-user',
-            'edit-user'
+            'edit-user',
+            'compra-entrada-concert',
+            'reserva-entrada-concert'
         ];
 
 
@@ -56,7 +58,7 @@ class Route
             'salas'      => 'salas.php'
         ];
 
-    
+
 
         if ($requestMethod === 'GET') {
 
@@ -100,7 +102,7 @@ class Route
                 $controller = new UserController();
 
                 $entrades = new EntradaController();
-                $entrades->consultarEntradesAssaig();
+                //$entrades->consultarEntradesAssaig();
 
                 if ($controller->login()) {
                     //si ha podido iniciar sesión carga datos del dashboard
@@ -130,6 +132,10 @@ class Route
                 $controller = new UserController();
                 $controller->updateProfile();
                 exit();
+            }
+            if ($requestUri == 'compra-entrada-concert') {
+                $controller = new EntradaController();
+                $controller->comprarEntradaConcert();
             }
         }
 
