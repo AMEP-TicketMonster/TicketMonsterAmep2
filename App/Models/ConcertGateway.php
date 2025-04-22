@@ -93,4 +93,15 @@ class ConcertGateway
         $stmt->execute([$preu, $idConcert, $idEstatEntrada]);
     }
 
+    // Guardar la valoració d'un concert
+    public function guardaValoracio($idConcert, $puntuacio, $comentari)
+    {
+        $stmt = $this->pdo->prepare(
+            "INSERT INTO Valoracio (idConcert, puntuacio, comentari) 
+            VALUES (?, ?, ?, ?)"
+        );
+        $stmt->execute([$idConcert, $puntuacio, $comentari]);
+        return true;
+    }
+
 }
