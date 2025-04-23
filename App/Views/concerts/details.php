@@ -1,6 +1,6 @@
 <?php
 $concert = isset($_SESSION['concert']) ? $_SESSION['concert'] : null;
-var_dump($concert);
+//var_dump($concert);
 ?>
 <div class="container my-5">
     <h2 class="text-center mb-4" id="concert-title"></h2>
