@@ -12,11 +12,12 @@ class Route
     public static function route()
     {
         $requestUri = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+        //var_dump($requestUri); die();
         $requestMethod = $_SERVER['REQUEST_METHOD'];  // Obtener el método HTTP (GET, POST, etc.)
 
 
 
-        if ($requestUri == 'pruebas') {
+        if ($requestUri == 'test') {
             $controller = new ConcertController();
             $controller->pruebas();
             exit();

@@ -19,6 +19,13 @@ class ConcertController
         }
     }
 
+    public function pruebas(){
+        $idConcert = 1;
+        $puntuacio = 5;
+        $comentari = "El concert ha estat genial!";
+        $this->concertGateway->guardaValoracio($idConcert, $puntuacio, $comentari);
+    }   
+
     public function carregaConcerts()
     {
         $concerts = $this->concertGateway->getConcertList();
@@ -33,11 +40,6 @@ class ConcertController
         $_SESSION['concert'] = $concert;
         setcookie('concert_id', $id, time() + 3600, '/');
         //header("Location: /concierto");
-    }
-
-    public function pruebas(){
-        echo "hola!!";
-        die();
     }
 
     // Aquest mètode crea tantes entrades disponibles com capacitat té la sala
