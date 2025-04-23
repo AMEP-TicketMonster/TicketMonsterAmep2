@@ -93,6 +93,7 @@ class ConcertGateway
         $stmt->execute([$preu, $idConcert, $idEstatEntrada]);
     }
 
+
     public function guardaValoracio($idConcert, $puntuacio, $comentari)
     {
         $stmt = $this->pdo->prepare(
