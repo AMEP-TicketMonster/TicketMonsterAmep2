@@ -35,6 +35,10 @@ class ConcertController
         //header("Location: /concierto");
     }
 
+    public function pruebas(){
+        echo "hola!!";
+        die();
+    }
 
     // Aquest mètode crea tantes entrades disponibles com capacitat té la sala
     public function createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere)

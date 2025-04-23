@@ -125,7 +125,7 @@ class UserGateway
         );
         $stmt->execute([$idEntrada]);
         //cambiar a fetch
-        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $users = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         return $users;
     }
 

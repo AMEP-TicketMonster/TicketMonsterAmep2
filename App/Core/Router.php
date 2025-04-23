@@ -14,10 +14,19 @@ class Route
         $requestUri = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
         $requestMethod = $_SERVER['REQUEST_METHOD'];  // Obtener el método HTTP (GET, POST, etc.)
 
+
+
+        if ($requestUri == 'pruebas') {
+            $controller = new ConcertController();
+            $controller->pruebas();
+            exit();
+        }
+
         $publicRoutes = [
             '',
             'login',
-            'register'
+            'register',
+            'pruebas'
         ];
 
         $privateRoutes = [
@@ -30,7 +39,8 @@ class Route
             'delete-user',
             'edit-user',
             'compra-entrada-concert',
-            'reserva-entrada-concert'
+            'reserva-entrada-concert',
+            'pruebas'
         ];
 
 
