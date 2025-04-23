@@ -19,6 +19,13 @@ class ConcertController
         }
     }
 
+    public function pruebas(){
+        $idConcert = 1;
+        $puntuacio = 5;
+        $comentari = "El concert ha estat genial!";
+        $this->concertGateway->guardaValoracio($idConcert, $puntuacio, $comentari);
+    }   
+
     public function carregaConcerts()
     {
         $concerts = $this->concertGateway->getConcertList();
@@ -34,19 +41,26 @@ class ConcertController
         setcookie('concert_id', $id, time() + 3600, '/');
         //header("Location: /concierto");
     }
-}   
 
     // Aquest mètode crea tantes entrades disponibles com capacitat té la sala
     public function createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere)
     {
         $this->concertGateway->createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere);
-    }    
+    }
 
     // Aquest mètode actualitza també el preu de totes les entrades disponibles d'aquest concert
-    public function modificaConcert($idConcert, $idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere) 
+    public function modificaConcert($idConcert, $idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere)
     {
-        $this->concertGateway->modificaConcert($idConcert, $idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora, $preu, 
-                                               $idGenere);
+        $this->concertGateway->modificaConcert(
+            $idConcert,
+            $idUsuariOrganitzador,
+            $idGrup,
+            $idSala,
+            $nomConcert,
+            $dia,
+            $hora,
+            $preu,
+            $idGenere
+        );
     }
 }
-

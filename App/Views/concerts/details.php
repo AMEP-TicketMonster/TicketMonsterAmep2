@@ -12,8 +12,14 @@ $concert = isset($_SESSION['concert']) ? $_SESSION['concert'] : null;
             <p><strong>Género:</strong> <span id="concert-genre"></span></p>
             <p><strong>Organizador:</strong> <span id="concert-organizer"></span></p>
             <div class="d-flex justify-content-between mt-4">
-                <button class="btn btn-success" id="reserve-btn">Hacer una Reserva</button>
-                <button class="btn btn-primary" id="buy-btn">Comprar Entrada</button>
+                <form method="POST" action="/reserva" id="form-reserva">
+                    <input type="hidden" name="idConcert" value="">
+                    <button type="submit" class="btn btn-success">Hacer una Reserva</button>
+                </form>
+                <form method="POST" action="/compra-entrada-concert" id="form-compra">
+                    <input type="hidden" name="idConcert" value="">
+                    <button type="submit" class="btn btn-primary">Comprar Entrada</button>
+                </form>
             </div>
         </div>
     </div>
@@ -26,17 +32,11 @@ $concert = isset($_SESSION['concert']) ? $_SESSION['concert'] : null;
     document.getElementById('concert-location').textContent = concertData.ubicacio;
     document.getElementById('concert-price').textContent = concertData.preu;
     document.getElementById('concert-aforo').textContent = concertData.aforament;
-    document.getElementById('concert-genre').textContent = concertData.idGenere; 
+    document.getElementById('concert-genre').textContent = concertData.idGenere;
     document.getElementById('concert-organizer').textContent = concertData.idUsuariOrganitzador;
+    
+    document.querySelector('#form-reserva input[name="idConcert"]').value = concertData.idConcert;
+    document.querySelector('#form-compra input[name="idConcert"]').value = concertData.idConcert;
+  
 
-    // Mostrar animación y redirigir a controlador de entradas: (esto quedar por acabar)
-    document.getElementById('reserve-btn').addEventListener('click', function() {
-        alert('Reserva realizada para el concierto: ' + concertData.nomConcert);
-
-    });
-
-    document.getElementById('buy-btn').addEventListener('click', function() {
-        alert('Entrada comprada para el concierto: ' + concertData.nomConcert);
-      
-    });
 </script>

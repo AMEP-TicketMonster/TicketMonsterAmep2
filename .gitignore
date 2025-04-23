@@ -3,6 +3,8 @@
 .env_test
 .vscode
 .vs
+/mysql-connector-c++-9.1.0-winx64/
+/tests
 # Compiled binary files
 *.exe
 *.dll

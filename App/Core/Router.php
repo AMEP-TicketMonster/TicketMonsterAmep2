@@ -12,7 +12,16 @@ class Route
     public static function route()
     {
         $requestUri = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+        //var_dump($requestUri); die();
         $requestMethod = $_SERVER['REQUEST_METHOD'];  // Obtener el método HTTP (GET, POST, etc.)
+
+
+
+        if ($requestUri == 'test') {
+            $controller = new ConcertController();
+            $controller->pruebas();
+            exit();
+        }
 
         $publicRoutes = [
             '',
@@ -28,7 +37,9 @@ class Route
             'logout',
             'profile',
             'delete-user',
-            'edit-user'
+            'edit-user',
+            'compra-entrada-concert',
+            'reserva-entrada-concert'
         ];
 
 
@@ -56,7 +67,7 @@ class Route
             'salas'      => 'salas.php'
         ];
 
-    
+
 
         if ($requestMethod === 'GET') {
 
@@ -100,7 +111,7 @@ class Route
                 $controller = new UserController();
 
                 $entrades = new EntradaController();
-                $entrades->consultarEntradesAssaig();
+                //$entrades->consultarEntradesAssaig();
 
                 if ($controller->login()) {
                     //si ha podido iniciar sesión carga datos del dashboard
@@ -130,6 +141,10 @@ class Route
                 $controller = new UserController();
                 $controller->updateProfile();
                 exit();
+            }
+            if ($requestUri == 'compra-entrada-concert') {
+                $controller = new EntradaController();
+                $controller->comprarEntradaConcert();
             }
         }
 
