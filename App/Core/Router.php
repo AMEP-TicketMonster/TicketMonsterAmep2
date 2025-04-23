@@ -26,8 +26,7 @@ class Route
         $publicRoutes = [
             '',
             'login',
-            'register',
-            'pruebas'
+            'register'
         ];
 
         $privateRoutes = [
@@ -40,8 +39,7 @@ class Route
             'delete-user',
             'edit-user',
             'compra-entrada-concert',
-            'reserva-entrada-concert',
-            'pruebas'
+            'reserva-entrada-concert'
         ];
 
 
