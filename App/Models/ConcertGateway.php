@@ -23,7 +23,7 @@ class ConcertGateway
     public function getConcertList()
     {
         //Habría que poner un LIMIT 'int, sin las comillas'
-        $stmt = $this->pdo->prepare("SELECT * FROM Concerts WHERE data > CURDATE()");
+        $stmt = $this->pdo->prepare("SELECT * FROM Concerts WHERE dia > CURDATE()");
         $stmt->execute();
         $concerts = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         return $concerts;
@@ -91,6 +91,17 @@ class ConcertGateway
         $sql = "UPDATE EntradesConcert SET preu = ? WHERE idConcert = ? AND idEstatEntrada = ?";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$preu, $idConcert, $idEstatEntrada]);
+    }
+
+
+    public function guardaValoracio($idConcert, $puntuacio, $comentari)
+    {
+        $stmt = $this->pdo->prepare(
+            "INSERT INTO Valoracions (idConcert, puntuacio, comentari) 
+            VALUES (?, ?, ?)"
+        );
+        $stmt->execute([$idConcert, $puntuacio, $comentari]);
+        return true;
     }
 
 }

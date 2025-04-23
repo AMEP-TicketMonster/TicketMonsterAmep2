@@ -180,17 +180,6 @@ class UserController
         Session::closeSession();
     }
 
-    // Función auxiliar para obtener un usuario por su ID (simulada con un array)
-    private function getUserById($id)
-    {
-        // Simulación de una base de datos de usuarios
-        $users = [
-            1 => ['id' => 1, 'name' => 'Juan Pérez', 'email' => 'juan@ejemplo.com'],
-            2 => ['id' => 2, 'name' => 'Ana García', 'email' => 'ana@ejemplo.com']
-        ];
-
-        return isset($users[$id]) ? $users[$id] : null;
-    }
 
     // Función para validar el correo electrónico
     private function isValidEmail($email)
