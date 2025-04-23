@@ -55,14 +55,14 @@ class EntradaController
         }
 
         $estatEntrada = $this->entradaGateway->getStringFromEntradaId($entrada['idEstatEntrada']);
-        
+
         if ($estatEntrada !== "Disponible") {
             echo "Error: La entrada ja est� reservada o comprada.";
             return;
         }
 
         $saldo = $this->usuariGateway->getByUserId($idUsuari)['saldo'];
-        
+
         $preu = $entrada['preu'];
 
         if ($saldo < $preu) {
@@ -92,10 +92,12 @@ class EntradaController
         // TODO: creo que deberíamos tener un idEntradaConcert y un idEntradaAssaig
         //       no he podido probar estas dos _SESSION y _POST pq creo que no está cableado todavía
         //       pero he probado el resto de la función poniendo valores válidos en $idUsuari y $idEntrada
-        $idUsuari = $_SESSION['idUsuari'] ?? null;
+
+        $idUsuari = $_SESSION['user']['idUsuari'];
         // Obtener la entrada que se quiere comprar (por ejemplo, desde un formulario)
         $idEntrada = $_POST['idConcert'] ?? null;
-        var_dump($idUsuari, $idEntrada);
+        //var_dump($idUsuari, $idEntrada);
+        //die();
         // Validaci�n b�sica
         if (!$idUsuari || !$idEntrada) {
             echo "Error: Falten dades necessaris per realitzar la compra.";
@@ -103,6 +105,7 @@ class EntradaController
         }
 
         // Obtener la entrada desde la base de datos
+        //cuando se haga la creación de un concierto también hay que crear sus entradas
         $entrada = $this->entradaGateway->getEntradaConcertById($idEntrada);
 
         if (!$entrada) {
@@ -111,14 +114,14 @@ class EntradaController
         }
 
         $estatEntrada = $this->entradaGateway->getStringFromEntradaId($entrada['idEstatEntrada']);
-        
+
         if ($estatEntrada !== "Disponible") {
             echo "Error: La entrada ja est� reservada o comprada.";
             return;
         }
 
         $saldo = $this->usuariGateway->getByUserId($idUsuari)['saldo'];
-        
+
         $preu = $entrada['preu'];
 
         if ($saldo < $preu) {
@@ -139,7 +142,7 @@ class EntradaController
         echo "Compra realitzada amb �xit.";
     }
 
-    
+
 
     /**
      * Reserva una entrada disponible.
@@ -169,7 +172,7 @@ class EntradaController
             return;
         }
         $estatEntrada = $this->entradaGateway->getStringFromEntradaId($entrada['idEstatEntrada']);
-        
+
         if ($estatEntrada !== "Disponible") {
             echo "Error: La entrada ja est� reservada o comprada.";
             return;
@@ -211,7 +214,7 @@ class EntradaController
             return;
         }
         $estatEntrada = $this->entradaGateway->getStringFromEntradaId($entrada['idEstatEntrada']);
-        
+
         if ($estatEntrada !== "Disponible") {
             echo "Error: La entrada ja est� reservada o comprada.";
             return;
@@ -236,7 +239,7 @@ class EntradaController
         $entrades = $this->entradaGateway->getAllEntradesAssaig();
 
         var_dump($entrades); // TODO: debe haber algun error de encoding UTF8 en $entrades
-                             //       si no hago el var_dump json_encode falla
+        //       si no hago el var_dump json_encode falla
         $_SESSION["entrades"] = json_encode($entrades, JSON_PRETTY_PRINT);
         if (empty($entrades)) {
             echo "No hi ha entrades disponibles.";
