@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Config\Database;
+use App\Models\SalesGateway;
+use App\Models\SalesSearcher;
 
 // Aquesta classe compleix el patró Row Data Gateway
 class AssajosGateway
@@ -64,10 +66,31 @@ class AssajosGateway
 
 
     // Creem un assaig (requereix que existeix idSala i idDataSala)
-    public function create(int $idGrup, int $idSala, int $idDataSala, int $entradesDisponibles, float $preuEntradaPublic): int {
+    public function create(int $idGrup, int $idSala, int $idDataSala, float $preuEntradaPublic): ?int {
+        // Obtenim la capacitat de la sala que serà les entrades disponibles de l'assaig
+        $searcher = new SalesSearcher();
+        $sales = $searcher->findById($idSala);
+        if ($sales === null) {
+            return null; 
+        }
+        $entradesDisponibles = $sales->getCapacitat();
+
+        // Creem l'assaig
         $stmt = $this->pdo->prepare("INSERT INTO Assajos (idGrup, idSala, idDataSala, entrades_disponibles, preu_entrada_public) VALUES (?, ?, ?, ?, ?)");
         $stmt->execute([$idGrup, $idSala, $idDataSala, $entradesDisponibles, $preuEntradaPublic]);
-        return (int)$this->pdo->lastInsertId();
+        $idAssaig = (int)$this->pdo->lastInsertId();
+
+        // Creem totes les entrades per aquest assaig
+        $placeholders = array_fill(0, $entradesDisponibles, "(?, ?, ?)");
+        $sql = "INSERT INTO EntradesAssaig (idAssaig, preu, idEstatEntrada) VALUES " . implode(", ", $placeholders);
+        $stmt = $this->pdo->prepare($sql);
+        $params = []; 
+        for ($i = 0; $i < $entradesDisponibles; $i++) {
+            array_push($params, $idAssaig, $preuEntradaPublic, 3); // 3 és Disponible
+        }        
+        $stmt->execute($params);
+
+        return $idAssaig;
     }
 
     // Modifiquem el preu de l'entrada

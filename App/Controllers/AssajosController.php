@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\AssajosGateway;
 use App\Models\AssajosSearcher;
+use App\Models\DataSalaGateway;
 use Core\Route;
 use Core\Auth;
 use Core\Session;
@@ -31,4 +32,15 @@ class AssajosController
             return -1;
         }
     }
+
+    public function createAssaig($idGrup, $idSala, $dia, $horaInici, $horaFi, $preu_entrada_public) :?int {
+        $dataSala = new DataSalaGateway();
+        $idDatasala = $dataSala->create($dia, $horaInici, $horaFi, $idSala);
+        if ($idDatasala !== null) {
+            $assajos = new AssajosGateway();
+            return $assajos->create($idGrup, $idSala, $idDatasala, $preu_entrada_public);
+        }
+        return null;
+    }   
+
 }

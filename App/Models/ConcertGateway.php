@@ -41,9 +41,12 @@ class ConcertGateway
     public function createConcert($idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere)
     {
         // Obtenim la capacitat de la sala que serà les entrades disponibles del concert
-        $stmt = $this->pdo->prepare("SELECT capacitat FROM Sales WHERE idSala = ?");
-        $stmt->execute([$idSala]);
-        $entrades_disponibles = $stmt->fetch(\PDO::FETCH_ASSOC)['capacitat'];
+        $searcher = new SalesSearcher();
+        $sales = $searcher->findById($idSala);
+        if ($sales === null) {
+            return; 
+        }
+        $entradesDisponibles = $sales->getCapacitat();
 
         // Creem el concert
         $sql = "INSERT INTO Concerts (idGrup, idSala, nomConcert, dia, hora, entrades_disponibles, preu, idGenere)
@@ -56,7 +59,7 @@ class ConcertGateway
         // Creem totes les entrades per aquest concert
         $placeholders = array_fill(0, $entrades_disponibles, "(?, ?, ?)");
         $sql = "INSERT INTO EntradesConcert (idConcert, preu, idEstatEntrada) VALUES " . implode(", ", $placeholders);
-        $stmt = $this->pdo->prepare($sql);       
+        $stmt = $this->pdo->prepare($sql);
         $params = []; 
         for ($i = 0; $i < $entrades_disponibles; $i++) {
             array_push($params, $idConcert, $preu, 3); // 3 és Disponible
