@@ -74,12 +74,12 @@ class AssajosGateway
         $this->idAssajos = (int)$this->pdo->lastInsertId();
 
         // Creem totes les entrades per aquest assaig
-        $placeholders = array_fill(0, $entradesDisponibles, "(?, ?, ?)");
-        $sql = "INSERT INTO EntradesAssaig (idAssaig, preu, idEstatEntrada) VALUES " . implode(", ", $placeholders);
+        $placeholders = array_fill(0, $entradesDisponibles, "(?, ?, ?, ?)");
+        $sql = "INSERT INTO Entrades (idEsdeveniment, tipus, preu, idEstatEntrada) VALUES " . implode(", ", $placeholders);
         $stmt = $this->pdo->prepare($sql);
         $params = []; 
         for ($i = 0; $i < $entradesDisponibles; $i++) {
-            array_push($params, $this->idAssajos, $preuEntrada, 3); // 3 és Disponible
+            array_push($params, $this->idAssajos, "Assaig", $preuEntrada, 3); // 3 és Disponible
         }        
         $stmt->execute($params);
 

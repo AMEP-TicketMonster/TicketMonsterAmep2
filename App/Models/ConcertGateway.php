@@ -86,12 +86,12 @@ class ConcertGateway
         $this->idConcert = $stmt->fetchColumn();
 
         // Creem totes les entrades per aquest concert
-        $placeholders = array_fill(0, $entradesDisponibles, "(?, ?, ?)");
-        $sql = "INSERT INTO EntradesConcert (idConcert, preu, idEstatEntrada) VALUES " . implode(", ", $placeholders);
+        $placeholders = array_fill(0, $entradesDisponibles, "(?, ?, ?, ?)");
+        $sql = "INSERT INTO Entrades (idEsdeveniment, tipus, preu, idEstatEntrada) VALUES " . implode(", ", $placeholders);
         $stmt = $this->pdo->prepare($sql);
         $params = []; 
         for ($i = 0; $i < $entradesDisponibles; $i++) {
-            array_push($params, $this->idConcert, $preu, 3); // 3 és Disponible
+            array_push($params, $this->idConcert, "Concert", $preu, 3); // 3 és Disponible
         }        
         $stmt->execute($params);
         return $this->idConcert;
