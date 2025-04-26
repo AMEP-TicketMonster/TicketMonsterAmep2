@@ -1,40 +1,65 @@
 <?php
 
 namespace App\Models;
-
+use \PDO;
 use App\Config\Database;
 
+// Aquesta classe compleix el patró Row Data Gateway
 class EntradaGateway
 {
-    private $pdo;
-    private $id;
-    //to do...
+    private PDO $pdo;
+    private $idEntrada;
+    private $idUsuari;
+    private $idEsdeveniment;
+    private $tipus;
+    private $preu;
+    private $idEstatEntrada;
 
     public function __construct()
     {
-        $this->pdo = Database::getConnection(); // patrón singleton
+        $this->pdo = Database::getConnection(); // patró singleton
+
+        if ($idEntrada !== null) {
+            $stmt = $this->pdo->prepare("SELECT * FROM Entrades WHERE idEntrada = ?");
+            $stmt->execute([$idEntrada]);
+            $data = $stmt->fetch();
+
+            if ($data) {
+                $this->idEntrada = $data['idEntrada'];
+                $this->idUsuari = $data['idUsuari'];
+                $this->idEsdeveniment = $data['idEsdeveniment'];
+                $this->tipus = $data['tipus'];
+                $this->preu = $data['preu'];
+                $this->idEstatEntrada = $data['idEstatEntrada'];
+            } else {
+                throw new \Exception("Entrada no trobada.");
+            }
+        }
     }
 
-    //cargar entradas
-    public function getEntradaAssaigById($id)
-    {
-        $stmt = $this->pdo->prepare("SELECT * FROM EntradesAssaig WHERE idEntrada = ?");
-        $stmt->execute([$id]);
-        return  $stmt->fetch();
+    // Getters
+    public function getIdEntrada(): int {
+        return $this->idEntrada;
     }
 
-    public function getEntradaConcertById($id)
-    {
-        $stmt = $this->pdo->prepare("SELECT * FROM EntradesConcert WHERE idEntrada = ?");
-        $stmt->execute([$id]);
-        return  $stmt->fetch();
+    public function getIdUsuari(): int {
+        return $this->idUsuari;
+    }
+
+    public function getIdEsdeveniment(): int {
+        return $this->idEsdeveniment;
     }
     
-    public function getAllEntradesAssaig()
-    {
-        $stmt = $this->pdo->prepare("SELECT * FROM EntradesAssaig");
-        $stmt->execute();
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    public function getTipus(): string {
+        return $this->tipus;
+    }
+
+    public function getPreu(): float {
+        return $this->preu;
+    }
+    
+    public function getIdEstatEntrada(): int {
+        return $this->idEstatEntrada;
     }
  
     public function getStringFromEntradaId($idEntrada)
@@ -45,46 +70,19 @@ class EntradaGateway
         return $stmt->fetch(\PDO::FETCH_ASSOC)['estat'];
     }
 
-    public function assignarEntradaAssaig($idEntrada, $idUsuari, $nou_estat)
+    // quan un usuari compra/reserva/cancela una entrada modifica el idUsuari i el estat de l'entrada
+    public function assignarEntrada($idEntrada, $idUsuari, $nou_estat)
     {
         // Obtenim el id del estat a partir del seu string
         $stmt = $this->pdo->prepare("SELECT idEstatEntrada FROM EstatEntrada WHERE estat = ?");
         $stmt->execute([$nou_estat]);
         $nou_estat_id = $stmt->fetch(\PDO::FETCH_ASSOC)['idEstatEntrada'];
 
-        $sql = "UPDATE EntradesAssaig 
+        $sql = "UPDATE Entrades 
                 SET idUsuari = ?, idEstatEntrada = ?
                 WHERE idEntrada = ?";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$idUsuari, $nou_estat_id, $idEntrada]);
-    }
-
-    public function assignarEntradaConcert($idEntrada, $idUsuari, $nou_estat)
-    {
-        // Obtenim el id del estat a partir del seu string
-        $stmt = $this->pdo->prepare("SELECT idEstatEntrada FROM EstatEntrada WHERE estat = ?");
-        $stmt->execute([$nou_estat]);
-        $nou_estat_id = $stmt->fetch(\PDO::FETCH_ASSOC)['idEstatEntrada'];
-
-        $sql = "UPDATE EntradesConcert 
-                SET idUsuari = ?, idEstatEntrada = ?
-                WHERE idEntrada = ?";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$idUsuari, $nou_estat_id, $idEntrada]);
-    }
-
-    public function decrementarEntradesDisponiblesAssaig($idAssaig)
-    {
-        $stmt = $this->pdo->prepare("UPDATE Assajos SET entrades_disponibles = entrades_disponibles - 1
-                                     WHERE idAssajos = ? AND entrades_disponibles > 0");
-        $stmt->execute([$idAssaig]);
-    }
-
-    public function decrementarEntradesDisponiblesConcert($idConcert)
-    {
-        $stmt = $this->pdo->prepare("UPDATE Concerts SET entrades_disponibles = entrades_disponibles - 1
-                                     WHERE idConcert = ? AND entrades_disponibles > 0");
-        $stmt->execute([$idConcert]);
     }
     
 }

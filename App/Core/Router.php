@@ -83,7 +83,7 @@ class Route
 
                     // proves (TODO: borrar)
                     // $assajos = new AssajosController();
-                    // $assajos->createAssaig(1, 1, "2055-01-01", "15:00", "17:00", 40);
+                    // $assajos->createAssaig(1, 1, "2033-01-01", "16:00", "17:00", 33);
 
                     // proves (TODO: borrar)
                     //$dataSala = new DataSalaController();
@@ -99,7 +99,7 @@ class Route
 
                     // proves (TODO: borrar)
                     // $concerts = new ConcertController();
-                    // $concerts->createConcert(2, 4, "Feria_sep", "2045-11-06", "21:01", "23:01", 5, 2);
+                    // $concerts->createConcert(2, 4, "Feria_oct", "2025-12-13", "20:01", "23:01", 5, 2);
 
                 }
                 if ($requestUri === 'concierto') {
