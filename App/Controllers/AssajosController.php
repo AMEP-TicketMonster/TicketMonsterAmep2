@@ -33,12 +33,12 @@ class AssajosController
         }
     }
 
-    public function createAssaig($idGrup, $idSala, $dia, $horaInici, $horaFi, $preu_entrada_public) :?int {
+    public function createAssaig($idGrup, $idSala, $dia, $horaInici, $horaFi, $preuEntrada) :?int {
         $dataSala = new DataSalaGateway();
         $idDatasala = $dataSala->create($dia, $horaInici, $horaFi, $idSala);
         if ($idDatasala !== null) {
             $assajos = new AssajosGateway();
-            return $assajos->create($idGrup, $idSala, $idDatasala, $preu_entrada_public);
+            return $assajos->create($idGrup, $idSala, $idDatasala, $preuEntrada);
         }
         return null;
     }   

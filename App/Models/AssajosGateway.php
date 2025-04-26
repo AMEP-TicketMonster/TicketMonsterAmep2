@@ -15,7 +15,6 @@ class AssajosGateway
     private int $idSala;
     private int $idDataSala;
     private int $entradesDisponibles;
-    private float $preuEntradaPublic;
 
     public function __construct(?int $idAssajos = null)
     {
@@ -32,7 +31,6 @@ class AssajosGateway
                 $this->idSala = $data['idSala'];
                 $this->idDataSala = $data['idDataSala'];
                 $this->entradesDisponibles = $data['entrades_disponibles'];
-                $this->preuEntradaPublic = $data['preu_entrada_public'];
             } else {
                 throw new Exception("Assaig no trobat.");
             }
@@ -60,13 +58,8 @@ class AssajosGateway
         return $this->entradesDisponibles;
     }
 
-    public function getPreuEntradaPublic(): float {
-        return $this->preuEntradaPublic;
-    }
-
-
     // Creem un assaig (requereix que existeix idSala i idDataSala)
-    public function create(int $idGrup, int $idSala, int $idDataSala, float $preuEntradaPublic): ?int {
+    public function create(int $idGrup, int $idSala, int $idDataSala, float $preuEntrada): ?int {
         // Obtenim la capacitat de la sala que serà les entrades disponibles de l'assaig
         $searcher = new SalesSearcher();
         $sales = $searcher->findById($idSala);
@@ -76,8 +69,8 @@ class AssajosGateway
         $entradesDisponibles = $sales->getCapacitat();
 
         // Creem l'assaig
-        $stmt = $this->pdo->prepare("INSERT INTO Assajos (idGrup, idSala, idDataSala, entrades_disponibles, preu_entrada_public) VALUES (?, ?, ?, ?, ?)");
-        $stmt->execute([$idGrup, $idSala, $idDataSala, $entradesDisponibles, $preuEntradaPublic]);
+        $stmt = $this->pdo->prepare("INSERT INTO Assajos (idGrup, idSala, idDataSala, entrades_disponibles) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$idGrup, $idSala, $idDataSala, $entradesDisponibles]);
         $this->idAssajos = (int)$this->pdo->lastInsertId();
 
         // Creem totes les entrades per aquest assaig
@@ -86,26 +79,11 @@ class AssajosGateway
         $stmt = $this->pdo->prepare($sql);
         $params = []; 
         for ($i = 0; $i < $entradesDisponibles; $i++) {
-            array_push($params, $this->idAssajos, $preuEntradaPublic, 3); // 3 és Disponible
+            array_push($params, $this->idAssajos, $preuEntrada, 3); // 3 és Disponible
         }        
         $stmt->execute($params);
 
         return $this->idAssajos;
-    }
-
-    // Modifiquem el preu de l'entrada
-    public function updatePreuEntrada(float $nouPreu): void {
-        if ($this->idAssajos === null) {
-            throw new Exception("No es pot actualitzar un Assaig que no ha estat carregat.");
-        }
-    
-        if ($nouPreu < 0) {
-            throw new Exception("El preu de l'entrada no pot ser negatiu.");
-        }
-
-        $stmt = $this->pdo->prepare("UPDATE Assajos SET preu_entrada_public = ? WHERE idAssajos = ?");
-        $stmt->execute([$nouPreu, $this->idAssajos]);
-        $this->preuEntradaPublic = $nouPreu;
     }
     
     // Incrementa les entrades disponibles

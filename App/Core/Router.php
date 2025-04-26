@@ -82,8 +82,8 @@ class Route
                     $concerts->carregaConcerts();
 
                     // proves (TODO: borrar)
-                    //$assajos = new AssajosController();
-                    //$assajos->createAssaig(1, 1, "2035-01-01", "15:00", "17:00", 13);
+                    // $assajos = new AssajosController();
+                    // $assajos->createAssaig(1, 1, "2055-01-01", "15:00", "17:00", 40);
 
                     // proves (TODO: borrar)
                     //$dataSala = new DataSalaController();
