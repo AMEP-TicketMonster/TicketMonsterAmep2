@@ -5,6 +5,7 @@ namespace Core;
 use App\Controllers\UserController;
 use App\Controllers\ConcertController;
 use App\Controllers\EntradaController;
+use App\Controllers\AssajosController;
 use App\Core\Auth;
 
 class Route
@@ -77,6 +78,14 @@ class Route
                     //Si visita esta dirección cargamos los conciertos
                     $concerts = new ConcertController();
                     $concerts->carregaConcerts();
+
+                    // proves (TODO: borrar)
+                    //$assajos = new AssajosController();
+                    //$assajos->getEntradesDisponibles(55);
+
+                    // proves (TODO: borrar)
+                    //$concerts->createConcert(3, 4, "suave", "2025-09-05", "21:00", 25, 2);
+
                 }
                 if ($requestUri === 'concierto') {
                     $id = $_GET['id'] ?? $_COOKIE['concert_id'] ?? null;
