@@ -78,7 +78,7 @@ class AssajosGateway
         // Creem l'assaig
         $stmt = $this->pdo->prepare("INSERT INTO Assajos (idGrup, idSala, idDataSala, entrades_disponibles, preu_entrada_public) VALUES (?, ?, ?, ?, ?)");
         $stmt->execute([$idGrup, $idSala, $idDataSala, $entradesDisponibles, $preuEntradaPublic]);
-        $idAssaig = (int)$this->pdo->lastInsertId();
+        $this->idAssajos = (int)$this->pdo->lastInsertId();
 
         // Creem totes les entrades per aquest assaig
         $placeholders = array_fill(0, $entradesDisponibles, "(?, ?, ?)");
@@ -86,11 +86,11 @@ class AssajosGateway
         $stmt = $this->pdo->prepare($sql);
         $params = []; 
         for ($i = 0; $i < $entradesDisponibles; $i++) {
-            array_push($params, $idAssaig, $preuEntradaPublic, 3); // 3 és Disponible
+            array_push($params, $this->idAssajos, $preuEntradaPublic, 3); // 3 és Disponible
         }        
         $stmt->execute($params);
 
-        return $idAssaig;
+        return $this->idAssajos;
     }
 
     // Modifiquem el preu de l'entrada

@@ -99,7 +99,7 @@ class Route
 
                     // proves (TODO: borrar)
                     // $concerts = new ConcertController();
-                    // $concerts->createConcert(2, 4, "Feria_abril", "2039-11-05", "21:00", "23:00", 5, 2);
+                    // $concerts->createConcert(2, 4, "Feria_sep", "2045-11-06", "21:01", "23:01", 5, 2);
 
                 }
                 if ($requestUri === 'concierto') {

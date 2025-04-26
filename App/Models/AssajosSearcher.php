@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use \PDO;
 use App\Config\Database;
 use App\Models\AssajosGateway;
 
 
 // Aquesta classe és la cercadora del patró Row Data Gateway
 class AssajosSearcher {
-    private $pdo;
+    private \PDO $pdo;
 
     public function __construct() {
         $this->pdo = Database::getConnection(); // patró singleton
@@ -23,19 +24,19 @@ class AssajosSearcher {
     }
         
     public function findByGrup(int $idGrup): array {
-        $stmt = $this->conn->prepare("SELECT * FROM Assajos WHERE idGrup = ?");
+        $stmt = $this->pdo->prepare("SELECT * FROM Assajos WHERE idGrup = ?");
         $stmt->execute([$idGrup]);
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     public function findBySala(int $idSala): array {
-        $stmt = $this->conn->prepare("SELECT * FROM Assajos WHERE idSala = ?");
+        $stmt = $this->pdo->prepare("SELECT * FROM Assajos WHERE idSala = ?");
         $stmt->execute([$idSala]);
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     public function findAll(): array {
-        $stmt = $this->conn->query("SELECT * FROM Assajos");
+        $stmt = $this->pdo->query("SELECT * FROM Assajos");
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 }

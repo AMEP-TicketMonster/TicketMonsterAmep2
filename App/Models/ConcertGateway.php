@@ -7,54 +7,83 @@ use App\Config\Database;
 class ConcertGateway
 {
     private $pdo;
-    private $id;
+    private $idConcert;
+    private $idGrup;
+    private $idSala;
     private $nomConcert;
-    private $data;
-    private $aforament;
-    private $preu;
-    private $idUsuariOrganitzador;
+    private $entradesDisponibles;
+    private $idGenere;
+    private $idDataSala;
 
-    public function __construct()
+    public function __construct(?int $idConcert = null)
     {
-        $this->pdo = Database::getConnection(); // patrón singleton
-    }
-
-    // Cargar todos los conciertos
-    public function getConcertList()
-    {
-        //Habría que poner un LIMIT 'int, sin las comillas'
-        $stmt = $this->pdo->prepare("SELECT * FROM Concerts WHERE dia > CURDATE()");
-        $stmt->execute();
-        $concerts = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        return $concerts;
+        $this->pdo = Database::getConnection(); // patró singleton
         
+        if ($idConcert !== null) {
+            $stmt = $this->pdo->prepare("SELECT * FROM Concerts WHERE idConcert = ?");
+            $stmt->execute([$idConcert]);
+            $data = $stmt->fetch();
+
+            if ($data) {
+                $this->idConcert = $data['idConcert'];
+                $this->idGrup = $data['idGrup'];
+                $this->idSala = $data['idSala'];
+                $this->nomConcert = $data['nomConcert'];
+                $this->entradesDisponibles = $data['entrades_disponibles'];
+                $this->idGenere = $data['idGenere'];
+                $this->idDataSala = $data['idDataSala'];
+            } else {
+                throw new Exception("Concert no trobat.");
+            }
+        }
     }
 
-    public function getByConcertId($id)
-    {
-        $stmt = $this->pdo->prepare("SELECT * FROM Concerts WHERE idConcert = ?");
-        $stmt->execute([$id]);
-        $user = $stmt->fetch();
-        return $user;
+    // Getters 
+    public function getIdConcert(): ?int {
+        return $this->idConcert;
     }
 
-    public function createConcert($idGrup, $idSala, $nomConcert, $idDataSala, $preu, $idGenere)
+    public function getIdGrup(): int {
+        return $this->idGrup;
+    }
+
+    public function getIdSala(): int {
+        return $this->idSala;
+    }
+
+    public function getNomConcert(): string {
+        return $this->nomConcert;
+    }
+
+    public function getEntradesDisponibles(): int {
+        return $this->entradesDisponibles;
+    }
+
+    public function getIdGenere(): int {
+        return $this->idGenere;
+    }
+
+    public function getIdDataSala(): int {
+        return $this->idDataSala;
+    }
+
+    public function createConcert($idGrup, $idSala, $nomConcert, $idDataSala, $preu, $idGenere): ?int
     {
         // Obtenim la capacitat de la sala que serà les entrades disponibles del concert
         $searcher = new SalesSearcher();
         $sales = $searcher->findById($idSala);
         if ($sales === null) {
-            return; 
+            return null; 
         }
         $entradesDisponibles = $sales->getCapacitat();
 
         // Creem el concert
-        $sql = "INSERT INTO Concerts (idGrup, idSala, idDataSala, nomConcert, entrades_disponibles, preu, idGenere)
-                VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO Concerts (idGrup, idSala, idDataSala, nomConcert, entrades_disponibles, idGenere)
+                VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$idGrup, $idSala, $idDataSala, $nomConcert, $entradesDisponibles, $preu, $idGenere]);
+        $stmt->execute([$idGrup, $idSala, $idDataSala, $nomConcert, $entradesDisponibles, $idGenere]);
         $stmt = $this->pdo->query("SELECT LAST_INSERT_ID()");
-        $idConcert = $stmt->fetchColumn();
+        $this->idConcert = $stmt->fetchColumn();
 
         // Creem totes les entrades per aquest concert
         $placeholders = array_fill(0, $entradesDisponibles, "(?, ?, ?)");
@@ -62,49 +91,51 @@ class ConcertGateway
         $stmt = $this->pdo->prepare($sql);
         $params = []; 
         for ($i = 0; $i < $entradesDisponibles; $i++) {
-            array_push($params, $idConcert, $preu, 3); // 3 és Disponible
+            array_push($params, $this->idConcert, $preu, 3); // 3 és Disponible
         }        
         $stmt->execute($params);
+        return $this->idConcert;
     }
 
-    // Nota: aquesta funció no actualitza les entrades disponibles del concert pq es complica la lògica per actualitzar les entrades
-    //       però sí modifica el preu de totes les entrades disponibles d'aquest concert
-    public function modificaConcert($idConcert, $idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere)
-    {
-        // Modifica el concert
-        $sql = "UPDATE Concerts
-                SET idGrup = ?, 
-                idSala = ?, 
-                nomConcert = ?, 
-                dia = ?, 
-                hora = ?, 
-                preu = ?, 
-                idGenere = ?, 
-                idUsuari = ?
-                WHERE idConcert = ?";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere, $idUsuariOrganitzador, $idConcert]);
-
-        // Obtenim el id del estat "Disponible"
-        $stmt = $this->pdo->prepare("SELECT idEstatEntrada FROM EstatEntrada WHERE estat = 'Disponible'");
-        $stmt->execute();
-        $idEstatEntrada = $stmt->fetch(\PDO::FETCH_ASSOC)['idEstatEntrada'];
-
-        // Actualitzem els preus de totes les entrades per aquest concert que encara no s'han venut ni reservat
-        $sql = "UPDATE EntradesConcert SET preu = ? WHERE idConcert = ? AND idEstatEntrada = ?";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$preu, $idConcert, $idEstatEntrada]);
+    // Incrementa les entrades disponibles
+    public function incrementaEntradesDisponibles(int $valor): void {
+        if ($this->idConcert === null) {
+            throw new Exception("No es pot actualitzar un Concert que no ha estat carregat.");
+        }       
+        if ($valor < 0){
+            throw new Exception("El valor a incrementar no pot ser negatiu.");
+        }
+        $this->entradesDisponibles += $valor;
+        $stmt = $this->pdo->prepare("UPDATE Concerts SET entrades_disponibles = ? WHERE idConcert = ?");
+        $stmt->execute([$this->entradesDisponibles, $this->idConcert]);
     }
 
-
-    public function guardaValoracio($idConcert, $puntuacio, $comentari)
-    {
-        $stmt = $this->pdo->prepare(
-            "INSERT INTO Valoracions (idConcert, puntuacio, comentari) 
-            VALUES (?, ?, ?)"
-        );
-        $stmt->execute([$idConcert, $puntuacio, $comentari]);
-        return true;
+    // Decrementa les entrades disponibles
+    public function decrementaEntradesDisponibles(int $valor): void {
+        if ($this->idConcert === null) {
+            throw new Exception("No es pot actualitzar un Concert que no ha estat carregat.");
+        }       
+        if ($valor < 0){
+            throw new Exception("El valor a decrementar no pot ser negatiu.");
+        }
+        if ($this->entradesDisponibles - $valor < 0) {
+            throw new Exception("No es poden tenir entrades negatives.");
+        }
+        $this->entradesDisponibles -= $valor;
+        $stmt = $this->pdo->prepare("UPDATE Concerts SET entrades_disponibles = ? WHERE idConcert = ?");
+        $stmt->execute([$this->entradesDisponibles, $this->idConcert]);
     }
+
+    // Borrem el registre idConcert de la taula
+    public function delete(): void {
+        if ($this->idConcert !== null) {
+            $stmt = $this->pdo->prepare("DELETE FROM Concerts WHERE idConcert = ?");
+            $stmt->execute([$this->idConcert]);
+        } else {
+            throw new Exception("No es pot eliminar un Concert que no ha estat carregat.");
+        }
+    }
+
+    
 
 }

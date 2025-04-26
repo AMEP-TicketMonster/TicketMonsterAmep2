@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\ConcertGateway;
+use App\Models\ConcertSearcher;
 use App\Models\DataSalaGateway;
 use Core\Route;
 use Core\Auth;
@@ -10,16 +11,17 @@ use Core\Session;
 
 class ConcertController
 {
-    private $concertGateway;
+    private $searcher;
 
     public function __construct()
     {
-        $this->concertGateway = new ConcertGateway();
+        $this->searcher = new ConcertSearcher();
         if (session_status() === PHP_SESSION_NONE) {
             Session::sessionStart("ticketmonster_session");
         }
     }
 
+    // TODO: borrar cuando se borre del frontend también
     public function pruebas(){
         $idConcert = 1;
         $puntuacio = 5;
@@ -29,15 +31,14 @@ class ConcertController
 
     public function carregaConcerts()
     {
-        $concerts = $this->concertGateway->getConcertList();
+        $concerts = $this->searcher->findAll();
         //pasar a json y ya lo tratará el frontend.
         $_SESSION['concerts'] = $concerts;
     }
 
     public function showConcert($id)
     {
-        $concert = $this->concertGateway->getByConcertId($id);
-
+        $concert = $this->searcher->findByConcertId($id);
         $_SESSION['concert'] = $concert;
         setcookie('concert_id', $id, time() + 3600, '/');
         //header("Location: /concierto");
@@ -49,27 +50,10 @@ class ConcertController
         $dataSala = new DataSalaGateway();
         $idDatasala = $dataSala->create($dia, $horaInici, $horaFi, $idSala);
         if ($idDatasala !== null) {
-            $this->concertGateway->createConcert($idGrup, $idSala, $nomConcert, $idDatasala, $preu, $idGenere);
+            $concerts = new ConcertGateway();
+            return $concerts->createConcert($idGrup, $idSala, $nomConcert, $idDatasala, $preu, $idGenere);
         }
-        return null;
-
-
-        
+        return null;       
     }
 
-    // Aquest mètode actualitza també el preu de totes les entrades disponibles d'aquest concert
-    public function modificaConcert($idConcert, $idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere)
-    {
-        $this->concertGateway->modificaConcert(
-            $idConcert,
-            $idUsuariOrganitzador,
-            $idGrup,
-            $idSala,
-            $nomConcert,
-            $dia,
-            $hora,
-            $preu,
-            $idGenere
-        );
-    }
 }
