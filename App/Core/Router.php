@@ -6,6 +6,7 @@ use App\Controllers\UserController;
 use App\Controllers\ConcertController;
 use App\Controllers\EntradaController;
 use App\Controllers\AssajosController;
+use App\Controllers\SalesController;
 use App\Core\Auth;
 
 class Route
@@ -78,6 +79,10 @@ class Route
                     //Si visita esta dirección cargamos los conciertos
                     $concerts = new ConcertController();
                     $concerts->carregaConcerts();
+
+                    // proves (TODO: borrar)
+                    //$sales = new SalesController();
+                    //$sales->getCapacitat(4);
 
                     // proves (TODO: borrar)
                     //$assajos = new AssajosController();
