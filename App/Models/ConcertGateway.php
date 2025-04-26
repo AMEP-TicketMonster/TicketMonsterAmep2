@@ -38,7 +38,7 @@ class ConcertGateway
         return $user;
     }
 
-    public function createConcert($idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere)
+    public function createConcert($idGrup, $idSala, $nomConcert, $idDataSala, $preu, $idGenere)
     {
         // Obtenim la capacitat de la sala que serà les entrades disponibles del concert
         $searcher = new SalesSearcher();
@@ -49,19 +49,19 @@ class ConcertGateway
         $entradesDisponibles = $sales->getCapacitat();
 
         // Creem el concert
-        $sql = "INSERT INTO Concerts (idGrup, idSala, nomConcert, dia, hora, entrades_disponibles, preu, idGenere)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO Concerts (idGrup, idSala, idDataSala, nomConcert, entrades_disponibles, preu, idGenere)
+                VALUES (?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$idGrup, $idSala, $nomConcert, $dia, $hora, $entrades_disponibles, $preu, $idGenere]);
+        $stmt->execute([$idGrup, $idSala, $idDataSala, $nomConcert, $entradesDisponibles, $preu, $idGenere]);
         $stmt = $this->pdo->query("SELECT LAST_INSERT_ID()");
         $idConcert = $stmt->fetchColumn();
 
         // Creem totes les entrades per aquest concert
-        $placeholders = array_fill(0, $entrades_disponibles, "(?, ?, ?)");
+        $placeholders = array_fill(0, $entradesDisponibles, "(?, ?, ?)");
         $sql = "INSERT INTO EntradesConcert (idConcert, preu, idEstatEntrada) VALUES " . implode(", ", $placeholders);
         $stmt = $this->pdo->prepare($sql);
         $params = []; 
-        for ($i = 0; $i < $entrades_disponibles; $i++) {
+        for ($i = 0; $i < $entradesDisponibles; $i++) {
             array_push($params, $idConcert, $preu, 3); // 3 és Disponible
         }        
         $stmt->execute($params);

@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\ConcertGateway;
+use App\Models\DataSalaGateway;
 use Core\Route;
 use Core\Auth;
 use Core\Session;
@@ -43,9 +44,17 @@ class ConcertController
     }
 
     // Aquest mètode crea tantes entrades disponibles com capacitat té la sala
-    public function createConcert($idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere)
+    public function createConcert($idGrup, $idSala, $nomConcert, $dia, $horaInici, $horaFi, $preu, $idGenere)
     {
-        $this->concertGateway->createConcert($idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere);
+        $dataSala = new DataSalaGateway();
+        $idDatasala = $dataSala->create($dia, $horaInici, $horaFi, $idSala);
+        if ($idDatasala !== null) {
+            $this->concertGateway->createConcert($idGrup, $idSala, $nomConcert, $idDatasala, $preu, $idGenere);
+        }
+        return null;
+
+
+        
     }
 
     // Aquest mètode actualitza també el preu de totes les entrades disponibles d'aquest concert

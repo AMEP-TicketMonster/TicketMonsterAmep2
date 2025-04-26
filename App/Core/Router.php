@@ -98,7 +98,8 @@ class Route
                     //$assajos->getEntradesDisponibles(55);
 
                     // proves (TODO: borrar)
-                    //$concerts->createConcert(3, 4, "suave", "2025-09-05", "21:00", 25, 2);
+                    // $concerts = new ConcertController();
+                    // $concerts->createConcert(2, 4, "Feria_abril", "2039-11-05", "21:00", "23:00", 5, 2);
 
                 }
                 if ($requestUri === 'concierto') {
