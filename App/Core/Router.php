@@ -7,6 +7,7 @@ use App\Controllers\ConcertController;
 use App\Controllers\EntradaController;
 use App\Controllers\AssajosController;
 use App\Controllers\SalesController;
+use App\Controllers\DataSalaController;
 use App\Core\Auth;
 
 class Route
@@ -79,6 +80,10 @@ class Route
                     //Si visita esta dirección cargamos los conciertos
                     $concerts = new ConcertController();
                     $concerts->carregaConcerts();
+
+                    // proves (TODO: borrar)
+                    //$dataSala = new DataSalaController();
+                    //$dataSala->createDataSala("2028-01-01", "20:00:00", "22:00:00", 3);
 
                     // proves (TODO: borrar)
                     //$sales = new SalesController();
