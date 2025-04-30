@@ -45,10 +45,6 @@ class UserGateway
           $stmt->execute([$nom, $cognoms, $email, $hashedPassword, 0.0]);
           
           $id = $this->pdo->lastInsertId();
-          $sql = "INSERT INTO UsuariRoles (idUsuari, idRol) VALUES (?, ?)";
-          $stmt = $this->pdo->prepare($sql);
-          $stmt->execute([$id, 0]);
-
           return $id;
       }
     
