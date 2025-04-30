@@ -1,6 +1,4 @@
-
-    <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+<nav class="navbar navbar-expand-lg navbar-light fixed-top navbar-translucent">
     <div class="container">
         <a class="navbar-brand fw-bold" href="/">LOGO TICKETMONSTER</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -24,5 +22,3 @@
         </div>
     </div>
 </nav>
-
-
