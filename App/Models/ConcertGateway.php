@@ -24,19 +24,29 @@ class ConcertGateway
     {
         //Habría que poner un LIMIT 'int, sin las comillas'
         // idConcert, nomConcert AS nom, dia, nomGrup AS grup, nomGenere AS Genere, Sales.nom AS sala, Sales.ciutat AS ubicacio
+        /*$stmt = $this->pdo->prepare("SELECT idConcert, nomConcert AS nom, dia, nomGrup AS grup, nomGenere AS Genere, Sales.nom AS sala, Sales.ciutat AS ubicacio  FROM Concerts JOIN DataSala ON Concerts.idDataSala = DataSala.idDataSala JOIN GrupsMusicals ON Concerts.idGrup = GrupsMusicals.idGrup JOIN  Sales ON Concerts.idSala = Sales.idSala JOIN Generes ON Concerts.idGenere = Generes.idGenere and DataSala.dia > CURDATE();
+        ");
+       */
         $stmt = $this->pdo->prepare("SELECT idConcert, nomConcert AS nom, dia, nomGrup AS grup, nomGenere AS Genere, Sales.nom AS sala, Sales.ciutat AS ubicacio  FROM Concerts JOIN DataSala ON Concerts.idDataSala = DataSala.idDataSala JOIN GrupsMusicals ON Concerts.idGrup = GrupsMusicals.idGrup JOIN  Sales ON Concerts.idSala = Sales.idSala JOIN Generes ON Concerts.idGenere = Generes.idGenere and DataSala.dia > CURDATE();
         ");
-       
         $stmt->execute();
         $concerts = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-      
+
         return $concerts;
-        
     }
 
     public function getByConcertId($id)
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM Concerts WHERE idConcert = ?");
+        $stmt = $this->pdo->prepare("
+        SELECT * 
+        FROM Concerts
+        JOIN DataSala ON Concerts.idDataSala = DataSala.idDataSala
+        JOIN GrupsMusicals ON Concerts.idGrup = GrupsMusicals.idGrup
+        JOIN Sales ON Concerts.idSala = Sales.idSala
+        JOIN Generes ON Concerts.idGenere = Generes.idGenere
+        
+        WHERE Concerts.idConcert = ?
+    ");
         $stmt->execute([$id]);
         $user = $stmt->fetch();
         return $user;
@@ -60,11 +70,11 @@ class ConcertGateway
         // Creem totes les entrades per aquest concert
         $placeholders = array_fill(0, $entrades_disponibles, "(?, ?, ?, ?)");
         $sql = "INSERT INTO EntradesConcert (idUsuari, idConcert, preu, idEstatEntrada) VALUES " . implode(", ", $placeholders);
-        $stmt = $this->pdo->prepare($sql);       
-        $params = []; 
+        $stmt = $this->pdo->prepare($sql);
+        $params = [];
         for ($i = 0; $i < $entrades_disponibles; $i++) {
             array_push($params, $idUsuariOrganitzador, $idConcert, $preu, 3); // 3 és Disponible
-        }        
+        }
         $stmt->execute($params);
     }
 
@@ -107,5 +117,4 @@ class ConcertGateway
         $stmt->execute([$idConcert, $puntuacio, $comentari]);
         return true;
     }
-
 }
