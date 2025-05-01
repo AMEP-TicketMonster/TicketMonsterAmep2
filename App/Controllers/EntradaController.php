@@ -89,15 +89,13 @@ class EntradaController
      */
     public function comprarEntradaConcert()
     {
-        // TODO: creo que deberíamos tener un idEntradaConcert y un idEntradaAssaig
-        //       no he podido probar estas dos _SESSION y _POST pq creo que no está cableado todavía
-        //       pero he probado el resto de la función poniendo valores válidos en $idUsuari y $idEntrada
 
-        $idUsuari = $_SESSION['user']['idUsuari'];
+        $idUsuari = $_SESSION['user']['idUsuari'] ?? null;
         // Obtener la entrada que se quiere comprar (por ejemplo, desde un formulario)
         $idEntrada = $_POST['idConcert'] ?? null;
-        //var_dump($idUsuari, $idEntrada);
-        //die();
+        //var_dump($idUsuari,$idEntrada);
+        
+
         // Validaci�n b�sica
         if (!$idUsuari || !$idEntrada) {
             echo "Error: Falten dades necessaris per realitzar la compra.";
@@ -107,7 +105,7 @@ class EntradaController
         // Obtener la entrada desde la base de datos
         //cuando se haga la creación de un concierto también hay que crear sus entradas
         $entrada = $this->entradaGateway->getEntradaConcertById($idEntrada);
-
+       
         if (!$entrada) {
             echo "Error: La entrada no existeix.";
             return;
@@ -123,7 +121,7 @@ class EntradaController
         $saldo = $this->usuariGateway->getByUserId($idUsuari)['saldo'];
 
         $preu = $entrada['preu'];
-
+       
         if ($saldo < $preu) {
             echo "Error: Saldo insuficient.";
             return;
@@ -132,14 +130,18 @@ class EntradaController
         // Actualizar saldo del usuario
         $nouSaldo = $saldo - $preu;
         $this->usuariGateway->actualizarSaldo($idUsuari, $nouSaldo);
-
+       
         // Asignar la entrada al usuario y cambiar el estado
         $this->entradaGateway->assignarEntradaConcert($idEntrada, $idUsuari, "Comprada");
-
+      
+        //Esto no está listo para funcionar con la DB actual
+        /*
         $idConcert = $entrada['idConcert'];
         $this->entradaGateway->decrementarEntradesDisponiblesConcert($idConcert);
 
         echo "Compra realitzada amb �xit.";
+        */
+        header("location: /dashboard");
     }
 
 
