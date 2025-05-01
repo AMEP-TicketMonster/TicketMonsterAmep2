@@ -44,7 +44,7 @@ class ConcertGateway
         JOIN GrupsMusicals ON Concerts.idGrup = GrupsMusicals.idGrup
         JOIN Sales ON Concerts.idSala = Sales.idSala
         JOIN Generes ON Concerts.idGenere = Generes.idGenere
-        
+        JOIN Entrades ON Concerts.idConcert = Entrades.idConcert
         WHERE Concerts.idConcert = ?
     ");
         $stmt->execute([$id]);
