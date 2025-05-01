@@ -40,6 +40,7 @@ class UserController
             $_SESSION['status'] = true;
             unset($user['contrasenya']);                //CUIDADO que he pasado la contraseña al frontend!!! hay que tratar los datos! Con un DTO por ejemplo!
             $_SESSION['user'] = $user;   //luego hay que recoger y tratar los datos
+            $_SESSION['role'] = $user['idRol'];
             header("Location: /dashboard");
             //exit();
         } else {

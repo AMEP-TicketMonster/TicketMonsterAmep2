@@ -32,11 +32,20 @@ class Auth
         return (isset($_SESSION['status']) && $_SESSION['status'] === true);
     }
 
-    public static function checkRole(array $rolesPermitidos)
+    public static function checkRole()
     {
+        //estaría bien conectar esto con la base de datos por si en un futuro metemos más roles... queda provisional :)
+        $rolesPermitidos = [1, 2, 3]; //cliente, organizador, admin
         if (!isset($_SESSION['role']) || !in_array($_SESSION['role'], $rolesPermitidos)) {
             header("Location: " . UrlBase::urlLogin . "");    //si no tiene los permisos necesarios vuelve al login
             exit();
         }
+    }
+
+    public static function isAdmin()
+    {
+        //estaría bien conectar esto con la base de datos por si en un futuro metemos más roles... queda provisional :)
+        $rolesPermitidos = 3;
+        return (isset($_SESSION['role']) and $_SESSION['role'] == $rolesPermitidos);
     }
 }
