@@ -25,6 +25,15 @@ class EntradaController
         }
     }
 
+    public function consultarEntrades()
+    {
+        $idUsuari = $_SESSION['user']['idUsuari'];
+        $entrades = $this->entradaGateway->getEntradesComprades($idUsuari);
+        $_SESSION["entrades_usuari"] = $entrades;
+        
+    }
+
+
     /**
      * Compra una entrada assaig si est� disponible y el usuario tiene saldo suficiente.
      */

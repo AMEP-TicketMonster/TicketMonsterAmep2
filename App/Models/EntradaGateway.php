@@ -16,6 +16,30 @@ class EntradaGateway
     }
 
     //cargar entradas
+    public function getEntradesComprades($idUsuari){
+        //tipus, nomConcert, nomGrup
+        $stmt = $this->pdo->prepare("
+        SELECT Entrades.idEntrada,
+        EntradesUsuari.data_transaccio,
+        Entrades.preu,
+        Entrades.tipus,
+        Concerts.nomConcert,
+        GrupsMusicals.nomGrup,
+        DataSala.dia,
+        DataSala.hora_inici,
+        DataSala.hora_fi
+        FROM EntradesUsuari 
+        JOIN Entrades ON Entrades.idEntrada = EntradesUsuari.idEntrada
+        JOIN Concerts ON Concerts.idConcert = Entrades.idConcert
+        JOIN GrupsMusicals ON Concerts.idGrup = GrupsMusicals.idGrup
+        JOIN DataSala ON Concerts.idDataSala = DataSala.idDataSala
+
+        WHERE idUsuari = ?"
+    );
+        $stmt->execute([$idUsuari]);
+        return  $stmt->fetchAll();
+    }
+
     public function getEntradaAssaigById($id)
     {
         $stmt = $this->pdo->prepare("SELECT * FROM EntradesAssaig WHERE idEntrada = ?");

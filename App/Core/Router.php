@@ -110,14 +110,10 @@ class Route
             if ($requestUri === 'login') {
                 $controller = new UserController();
 
-                $entrades = new EntradaController();
-                //$entrades->consultarEntradesAssaig();
-
                 if ($controller->login()) {
-                    //si ha podido iniciar sesión carga datos del dashboard
-                    //$concerts = new ConcertController();
-                    //$concerts->mostraConcerts();
-
+                    //cargar entradas para mostrar en el dashboard
+                    $entrades = new EntradaController();
+                    $entrades->consultarEntradesAssaig();
                 }
             }
 
