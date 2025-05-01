@@ -82,4 +82,64 @@ class EntradaGateway
                                      WHERE idConcert = ? AND entrades_disponibles > 0");
         $stmt->execute([$idConcert]);
     }
+
+
+    // Retorna totes les entrades del usuari amb id = $idUsuari
+    public function getTicketsByUserId($idUsuari)
+    {
+        // Validación estricta: entero positivo
+        if (!filter_var($idUsuari, FILTER_VALIDATE_INT, ["options" => ["min_range" => 1]])) {
+            throw new InvalidArgumentException("ID de concierto no válido");
+        }
+
+        try {
+            $stmt = $this->pdo->prepare(
+                "SELECT idEntrada, idUsuari, idConcert, preu, estat 
+                FROM Entrades_Concert 
+                WHERE IdUsuari = ?"
+            );
+
+            if (!$stmt) {
+                throw new RuntimeException("Error preparando la consulta SQL.");
+            }
+
+            $stmt->execute([$idConcierto]);
+            $entrades = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $entrades;
+        } catch (PDOException $e) {
+            // Puedes loguearlo o relanzarlo según tu política de errores
+            throw new RuntimeException("Error en la consulta a la base de datos: " . $e->getMessage());
+        }
+    }
+
+    // Retorna totes les entrades del concert amb id = $idConcert
+    public function getTicketsByConcertId($idConcierto)
+    {
+        // Validación estricta: entero positivo
+        if (!filter_var($idConcierto, FILTER_VALIDATE_INT, ["options" => ["min_range" => 1]])) {
+            throw new InvalidArgumentException("ID de concierto no válido");
+        }
+
+        try {
+            $stmt = $this->pdo->prepare(
+                "SELECT IdEntrada, IdUsuari, IdConcert, preu, estat 
+                FROM Entrades_Concert 
+                WHERE IdConcert = ?"
+            );
+
+            if (!$stmt) {
+                throw new RuntimeException("Error preparando la consulta SQL.");
+            }
+
+            $stmt->execute([$idConcierto]);
+            $entrades = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $entrades;
+        } catch (PDOException $e) {
+            // Puedes loguearlo o relanzarlo según tu política de errores
+            throw new RuntimeException("Error en la consulta a la base de datos: " . $e->getMessage());
+        }
+    }
+
 }

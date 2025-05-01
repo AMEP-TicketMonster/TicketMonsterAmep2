@@ -37,22 +37,22 @@ class UserGateway
 
     // Crear un nuevo usuario (con rol y contraseña encriptada)
     public function createUser($nom, $cognoms, $email, $contrasenya, $rol = 'client')
-      {
-          $hashedPassword = password_hash($contrasenya, PASSWORD_DEFAULT);
-  
-          $sql = "INSERT INTO Usuaris (nom, cognom, email, contrasenya, saldo) VALUES (?, ?, ?, ?, ?)";
-          $stmt = $this->pdo->prepare($sql);
-          $stmt->execute([$nom, $cognoms, $email, $hashedPassword, 0.0]);
-          
-          $id = $this->pdo->lastInsertId();
-          $sql = "INSERT INTO UsuariRoles (idUsuari, idRol) VALUES (?, ?)";
-          $stmt = $this->pdo->prepare($sql);
-          $stmt->execute([$id, 0]);
+    {
+        $hashedPassword = password_hash($contrasenya, PASSWORD_DEFAULT);
 
-          return $id;
-      }
-    
-       // Actualizar datos de perfil
+        $sql = "INSERT INTO Usuaris (nom, cognom, email, contrasenya, saldo) VALUES (?, ?, ?, ?, ?)";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$nom, $cognoms, $email, $hashedPassword, 0.0]);
+
+        $id = $this->pdo->lastInsertId();
+        $sql = "INSERT INTO UsuariRoles (idUsuari, idRol) VALUES (?, ?)";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$id, 0]);
+
+        return $id;
+    }
+
+    // Actualizar datos de perfil
     public function updateUser($id, $nom, $cognoms, $email)
     {
         $sql = "UPDATE Usuaris SET nom = ?, cognom = ?, email = ? WHERE idUsuari = ?";
@@ -99,12 +99,13 @@ class UserGateway
     {
         //echo"<br>esto es verifyPassword";
         //return password_verify($password, $this->password);
-        return password_verify($password,$this->password);
+        return password_verify($password, $this->password);
     }
 
     // Obtener datos del usuario autenticado
     public function getId()
     {
+
         return $this->id;
     }
 
@@ -112,12 +113,12 @@ class UserGateway
     {
         return $this->email;
     }
-    
+
     //Devuelve el usuario que tiene la entrada = idEntrada 
     public function getByTicketId($idEntrada)
     {
         $stmt = $this->pdo->prepare(
-        "SELECT u.idUsuari, u.nom, u.cognom, u.email, u.contrasenya 
+            "SELECT u.idUsuari, u.nom, u.cognom, u.email, u.contrasenya 
         FROM Entrades e 
         INNER JOIN Usuaris u 
         ON e.idUsuari = u.idUsuari 

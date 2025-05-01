@@ -16,7 +16,7 @@ class Route
         $requestMethod = $_SERVER['REQUEST_METHOD'];  // Obtener el método HTTP (GET, POST, etc.)
 
 
-
+        //esto hay que recolocarlo bien, y solo es para hacer test de forma puntual
         if ($requestUri == 'test') {
             $controller = new ConcertController();
             $controller->pruebas();
