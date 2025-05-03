@@ -36,11 +36,27 @@ class ConcertController
     public function showConcert($id)
     {
         $concert = $this->concertGateway->getByConcertId($id);
+    
+        // Buscar una entrada disponible para ese concierto
+        $entradaGateway = new \App\Models\EntradaGateway();
+        $entradaDisponible = $entradaGateway->getEntradaDisponiblePorConcert($id);
+    
+        if ($entradaDisponible) {
+            $concert['idEntrada'] = $entradaDisponible['idEntrada'];
+        }
+    
+        $_SESSION['concert'] = $concert;
+        setcookie('concert_id', $id, time() + 3600, '/');
+    }
+    
+    /*public function showConcert($id)
+    {
+        $concert = $this->concertGateway->getByConcertId($id);
 
         $_SESSION['concert'] = $concert;
         setcookie('concert_id', $id, time() + 3600, '/');
         //header("Location: /concierto");
-    }
+    }*/
 
     // Aquest mètode crea tantes entrades disponibles com capacitat té la sala
     public function createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere)

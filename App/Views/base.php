@@ -20,7 +20,12 @@ use App\Core\Auth;
 require_once __DIR__ . '/partials/footer.php';
 // Incluir navbar según si el usuario está logueado
 if (Auth::isLogged()) {
-    require_once __DIR__ . '/partials/navbar_user.php';
+    if(Auth::isAdmin()){
+        require_once __DIR__ . '/partials/navbar_admin.php';
+    }else{
+        require_once __DIR__ . '/partials/navbar_user.php';
+    }
+    
 } else {
     require_once __DIR__ . '/partials/navbar_guest.php';
 }
