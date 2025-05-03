@@ -142,6 +142,18 @@ class Route
                 $controller = new EntradaController();
                 $controller->comprarEntradaConcert();
             }
+            if ($requestUri == 'reserva-entrada-concert') {
+                $controller = new EntradaController();
+                $controller->reservarEntradaConcert();
+                exit();
+            }
+            if ($requestUri == 'cancelar-reserva') {
+                $controller = new EntradaController();
+                $controller->cancelarReserva();
+                exit();
+            }
+            
+            
         }
 
         return __DIR__ . '/../Views/404.php'; // Si la ruta no está en la lista, mostrar 404
