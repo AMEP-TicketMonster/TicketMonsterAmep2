@@ -47,7 +47,7 @@ class SalesGateway {
 
     public function modifica(string $nouNom, string $novaCiutat, int $novaCapacitat): void {
         if ($this->idSala === null) {
-            throw new \Exception("No es pot actualitzar una sala que no ha estat carregada.");
+            throw new \Exception("No es pot modificar una sala que no ha estat carregada.");
         }
         if ($novaCapacitat <= 0) {
             throw new \Exception("La capacitat ha de ser major que 0.");
@@ -58,6 +58,27 @@ class SalesGateway {
         $this->ciutat = $novaCiutat;
         $this->capacitat = $novaCapacitat;
     }
+
+    public function elimina(): void {
+        if ($this->idSala === null) {
+            throw new \Exception("No es pot eliminar una sala que no ha estat carregada.");
+        }
+        $stmt = $this->pdo->prepare("DELETE FROM Sales WHERE idSala = ?");
+        $stmt->execute([$this->idSala]);
+    }
+
+    public function consulta(): array {
+        if ($this->idSala === null) {
+            throw new \Exception("No es pot consultar una sala que no ha estat carregada.");
+        }
+        return [
+            'idSala' => $this->idSala,
+            'nom' => $this->nom,
+            'ciutat' => $this->ciutat,
+            'capacitat' => $this->capacitat,
+        ];
+    }
+
 
     public function updateCapacitat(int $novaCapacitat): void {
         if ($this->idSala === null) {
@@ -70,15 +91,6 @@ class SalesGateway {
         $stmt = $this->pdo->prepare("UPDATE Sales SET capacitat = ? WHERE idSala = ?");
         $stmt->execute([$novaCapacitat, $this->idSala]);
         $this->capacitat = $novaCapacitat;
-    }
-
-    public function delete(): void {
-        if ($this->idSala === null) {
-            throw new \Exception("No es pot eliminar una sala que no ha estat carregada.");
-        }
-
-        $stmt = $this->pdo->prepare("DELETE FROM Sales WHERE idSala = ?");
-        $stmt->execute([$this->idSala]);
     }
 
     // Getters

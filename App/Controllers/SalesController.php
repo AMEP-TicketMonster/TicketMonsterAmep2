@@ -20,12 +20,12 @@ class SalesController
         }
     }
 
-    public function createSala(string $nom, string $ciutat, int $capacitat) : int {
+    public function creaSala(string $nom, string $ciutat, int $capacitat) : int {
         $sala = new SalesGateway();
-        return $sala->create($nom, $ciutat, $capacitat);
+        return $sala->crea($nom, $ciutat, $capacitat);
     }
 
-    public function modifica(string $nom, string $nouNom, string $novaCiutat, int $novaCapacitat) : void {
+    public function modificaSala(string $nom, string $nouNom, string $novaCiutat, int $novaCapacitat) : void {
         $sala = $this->searcher->findByName($nom);
         if ($sala !== null) {
             $sala->modifica($nouNom, $novaCiutat, $novaCapacitat);
@@ -33,4 +33,24 @@ class SalesController
             echo "No s'ha trobat cap sala amb nom " . $nom;
         }
     }   
+
+    public function eliminaSala(string $nom) : void {
+        $sala = $this->searcher->findByName($nom);
+        if ($sala !== null) {
+            $sala->elimina();
+        } else {
+            echo "No s'ha trobat cap sala amb nom " . $nom;
+        }
+    }
+
+    public function consultaSala(int $idSala) : ?array {
+        $sala = $this->searcher->findById($idSala);
+        if ($sala !== null) {
+            return $sala->consulta();
+        } else {
+            echo "No s'ha trobat cap sala amb id " . $idSala;
+            return null;
+        }
+    }
+
 }
