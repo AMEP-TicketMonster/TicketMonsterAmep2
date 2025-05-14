@@ -123,7 +123,7 @@ class ConcertGateway
     {
         $rutaImg = trim($img);
         $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM Concerts WHERE imatgeURL = :ruta");
-        $stmt->bindParam(':ruta', $rutaImg);
+        $stmt->bindParam(':ruta', $rutaImg, \PDO::PARAM_STR);
         $stmt->execute();
 
         $existe = $stmt->fetchColumn();
@@ -149,5 +149,14 @@ class ConcertGateway
             throw new Exception("No s'ha pogut actualitzar la imatge del concert.");
         }
         return true;
+    }
+    /*Nombre concierto
+    Nombre grupo
+    Num entradas
+    Genero
+    Sala*/
+    public function concertFiltre($filtres = []) 
+    {
+        
     }
 }
