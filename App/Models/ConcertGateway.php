@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Config\Database;
+use Exception;
 
 class ConcertGateway
 {
@@ -115,6 +116,38 @@ class ConcertGateway
             VALUES (?, ?, ?)"
         );
         $stmt->execute([$idConcert, $puntuacio, $comentari]);
+        return true;
+    }
+
+    public function consultaImatge($img)
+    {
+        $rutaImg = trim($img);
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM Concerts WHERE imatgeURL = :ruta");
+        $stmt->bindParam(':ruta', $rutaImg);
+        $stmt->execute();
+
+        $existe = $stmt->fetchColumn();
+        return $existe > 0;
+    }
+    
+    public function guardaImatge($idConcert, $img)
+    {
+        if ($this->consultaImatge($img)) {
+            echo "Ja existeix";
+            return true;
+        } else {
+            echo "No existeix";
+            return true;
+        }
+
+        $rutaImg = trim($img);
+
+        $stmt = $this->pdo->prepare("UPDATE Concerts SET imatgeURL = ? WHERE idConcert = ?");
+        $stmt->execute([$rutaImg, $idConcert]);
+
+        if ($stmt->rowCount() == 0) {
+            throw new Exception("No s'ha pogut actualitzar la imatge del concert.");
+        }
         return true;
     }
 }

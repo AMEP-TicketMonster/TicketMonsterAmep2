@@ -20,10 +20,9 @@ class ConcertController
     }
 
     public function pruebas(){
-        $idConcert = 1;
-        $puntuacio = 5;
-        $comentari = "El concert ha estat genial!";
-        $this->concertGateway->guardaValoracio($idConcert, $puntuacio, $comentari);
+        $idConcert = 20;
+        $img = "../../public/img/feria_abril.jpg";
+        $this->concertGateway->guardaImatge($idConcert, $img);
     }   
 
     public function carregaConcerts()
