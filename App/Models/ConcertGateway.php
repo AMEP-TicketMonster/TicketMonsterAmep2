@@ -54,6 +54,7 @@ class ConcertGateway
 
     public function createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere)
     {
+        /*
         // Obtenim la capacitat de la sala que serà les entrades disponibles del concert
         $stmt = $this->pdo->prepare("SELECT capacitat FROM Sales WHERE idSala = ?");
         $stmt->execute([$idSala]);
@@ -76,6 +77,14 @@ class ConcertGateway
             array_push($params, $idUsuariOrganitzador, $idConcert, $preu, 3); // 3 és Disponible
         }
         $stmt->execute($params);
+        */
+
+        //Lo de antes es el código que se había preparado. ..........
+        //Como apaño por ahora uso esto:
+        $stmt = $this->pdo->prepare("INSERT INTO Concerts (nomConcert, fecha, hora, lugar, grupo, precio, entradas_disponibles)
+            VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$nomConcert, $dia, $hora, $idSala, $idGrup, $preu, 1000]);
+        die();
     }
 
     // Nota: aquesta funció no actualitza les entrades disponibles del concert pq es complica la lògica per actualitzar les entrades
