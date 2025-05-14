@@ -56,10 +56,23 @@ class ConcertController
         setcookie('concert_id', $id, time() + 3600, '/');
         //header("Location: /concierto");
     }*/
-
+    public function creaConcert(){
+        //habría que hacer ciertas comprobaciones sobre los datos.
+        $idUsuariOrganitzador = $_SESSION['user']['idUsuari'];
+        $idGrup = $_POST['grupo_musical'];
+        $idSala = $_POST['lugar'];
+        $nomConcert = $_POST['nombre_concierto'];
+        $dia = $_POST['fecha'];
+        $hora = $_POST['hora'];
+        $preu = $_POST['precio'];
+        $idGenere = $_POST['genero'];
+        //falta por coger el campo entradas disponibles
+        $this->createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere);
+    }
     // Aquest mètode crea tantes entrades disponibles com capacitat té la sala
     public function createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere)
     {
+        
         $this->concertGateway->createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere);
     }
 

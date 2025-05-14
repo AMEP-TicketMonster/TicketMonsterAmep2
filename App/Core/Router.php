@@ -39,7 +39,8 @@ class Route
             'delete-user',
             'edit-user',
             'compra-entrada-concert',
-            'reserva-entrada-concert'
+            'reserva-entrada-concert',
+            'crea-concert'
         ];
 
 
@@ -64,7 +65,8 @@ class Route
             'profile'    => 'users/perfil.php',
             'conciertos' => 'concerts/concerts.php',
             'concierto'  => 'concerts/details.php',
-            'salas'      => 'salas.php'
+            'salas'      => 'salas.php',
+            'crea-concert' => 'concerts/crearConcierto.php'
         ];
 
 
@@ -151,6 +153,10 @@ class Route
                 $controller = new EntradaController();
                 $controller->cancelarReserva();
                 exit();
+            }
+            if($requestUri == 'crea-concert-backend'){
+                $controller = new ConcertController();
+                $controller->creaConcert();
             }
             
             
