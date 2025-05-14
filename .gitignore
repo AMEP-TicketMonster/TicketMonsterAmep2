@@ -1,0 +1,41 @@
+/vendor/
+.env
+.env_test
+.vscode
+.vs
+/mysql-connector-c++-9.1.0-winx64/
+/tests
+# Compiled binary files
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Compiler intermediate files
+*.obj
+*.o
+*.idb
+*.pdb
+*.ilk
+
+# Astah
+*.lock
+
+# Build directories
+Debug/
+Release/
+x64/
+x86/
+bin/
+obj/
+
+# Visual Studio workspace files
+*.suo
+*.user
+*.ncb
+*.sdf
+*.VC.db
+
+# Logs, temporary files
+*.log
+*.tmp
