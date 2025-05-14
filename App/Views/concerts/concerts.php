@@ -1,8 +1,7 @@
 <?php
-//$concerts = isset($_SESSION['concerts']) ? $_SESSION['concerts'] : '[]';
+$concerts = isset($_SESSION['concerts']) ? $_SESSION['concerts'] : '[]';
 // Esto es solo para debug en backend:
 //var_dump(json_encode($concerts));
-$concerts = ["nomConcert" => "guns and roasadadwdwa", "data"=>"7/8/2026", "ubicacio"=> "dawawd", "preu"=>623.92];
 ?>
 
 <div class="container my-5">
@@ -12,7 +11,7 @@ $concerts = ["nomConcert" => "guns and roasadadwdwa", "data"=>"7/8/2026", "ubica
 
 <script>
     const concerts =JSON.parse(`<?php echo json_encode($concerts); ?>`);
-    //console.log(concerts);
+
     console.log('Concerts:', concerts);
 
     const container = document.getElementById('concert-container');
@@ -23,11 +22,7 @@ $concerts = ["nomConcert" => "guns and roasadadwdwa", "data"=>"7/8/2026", "ubica
       <div class="card shadow-sm h-100">
         <div class="card-body d-flex flex-column">
           <h5 class="card-title text-primary fw-bold">
-
-            <i class="bi bi-music-note-beamed"></i><?php $concerts['nomConcert']?>
-
             <i class="bi bi-music-note-beamed"></i> ${concert.nom}
-
           </h5>
            <h6 class="card-title text-primary fw-bold">
             <i class="bi bi-music-note-beamed"></i> ${concert.grup}

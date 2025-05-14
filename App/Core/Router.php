@@ -77,8 +77,8 @@ class Route
             if (array_key_exists($requestUri, $routes)) {
                 if ($requestUri == 'conciertos') {
                     //Si visita esta dirección cargamos los conciertos
-                    //$concerts = new ConcertController();
-                    //$concerts->carregaConcerts();
+                    $concerts = new ConcertController();
+                    $concerts->carregaConcerts();
                 }
                 if ($requestUri === 'concierto') {
                     $id = $_GET['id'] ?? $_COOKIE['concert_id'] ?? null;

@@ -41,4 +41,3 @@ $concert = $_SESSION['concert'] ?? null;
         </div>
     </div>
 </div>
-

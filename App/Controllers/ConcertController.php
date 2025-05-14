@@ -30,6 +30,7 @@ class ConcertController
         $concerts = $this->concertGateway->getConcertList();
         //pasar a json y ya lo tratará el frontend.
         $_SESSION['concerts'] = $concerts;
+       
     }
 
     public function showConcert($id)
