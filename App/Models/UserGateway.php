@@ -37,6 +37,7 @@ class UserGateway
 
     // Crear un nuevo usuario (con rol y contraseña encriptada)
     public function createUser($nom, $cognoms, $email, $contrasenya, $rol = 'client')
+
       {
           $hashedPassword = password_hash($contrasenya, PASSWORD_DEFAULT);
   
@@ -48,7 +49,9 @@ class UserGateway
           return $id;
       }
     
-       // Actualizar datos de perfil
+
+
+
     public function updateUser($id, $nom, $cognoms, $email)
     {
         $sql = "UPDATE Usuaris SET nom = ?, cognom = ?, email = ? WHERE idUsuari = ?";
@@ -95,12 +98,13 @@ class UserGateway
     {
         //echo"<br>esto es verifyPassword";
         //return password_verify($password, $this->password);
-        return password_verify($password,$this->password);
+        return password_verify($password, $this->password);
     }
 
     // Obtener datos del usuario autenticado
     public function getId()
     {
+
         return $this->id;
     }
 
@@ -108,12 +112,12 @@ class UserGateway
     {
         return $this->email;
     }
-    
+
     //Devuelve el usuario que tiene la entrada = idEntrada 
     public function getByTicketId($idEntrada)
     {
         $stmt = $this->pdo->prepare(
-        "SELECT u.idUsuari, u.nom, u.cognom, u.email, u.contrasenya 
+            "SELECT u.idUsuari, u.nom, u.cognom, u.email, u.contrasenya 
         FROM Entrades e 
         INNER JOIN Usuaris u 
         ON e.idUsuari = u.idUsuari 

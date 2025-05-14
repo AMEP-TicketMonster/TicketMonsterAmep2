@@ -30,8 +30,11 @@ composer dump-autoload
             "App\\": "App/"
         }
     },
-    "require": {}
+    "require": {
+        "vlucas/phpdotenv": "^5.6"
+    }
 }
+
 
 ```
 

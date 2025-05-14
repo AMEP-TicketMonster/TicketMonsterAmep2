@@ -25,6 +25,15 @@ class EntradaController
         }
     }
 
+    public function consultarEntrades()
+    {
+        $idUsuari = $_SESSION['user']['idUsuari'];
+        $entrades = $this->entradaGateway->getEntradesComprades($idUsuari);
+        $_SESSION["entrades_usuari"] = $entrades;
+        
+    }
+
+
     /**
      * Compra una entrada assaig si est� disponible y el usuario tiene saldo suficiente.
      */
@@ -55,14 +64,14 @@ class EntradaController
         }
 
         $estatEntrada = $this->entradaGateway->getStringFromEntradaId($entrada['idEstatEntrada']);
-        
+
         if ($estatEntrada !== "Disponible") {
             echo "Error: La entrada ja est� reservada o comprada.";
             return;
         }
 
         $saldo = $this->usuariGateway->getByUserId($idUsuari)['saldo'];
-        
+
         $preu = $entrada['preu'];
 
         if ($saldo < $preu) {
@@ -88,14 +97,59 @@ class EntradaController
      * Compra una entrada concert si est� disponible y el usuario tiene saldo suficiente.
      */
     public function comprarEntradaConcert()
+{
+    $idUsuari = $_SESSION['user']['idUsuari'] ?? null;
+    $idEntrada = $_POST['idEntrada'] ?? null; // ✅ aquí estaba el fallo (antes usabas idConcert)
+
+    if (!$idUsuari || !$idEntrada) {
+        $_SESSION['mensaje'] = "Falten dades per completar la compra.";
+        header("Location: /concierto?id=" . ($_COOKIE['concert_id'] ?? ''));
+        exit();
+    }
+
+    $entrada = $this->entradaGateway->getEntradaConcertById($idEntrada);
+
+    if (!$entrada) {
+        $_SESSION['mensaje'] = "La entrada no existeix.";
+        header("Location: /concierto?id=" . ($_COOKIE['concert_id'] ?? ''));
+        exit();
+    }
+
+    $estatEntrada = $this->entradaGateway->getStringFromEntradaId($entrada['idEstatEntrada']);
+    if ($estatEntrada !== "Disponible") {
+        $_SESSION['mensaje'] = "La entrada no está disponible.";
+        header("Location: /concierto?id=" . ($_COOKIE['concert_id'] ?? ''));
+        exit();
+    }
+
+    $saldo = $this->usuariGateway->getByUserId($idUsuari)['saldo'];
+    $preu = $entrada['preu'];
+
+    if ($saldo < $preu) {
+        $_SESSION['mensaje'] = "Saldo insuficient.";
+        header("Location: /concierto?id=" . ($_COOKIE['concert_id'] ?? ''));
+        exit();
+    }
+
+    $nouSaldo = $saldo - $preu;
+    $this->usuariGateway->actualizarSaldo($idUsuari, $nouSaldo);
+    $this->entradaGateway->assignarEntradaConcert($idEntrada, $idUsuari, "Comprada");
+    $this->entradaGateway->decrementarEntradesDisponiblesConcert($entrada['idConcert']);
+
+    $_SESSION['mensaje'] = "Compra realizada con éxito.";
+    header("Location: /concierto?id=" . ($_COOKIE['concert_id'] ?? ''));
+    exit();
+}
+
+    /*public function comprarEntradaConcert()
     {
-        // TODO: creo que deberíamos tener un idEntradaConcert y un idEntradaAssaig
-        //       no he podido probar estas dos _SESSION y _POST pq creo que no está cableado todavía
-        //       pero he probado el resto de la función poniendo valores válidos en $idUsuari y $idEntrada
-        $idUsuari = $_SESSION['idUsuari'] ?? null;
+
+        $idUsuari = $_SESSION['user']['idUsuari'] ?? null;
         // Obtener la entrada que se quiere comprar (por ejemplo, desde un formulario)
         $idEntrada = $_POST['idConcert'] ?? null;
-        var_dump($idUsuari, $idEntrada);
+        //var_dump($idUsuari,$idEntrada);
+        
+
         // Validaci�n b�sica
         if (!$idUsuari || !$idEntrada) {
             echo "Error: Falten dades necessaris per realitzar la compra.";
@@ -103,24 +157,25 @@ class EntradaController
         }
 
         // Obtener la entrada desde la base de datos
+        //cuando se haga la creación de un concierto también hay que crear sus entradas
         $entrada = $this->entradaGateway->getEntradaConcertById($idEntrada);
-
+       
         if (!$entrada) {
             echo "Error: La entrada no existeix.";
             return;
         }
 
         $estatEntrada = $this->entradaGateway->getStringFromEntradaId($entrada['idEstatEntrada']);
-        
+
         if ($estatEntrada !== "Disponible") {
             echo "Error: La entrada ja est� reservada o comprada.";
             return;
         }
 
         $saldo = $this->usuariGateway->getByUserId($idUsuari)['saldo'];
-        
-        $preu = $entrada['preu'];
 
+        $preu = $entrada['preu'];
+       
         if ($saldo < $preu) {
             echo "Error: Saldo insuficient.";
             return;
@@ -129,17 +184,21 @@ class EntradaController
         // Actualizar saldo del usuario
         $nouSaldo = $saldo - $preu;
         $this->usuariGateway->actualizarSaldo($idUsuari, $nouSaldo);
-
+       
         // Asignar la entrada al usuario y cambiar el estado
         $this->entradaGateway->assignarEntradaConcert($idEntrada, $idUsuari, "Comprada");
-
+      
+        //Esto no está listo para funcionar con la DB actual
+        /*
         $idConcert = $entrada['idConcert'];
         $this->entradaGateway->decrementarEntradesDisponiblesConcert($idConcert);
 
         echo "Compra realitzada amb �xit.";
-    }
+        */
+        //header("location: /dashboard");
+   // }*/
 
-    
+
 
     /**
      * Reserva una entrada disponible.
@@ -169,7 +228,7 @@ class EntradaController
             return;
         }
         $estatEntrada = $this->entradaGateway->getStringFromEntradaId($entrada['idEstatEntrada']);
-        
+
         if ($estatEntrada !== "Disponible") {
             echo "Error: La entrada ja est� reservada o comprada.";
             return;
@@ -191,7 +250,42 @@ class EntradaController
      * - assignarEntradaConcert
      * - decrementarEntradesDisponiblesConcert
      */
-    public function reservarEntradaConcert()
+
+     public function reservarEntradaConcert()
+{
+    $idUsuari = $_SESSION['user']['idUsuari'] ?? null;
+    $idEntrada = $_POST['idEntrada'] ?? null;
+
+    if (!$idUsuari || !$idEntrada) {
+        $_SESSION['mensaje'] = "Falten dades per realitzar la reserva.";
+        header("Location: /concierto?id=" . ($_COOKIE['concert_id'] ?? ''));
+        exit();
+    }
+
+    $entrada = $this->entradaGateway->getEntradaConcertById($idEntrada);
+
+    if (!$entrada) {
+        $_SESSION['mensaje'] = "La entrada no existeix.";
+        header("Location: /concierto?id=" . ($_COOKIE['concert_id'] ?? ''));
+        exit();
+    }
+
+    $estat = $this->entradaGateway->getStringFromEntradaId($entrada['idEstatEntrada']);
+    if ($estat !== "Disponible") {
+        $_SESSION['mensaje'] = "La entrada ja no està disponible.";
+        header("Location: /concierto?id=" . ($_COOKIE['concert_id'] ?? ''));
+        exit();
+    }
+
+    $this->entradaGateway->assignarEntradaConcert($idEntrada, $idUsuari, "Reservada");
+    $this->entradaGateway->decrementarEntradesDisponiblesConcert($entrada['idConcert']);
+
+    $_SESSION['mensaje'] = "Reserva realitzada amb èxit.";
+    header("Location: /concierto?id=" . ($_COOKIE['concert_id'] ?? ''));
+    exit();
+}
+
+    /*public function reservarEntradaConcert()
     {
         // TODO: creo que deberíamos tener un idEntradaConcert y un idEntradaAssaig
         //       no he podido probar estas dos _SESSION y _POST pq creo que no está cableado todavía
@@ -211,7 +305,7 @@ class EntradaController
             return;
         }
         $estatEntrada = $this->entradaGateway->getStringFromEntradaId($entrada['idEstatEntrada']);
-        
+
         if ($estatEntrada !== "Disponible") {
             echo "Error: La entrada ja est� reservada o comprada.";
             return;
@@ -223,7 +317,7 @@ class EntradaController
         $this->entradaGateway->decrementarEntradesDisponiblesConcert($idConcert);
 
         echo "Reserva realitzada amb �xit.";
-    }
+    }*/
 
     /**
      * Consulta todas las entradas.
@@ -236,7 +330,7 @@ class EntradaController
         $entrades = $this->entradaGateway->getAllEntradesAssaig();
 
         var_dump($entrades); // TODO: debe haber algun error de encoding UTF8 en $entrades
-                             //       si no hago el var_dump json_encode falla
+        //       si no hago el var_dump json_encode falla
         $_SESSION["entrades"] = json_encode($entrades, JSON_PRETTY_PRINT);
         if (empty($entrades)) {
             echo "No hi ha entrades disponibles.";

@@ -23,11 +23,18 @@ $concerts = ["nomConcert" => "guns and roasadadwdwa", "data"=>"7/8/2026", "ubica
       <div class="card shadow-sm h-100">
         <div class="card-body d-flex flex-column">
           <h5 class="card-title text-primary fw-bold">
+
             <i class="bi bi-music-note-beamed"></i><?php $concerts['nomConcert']?>
+
+            <i class="bi bi-music-note-beamed"></i> ${concert.nom}
+
           </h5>
-          <p class="card-text mb-1"><i class="bi bi-calendar-event"></i> Fecha: ${concert.data}</p>
+           <h6 class="card-title text-primary fw-bold">
+            <i class="bi bi-music-note-beamed"></i> ${concert.grup}
+          </h6>
+          <p class="card-text mb-1"><i class="bi bi-calendar-event"></i> Fecha: ${concert.dia}</p>
           <p class="card-text mb-1"><i class="bi bi-geo-alt"></i> Ubicación: ${concert.ubicacio}</p>
-          <p class="card-text mb-3"><i class="bi bi-currency-euro"></i> Precio: ${concert.preu} €</p>
+          <p class="card-text mb-3"><i class="bi bi-currency-euro"></i> Sala: ${concert.sala}</p>
           <div class="mt-auto">
             <a href="/concierto?id=${concert.idConcert}" class="btn btn-primary w-100" style="background-color:#624DE3;">
               Ver detalles
