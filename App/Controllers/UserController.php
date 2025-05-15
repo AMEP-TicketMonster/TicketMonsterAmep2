@@ -164,6 +164,35 @@ class UserController
         Session::closeSession();
     }
 
+    public function updateSaldo()
+    {
+        $nuevoSaldo = (float) $_POST["cantidad"];
+
+        if (!is_float($nuevoSaldo)) {
+            $_SESSION['errorSaldo'] = json_encode(["error" => "Datos incorrectos en el formato de los datos"]);
+            header("Location: /saldo");
+            exit;
+        }
+
+        if (!isset($_SESSION['user'])) {
+            header("Location: /login");
+            exit;
+        }
+
+        $userId = $_SESSION['user']['idUsuari'];
+
+        $saldoAnticArray = $this->userGateway->getSaldoByIdUsuari($userId);
+        $saldoAntic = (float) $saldoAnticArray['saldo'] ?? 0;
+
+        $saldoTotal = $saldoAntic + $nuevoSaldo;
+        if ($saldoTotal > 0) {
+            $this->userGateway->actualizarSaldo($userId, $saldoTotal);
+            $_SESSION['user']['saldo'] = $saldoTotal;
+        }
+        header("Location: /saldo");
+        exit;
+    }
+
 
     // Función para validar el correo electrónico
     private function isValidEmail($email)

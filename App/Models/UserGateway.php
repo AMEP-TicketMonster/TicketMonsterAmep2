@@ -38,17 +38,17 @@ class UserGateway
     // Crear un nuevo usuario (con rol y contraseña encriptada)
     public function createUser($nom, $cognoms, $email, $contrasenya, $rol = 'client')
 
-      {
-          $hashedPassword = password_hash($contrasenya, PASSWORD_DEFAULT);
-  
-          $sql = "INSERT INTO Usuaris (nom, cognom, email, contrasenya, saldo) VALUES (?, ?, ?, ?, ?)";
-          $stmt = $this->pdo->prepare($sql);
-          $stmt->execute([$nom, $cognoms, $email, $hashedPassword, 0.0]);
-          
-          $id = $this->pdo->lastInsertId();
-          return $id;
-      }
-    
+    {
+        $hashedPassword = password_hash($contrasenya, PASSWORD_DEFAULT);
+
+        $sql = "INSERT INTO Usuaris (nom, cognom, email, contrasenya, saldo) VALUES (?, ?, ?, ?, ?)";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$nom, $cognoms, $email, $hashedPassword, 0.0]);
+
+        $id = $this->pdo->lastInsertId();
+        return $id;
+    }
+
 
 
 
@@ -134,5 +134,12 @@ class UserGateway
         $sql = "UPDATE Usuaris SET saldo = ? WHERE idUsuari = ?";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$nouSaldo, $idUsuari]);
+    }
+    public function getSaldoByIdUsuari($idUsuari)
+    {
+        $sql = "SELECT saldo FROM Usuaris WHERE idUsuari = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$idUsuari]);
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 }

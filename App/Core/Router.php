@@ -157,19 +157,14 @@ class Route
                 $controller->cancelarReserva();
                 exit();
             }
-            if($requestUri == 'crea-concert-backend'){
+            if ($requestUri == 'crea-concert-backend') {
                 $controller = new ConcertController();
                 $controller->creaConcert();
             }
-            if($requestUri == 'recargar-saldo'){
+            if ($requestUri == 'recargar-saldo') {
                 $controller = new UserController();
-                //to do...
-                echo "to do... (queda por crear función de actualizar saldo y recoger con \$Post...)";
-                die();
-                //$controller->
+                $controller->updateSaldo();
             }
-            
-            
         }
 
         return __DIR__ . '/../Views/404.php'; // Si la ruta no está en la lista, mostrar 404
