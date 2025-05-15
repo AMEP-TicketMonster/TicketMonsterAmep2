@@ -22,7 +22,7 @@ class UserController
     public function login()
     {
         $email = trim($_POST["email"]);
-        $contrasenya = trim($_POST["password"]);
+        $contrasenya = $_POST["password"];
         $badLogin = false;
 
         if (empty($email) || empty($contrasenya)) {
@@ -185,7 +185,7 @@ class UserController
         $saldoAntic = (float) $saldoAnticArray['saldo'] ?? 0;
 
         $saldoTotal = $saldoAntic + $nuevoSaldo;
-        if ($saldoTotal > 0) {
+        if ($saldoTotal > 0 && $saldoTotal < 99999999.99) {
             $this->userGateway->actualizarSaldo($userId, $saldoTotal);
             $_SESSION['user']['saldo'] = $saldoTotal;
         }
