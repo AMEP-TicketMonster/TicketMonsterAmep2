@@ -22,7 +22,7 @@ $saldo = $_SESSION['user']['saldo'] ?? null;
                 <?php if ($saldo !== null): ?>
                     <li class="nav-item">
                         <a href="/saldo" class="btn btn-outline-success ms-3">
-                            Saldo: €<?= number_format($saldo, 2) ?>
+                            Saldo: <?= number_format($saldo, 2) ?>€
                         </a>
                     </li>
                 <?php endif; ?>
