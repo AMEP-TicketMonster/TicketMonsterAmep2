@@ -1,3 +1,6 @@
+<?php
+$saldo = $_SESSION['user']['saldo'] ?? null;
+?>
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
     <div class="container">
@@ -16,6 +19,13 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/crea-concert">NUEVO CONCIERTO</a>
                 </li>
+                <?php if ($saldo !== null): ?>
+                    <li class="nav-item">
+                        <a href="/saldo" class="btn btn-outline-success ms-3">
+                            Saldo: €<?= number_format($saldo, 2) ?>
+                        </a>
+                    </li>
+                <?php endif; ?>
                 <li class="nav-item">
                     <a href="/profile" class="btn btn-primary ms-2">Perfil</a>
                 </li>

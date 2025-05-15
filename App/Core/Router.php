@@ -40,7 +40,9 @@ class Route
             'edit-user',
             'compra-entrada-concert',
             'reserva-entrada-concert',
-            'crea-concert'
+            'crea-concert',
+            'saldo',
+            'recargar-saldo'
         ];
 
 
@@ -63,6 +65,7 @@ class Route
             'register'   => 'users/register.php',
             'dashboard'  => 'users/dashboard.php',
             'profile'    => 'users/perfil.php',
+            'saldo'      => 'users/saldo.php',
             'conciertos' => 'concerts/concerts.php',
             'concierto'  => 'concerts/details.php',
             'salas'      => 'salas.php',
@@ -157,6 +160,13 @@ class Route
             if($requestUri == 'crea-concert-backend'){
                 $controller = new ConcertController();
                 $controller->creaConcert();
+            }
+            if($requestUri == 'recargar-saldo'){
+                $controller = new UserController();
+                //to do...
+                echo "to do... (queda por crear función de actualizar saldo y recoger con \$Post...)";
+                die();
+                //$controller->
             }
             
             
