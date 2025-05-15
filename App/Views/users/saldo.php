@@ -10,7 +10,7 @@ $saldo = $_SESSION['user']['saldo'] ?? 0.00;
       <div class="text-center mb-4">
         <i class="bi bi-wallet2 fs-1 text-success mb-3"></i>
         <h5 class="fw-bold">Tu saldo actual</h5>
-        <p class="fs-4 text-success fw-bold">€<?= number_format($saldo, 2) ?></p>
+        <p class="fs-4 text-success fw-bold"><?= number_format($saldo, 2) ?>€</p>
       </div>
 
       <form method="POST" action="/recargar-saldo">

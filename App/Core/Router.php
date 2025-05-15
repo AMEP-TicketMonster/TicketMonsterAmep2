@@ -42,7 +42,8 @@ class Route
             'reserva-entrada-concert',
             'crea-concert',
             'saldo',
-            'recargar-saldo'
+            'recargar-saldo',
+            'filtroConciertos'
         ];
 
 
@@ -67,6 +68,7 @@ class Route
             'profile'    => 'users/perfil.php',
             'saldo'      => 'users/saldo.php',
             'conciertos' => 'concerts/concerts.php',
+            'filtroConciertos' => 'concerts/concerts.php',
             'concierto'  => 'concerts/details.php',
             'salas'      => 'salas.php',
             'crea-concert' => 'concerts/crearConcierto.php'
@@ -90,6 +92,10 @@ class Route
                         $concertController = new ConcertController();
                         $concertController->showConcert($id);
                     }
+                }
+                if ($requestUri == 'filtroConciertos') {
+                    $concertFiltro = new ConcertController();
+                    $concertFiltro->filtroConciertos();
                 }
 
 

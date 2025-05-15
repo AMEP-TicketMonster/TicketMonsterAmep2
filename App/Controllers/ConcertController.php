@@ -19,11 +19,12 @@ class ConcertController
         }
     }
 
-    public function pruebas(){
+    public function pruebas()
+    {
         $idConcert = 20;
         $img = "../../public/img/feria_abril.jpg";
         $this->concertGateway->guardaImatge($idConcert, $img);
-    }   
+    }
 
     public function carregaConcerts()
     {
@@ -35,19 +36,19 @@ class ConcertController
     public function showConcert($id)
     {
         $concert = $this->concertGateway->getByConcertId($id);
-    
+
         // Buscar una entrada disponible para ese concierto
         $entradaGateway = new \App\Models\EntradaGateway();
         $entradaDisponible = $entradaGateway->getEntradaDisponiblePorConcert($id);
-    
+
         if ($entradaDisponible) {
             $concert['idEntrada'] = $entradaDisponible['idEntrada'];
         }
-    
+
         $_SESSION['concert'] = $concert;
         setcookie('concert_id', $id, time() + 3600, '/');
     }
-    
+
     /*public function showConcert($id)
     {
         $concert = $this->concertGateway->getByConcertId($id);
@@ -56,7 +57,8 @@ class ConcertController
         setcookie('concert_id', $id, time() + 3600, '/');
         //header("Location: /concierto");
     }*/
-    public function creaConcert(){
+    public function creaConcert()
+    {
         //habría que hacer ciertas comprobaciones sobre los datos.
         $idUsuariOrganitzador = $_SESSION['user']['idUsuari'];
         $idGrup = $_POST['grupo_musical'];
@@ -72,7 +74,7 @@ class ConcertController
     // Aquest mètode crea tantes entrades disponibles com capacitat té la sala
     public function createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere)
     {
-        
+
         $this->concertGateway->createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere);
     }
 
@@ -90,5 +92,24 @@ class ConcertController
             $preu,
             $idGenere
         );
+    }
+
+
+
+    public function filtroConciertos()
+    {
+        // Filtros por la URL
+        $search = $_GET['search'] ?? $_POST['search'] ?? '';
+        $genere = $_GET['genere'] ?? $_POST['genere'] ?? '';
+        $sala = $_GET['sala'] ?? $_POST['sala'] ?? '';
+        $entradas = $_GET['entradas'] ?? $_POST['entradas'] ?? '';
+
+        var_dump([
+            'search' => $search,
+            'genere' => $genere,
+            'sala' => $sala,
+            'entradas' => $entradas,
+        ]);
+        die();
     }
 }
