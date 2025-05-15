@@ -23,20 +23,21 @@ class UserController
     {
         $email = trim($_POST["email"]);
         $contrasenya = trim($_POST["password"]);
+        $badLogin = false;
 
         if (empty($email) || empty($contrasenya)) {
-            echo "Error: Todos los campos son obligatorios.";
-            return;
+            //Esto no haría falta, ya que los campos en el frontend son required, pero por si llega el input de algun otro tipo de forma volvemos a mandar a login...
+            $badLogin = true;
         }
 
         // Obtener el usuario por email
-        $user = $this->userGateway->getByEmail($email);
+        if (!$badLogin) $user = $this->userGateway->getByEmail($email);
 
         // var_dump($this->userGateway->verifyPassword($contrasenya, $user['contrasenya']), $contrasenya, $user['contrasenya']);
         //var_dump();
         //die();
 
-        if ($user != NULL && $this->userGateway->verifyPassword($contrasenya, $user['contrasenya'])) {
+        if (!$badLogin && $user != NULL && $this->userGateway->verifyPassword($contrasenya, $user['contrasenya'])) {
             $_SESSION['status'] = true;
             unset($user['contrasenya']);                //CUIDADO que he pasado la contraseña al frontend!!! hay que tratar los datos! Con un DTO por ejemplo!
             $_SESSION['user'] = $user;   //luego hay que recoger y tratar los datos
@@ -146,28 +147,10 @@ class UserController
     public function logout()
     {
         Session::closeSession();
-        //session_destroy();
         header("Location: /login");
         exit();
     }
 
-
-
-    public function createUser($name, $email, $password)
-    {
-        //poner el código del insert
-
-        if ($this->isValidEmail($email)) {
-            $hashedPassword = password_hash($password, PASSWORD_DEFAULT); // Encriptar la contraseña
-            // Simular la creación de un nuevo usuario
-            echo "Nuevo usuario creado: <br>";
-            echo "Nombre: " . $name . "<br>";
-            echo "Correo: " . $email . "<br>";
-            // En un entorno real, deberías guardar estos datos en una base de datos.
-        } else {
-            echo "Correo electrónico no válido.";
-        }
-    }
 
     // Eliminar un usuario por ID
     public function delete($id)
