@@ -50,6 +50,43 @@ class UserController
             header("Location: /login");
         }
     }
+
+    private function redirectWithError($mensaje)
+    {
+        $_SESSION['bad_registration_data'] = $mensaje;
+        header("Location: /register");
+        exit;
+    }   
+
+    public function validarCamposRegistro($nom, $cognoms, $email, $contrasenya, $confirma_contrasenya)
+    {
+        if (empty($nom) || empty($cognoms) || empty($email) || empty($contrasenya) || empty($confirma_contrasenya)) {
+            return "Todos los campos son obligatorios.";
+        }
+    
+        if (!preg_match("/^[a-zA-ZÀ-ÿ\s]+$/u", $nom)) {
+            return "El nombre contiene caracteres no permitidos.";
+        }
+    
+        if (!preg_match("/^[a-zA-ZÀ-ÿ\s]+$/u", $cognoms)) {
+            return "Los apellidos contienen caracteres no permitidos.";
+        }
+    
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return "El correo electrónico no es válido.";
+        }
+    
+        if (strlen($contrasenya) < 6) {
+            return "La contraseña debe tener al menos 6 caracteres.";
+        }
+    
+        if ($contrasenya !== $confirma_contrasenya) {
+            return "Las contraseñas no coinciden.";
+        }
+    
+        return null; // Todo OK
+    }
+    
     public function register()
     {
         $nom = trim($_POST["nom"]);
@@ -58,24 +95,16 @@ class UserController
         $contrasenya = $_POST["contrasenya"];
         $confirma_contrasenya = $_POST["confirma_contrasenya"];
 
-        if (empty($nom) || empty($cognoms) || empty($email) || empty($contrasenya) || empty($confirma_contrasenya)) {
-            $_SESSION['bad_registration_data'] = "Todos los campos son obligatorios.";
-            header("Location: /register");
-            exit;
-        }
-        if ($contrasenya !== $confirma_contrasenya) {
-            $_SESSION['bad_registration_data'] = "Ldie();as contraseñas no coinciden.";
-            header("Location: /register");
-            exit;
+        $error = $this->validarCamposRegistro($nom, $cognoms, $email, $contrasenya, $confirma_contrasenya);
+        if ($error) {
+            $this->redirectWithError($error);
         }
 
 
         //verifica si l'usuari ja existeix!
         $existingUser = $this->userGateway->getByEmail($email);
         if ($existingUser) {
-            $_SESSION['bad_registration_data'] = "Este correo electrónico ya está registrado.";
-            header("Location: /register");
-            exit;
+            $this->redirectWithError("Este correo electrónico ya está registrado.");
         }
 
         //en el login hay que ajustarlo si hacemos esto:
@@ -92,9 +121,7 @@ class UserController
             header("Location: /dashboard");
             exit;
         } else {
-            $_SESSION['bad_registration_data'] = "Hubo un error al crear el usuario.";
-            header("Location: /register");
-            exit;
+            $this->redirectWithError("Hubo un error al crear el usuario.");
         }
     }
 
