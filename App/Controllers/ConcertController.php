@@ -92,9 +92,26 @@ class ConcertController
         $idSala = $_POST['lugar'];
         $nomConcert = $_POST['nombre_concierto'];
         $dia = $_POST['fecha'];
-        $hora = $_POST['hora'];
+        $horaIni = $_POST['hora-ini'];
+        $horaFin = $_POST['hora-fi'];
         $preu = $_POST['precio'];
         $idGenere = $_POST['genero'];
+        //a ver que sale xD
+        var_dump(
+            $idUsuariOrganitzador,
+            $idGrup,
+            $idSala,
+            $nomConcert,
+            $dia,
+            $horaIni,
+            $horaFin,
+            $preu,
+            $idGenere
+
+
+
+        );
+        die();
         //falta por coger el campo entradas disponibles
         $this->createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere);
     }

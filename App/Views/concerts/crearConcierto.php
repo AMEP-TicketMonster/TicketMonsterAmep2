@@ -14,12 +14,14 @@ $grups =  $_SESSION['datosConcierto_Grups'];
       </div>
       <div class="card-body">
         <form action="/crea-concert-backend" method="POST">
+          <p>Nombre:</p>
           <input type="text" class="form-control mb-3" name="nombre_concierto" placeholder="Nombre del concierto" required>
-
+          <p>Fecha:</p>
           <input type="date" class="form-control mb-3" name="fecha" required>
-
-          <input type="time" class="form-control mb-3" name="hora" required>
-
+          <p>Hora Inicio:</p>
+          <input type="time" class="form-control mb-3" name="hora-ini" required>
+          <p>Hora Fin:</p>
+          <input type="time" class="form-control mb-3" name="hora-fi" required>
           <select class="form-control mb-3" name="lugar" id="selector-salas" required>
             <option value="">Selecciona una sala</option>
             <!-- esto lo cargo con el javascript de más abajo-->
@@ -28,6 +30,7 @@ $grups =  $_SESSION['datosConcierto_Grups'];
             <option value="">Selecciona una grupo</option>
             <!-- esto lo cargo con el javascript de más abajo-->
           </select>
+          <p>Precio:</p>
           <input type="number" class="form-control mb-3" name="precio" placeholder="Precio (€)" step="0.01" required>
 
           <select class="form-control mb-3" name="genero" id="selector-genero" required>
