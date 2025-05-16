@@ -97,6 +97,10 @@ class Route
                     $concertFiltro = new ConcertController();
                     $concertFiltro->filtroConciertos();
                 }
+                if($requestUri == 'crea-concert'){
+                    $concertDades = new ConcertController();
+                    $concertDades->getDadesCreaConcerts();
+                }
 
 
 

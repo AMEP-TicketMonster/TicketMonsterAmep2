@@ -33,7 +33,8 @@ class ConcertController
         $_SESSION['concerts'] = $concerts;
     }
 
-    public function dadesConcerts(){
+    public function getDadesCreaConcerts()
+    {
         /*
         cal carregar:
             - idSala, nomSala
@@ -43,10 +44,16 @@ class ConcertController
         //implementar función getSalas
         //implementar función getGeneres
         //implementar función getGrups
+        $sales = $this->concertGateway->getSalas();
+        $generes = $this->concertGateway->getGeneres();
+        $grups = $this->concertGateway->getGrupMusical();
 
-        
-        $_SESSION['datos_concierto'] = $res;
-
+        //$res = [$sales, $generes, $grups];
+    
+        $_SESSION['datosConcierto_Salas'] = json_encode($sales, JSON_UNESCAPED_UNICODE);
+        $_SESSION['datosConciert_Genero'] = json_encode($generes, JSON_UNESCAPED_UNICODE);
+        $_SESSION['datosConcierto_Grups'] = json_encode($grups, JSON_UNESCAPED_UNICODE);
+  
     }
 
     public function showConcert($id)
