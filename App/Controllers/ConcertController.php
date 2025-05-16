@@ -21,9 +21,13 @@ class ConcertController
 
     public function pruebas()
     {
-        $idConcert = 20;
-        $img = "../../public/img/feria_abril.jpg";
-        $this->concertGateway->guardaImatge($idConcert, $img);
+        $filtres = ([
+            'search' => '',
+            'genere' => '',
+            'sala' => '',
+            'entradas' => ''
+        ]);
+        $this->concertGateway->concertFiltre($filtres);
     }
 
     public function carregaConcerts()

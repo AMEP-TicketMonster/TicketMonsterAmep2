@@ -191,12 +191,15 @@ class ConcertGateway
         }
 
         if (empty($params)) {
-            echo "Cap parametre";
-            die();
+            return [];
         }
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
+
+        $res = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        var_dump($res);
+        die();
 
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
