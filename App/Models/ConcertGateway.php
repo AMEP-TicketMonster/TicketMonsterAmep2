@@ -159,6 +159,7 @@ class ConcertGateway
         }
         return true;
     }
+
     /*Nombre concierto
     Nombre grupo
     Num entradas
@@ -202,5 +203,97 @@ class ConcertGateway
         die();
 
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /*
+        NO SE PUEDE:
+        1) Dos conciertos con mismo nombre
+        2) Dos conciertos con mismo grupo Y mismo dia Y hora
+        3) Dos conciertos con misma sala Y mismo dia Y hora
+        4) Dos grupos con dos conciertos simultaneos
+        5) Una sala no puede tener más de un evento al mismo tiempo
+        6) Dia y hora de un concierto deben ser válidas y futuras
+        7) Precio no puede ser negativo o cero
+        8) Dos conciertos con misma combinación de grupo, sala, dia y hora
+        9) idGrup, idSala o idGenere ya existe
+    */
+    public function validarParametrosCrearConcert($idGrup, $idSala, $nomConcert, $dia, $horaInici, $horaFi, $preu, $idGenere)
+    {
+        // Validación 1: Campos requeridos
+        if (empty($idGrup) || empty($idSala) || empty($nomConcert) || empty($dia) || empty($hora) || empty($preu) || empty($idGenere)) {
+            return "Tots els paràmetres són obligatoris.";
+        }
+
+        // Validación 2: Precio
+        if ($preu <= 0) {
+            return "El preu ha ser superior a 0.";
+        }
+
+        // Validación 3: Fecha futura
+        $timestamp = strtotime("$dia $horaInici");
+        if ($timestamp <= time()) {
+            return "No pots crear un concert en el passat.";
+        }
+
+        // Validación 4: Nombre único
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM Concerts WHERE nomConcert = ?");
+        $stmt->execute([$nomConcert]);
+        if ($stmt->fetchColumn() > 0) {
+            return "Ja existeix un concert amb aquest nom.";
+        }
+
+        // Validación 5: Conflicto de sala en DataSala
+        $stmt = $this->pdo->prepare("
+            SELECT COUNT(*) FROM DataSala
+            WHERE dia = :dia
+            AND idSala = :idSala
+            AND (
+                (hora_inici < :horaFi AND hora_fi > :horaInici)
+            )
+        ");
+        $stmt->execute([
+            ':dia' => $dia,
+            ':idSala' => $idSala,
+            ':horaInici' => $horaInici,
+            ':horaFi' => $horaFi
+        ]);
+        if ($stmt->fetchColumn() > 0) {
+            return "La sala ja està ocupada en aquest horari.";
+        }
+
+        // Validación 6: Conflicto de grupo en la misma franja
+        $stmt = $this->pdo->prepare("
+            SELECT COUNT(*) FROM Concerts c
+            JOIN DataSala ds ON c.idDataSala = ds.idDataSala
+            WHERE c.idGrup = :idGrup
+            AND ds.dia = :dia
+            AND (
+                (ds.hora_inici < :horaFi AND ds.hora_fi > :horaInici)
+            )
+        ");
+        $stmt->execute([
+            ':idGrup' => $idGrup,
+            ':dia' => $dia,
+            ':horaInici' => $horaInici,
+            ':horaFi' => $horaFi
+        ]);
+        if ($stmt->fetchColumn() > 0) {
+            return "Aquest grup ja té un concert programat en aquest horari.";
+        }
+
+        // Validación 7: FK válidas
+        foreach ([
+            ['table' => 'GrupsMusicals', 'field' => 'idGrup', 'value' => $idGrup],
+            ['table' => 'Sales', 'field' => 'idSala', 'value' => $idSala],
+            ['table' => 'Generes', 'field' => 'idGenere', 'value' => $idGenere]
+        ] as $check) {
+            $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM {$check['table']} WHERE {$check['field']} = ?");
+            $stmt->execute([$check['value']]);
+            if ($stmt->fetchColumn() == 0) {
+                return "Valor no vàlid per a " . $check['field'];
+            }
+        }
+
+        return null; // Todo OK
     }
 }

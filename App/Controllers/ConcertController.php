@@ -49,7 +49,7 @@ class ConcertController
         //implementar función getGrups
 
         
-        $_SESSION['datos_concierto'] = $res;
+        //$_SESSION['datos_concierto'] = $res;
 
     }
 
@@ -77,6 +77,7 @@ class ConcertController
         setcookie('concert_id', $id, time() + 3600, '/');
         //header("Location: /concierto");
     }*/
+
     public function creaConcert()
     {
         //habría que hacer ciertas comprobaciones sobre los datos.
@@ -89,6 +90,8 @@ class ConcertController
         $preu = $_POST['precio'];
         $idGenere = $_POST['genero'];
         //falta por coger el campo entradas disponibles
+        //En vez de 'hora' hay que hacer 'horaInici' y 'horaFi'
+        $this->concertGateway->validarParametrosCrearConcert($idGrup, $idSala, $nomConcert, $dia, $horaInici, $horaFi, $preu, $idGenere);
         $this->createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere);
     }
     // Aquest mètode crea tantes entrades disponibles com capacitat té la sala
