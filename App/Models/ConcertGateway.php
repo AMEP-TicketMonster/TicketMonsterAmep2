@@ -166,6 +166,38 @@ class ConcertGateway
     Sala*/
     public function concertFiltre($filtres = []) 
     {
-        
+       $sql = "SELECT * FROM Concerts c WHERE 1=1";
+
+       $params = [];
+
+        if (!empty($filtres['search'])) {
+            $sql .= " AND c.idConcert = :idConcert";
+            $params[':idConcert'] = (int) $filtres['search'];
+        }
+
+        if (!empty($filtres['genere'])) {
+            $sql .= " AND c.idGenere = :idGenere";
+            $params[':idGenere'] = (int) $filtres['genere'];
+        }
+
+        if (!empty($filtres['sala'])) {
+            $sql .= " AND c.idSala = :idSala";
+            $params[':idSala'] = (int) $filtres['sala'];
+        }
+
+        if (!empty($filtres['entradas'])) {
+            $sql .= " AND c.entrades_disponibles >= :entrades_disponibles";
+            $params[':entrades_disponibles'] = (int) $filtres['entradas'];
+        }
+
+        if (empty($params)) {
+            echo "Cap parametre";
+            die();
+        }
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 }
