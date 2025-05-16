@@ -146,6 +146,7 @@ class ConcertController
         $search = $_GET['search'] ?? $_POST['search'] ?? '';
         $genere = $_GET['genere'] ?? $_POST['genere'] ?? '';
         $sala = $_GET['sala'] ?? $_POST['sala'] ?? '';
+        $grup = $_GET['grupo_musical'] ?? $_POST['grupo_musical'] ?? '';
         $entradas = $_GET['entradas'] ?? $_POST['entradas'] ?? '';
 
         var_dump([
@@ -153,6 +154,7 @@ class ConcertController
             'genere' => $genere,
             'sala' => $sala,
             'entradas' => $entradas,
+            'grupMusical' => $grup
         ]);
         die();
     }
