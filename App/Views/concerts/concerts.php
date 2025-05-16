@@ -1,43 +1,45 @@
 <?php
 $concerts = $_SESSION['concerts'] ?? [];
+$sales = $_SESSION['datosConcierto_Salas'];
+$generes = $_SESSION['datosConciert_Genero'];
+$grups = $_SESSION['datosConcierto_Grups'];
 ?>
 
 <div class="container my-5">
     <h2 class="text-center mb-4">Próximos Conciertos</h2>
 
-    <!-- Filtros -->
     <form method="GET" action="/filtroConciertos" class="mb-4">
         <div class="row g-2">
-            <div class="col-md-3">
+            <div class="col-12 col-md-3">
                 <input type="text" name="search" class="form-control" placeholder="Buscar concierto o grupo" value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
             </div>
 
-            <div class="col-md-2">
-                <select name="genre" class="form-select">
+            <div class="col-6 col-md-2">
+                <select class="form-select" name="genere" id="selector-genero" required>
                     <option value="">Género</option>
-                    <!-- Habría que cargar los options según generos en la BD -->
-                    <option value="rock" <?= ($_GET['genre'] ?? '') === 'rock' ? 'selected' : '' ?>>Rock</option>
-                    <option value="pop" <?= ($_GET['genre'] ?? '') === 'pop' ? 'selected' : '' ?>>Pop</option>
-                    <option value="jazz" <?= ($_GET['genre'] ?? '') === 'jazz' ? 'selected' : '' ?>>Jazz</option>
                 </select>
             </div>
 
-            <div class="col-md-2">
-                <select name="sala" class="form-select">
+            <div class="col-6 col-md-2">
+                <select class="form-select" name="sala" id="selector-salas" required>
                     <option value="">Sala</option>
-                    <option value="Apolo" <?= ($_GET['sala'] ?? '') === 'Apolo' ? 'selected' : '' ?>>Apolo</option>
-                    <option value="Razzmatazz" <?= ($_GET['sala'] ?? '') === 'Razzmatazz' ? 'selected' : '' ?>>Razzmatazz</option>
                 </select>
             </div>
 
-            <div class="col-md-2">
+            <div class="col-6 col-md-2">
+                <select class="form-select" name="grupo_musical" id="selector-grups" required>
+                    <option value="">Grupo</option>
+                </select>
+            </div>
+
+            <div class="col-6 col-md-1">
                 <select name="entradas" class="form-select">
                     <option value="">Entradas</option>
                     <option value="disponibles" <?= ($_GET['entradas'] ?? '') === 'disponibles' ? 'selected' : '' ?>>Disponibles</option>
                 </select>
             </div>
 
-            <div class="col-md-2">
+            <div class="col-12 col-md-2">
                 <button type="submit" class="btn btn-primary w-100" style="background-color:#624DE3;">Filtrar</button>
             </div>
         </div>
@@ -69,7 +71,6 @@ $concerts = $_SESSION['concerts'] ?? [];
                         <p class="card-text mb-1"><i class="bi bi-geo-alt"></i> Ubicación: ${concert.ubicacio}</p>
                         <p class="card-text mb-1"><i class="bi bi-tag"></i> Género: ${concert.Genere}</p>
                         <p class="card-text mb-1"><i class="bi bi-building"></i> Sala: ${concert.sala}</p>
-                        
                         <div class="mt-auto">
                             <a href="/concierto?id=${concert.idConcert}" class="btn btn-primary w-100" style="background-color:#624DE3;">
                                 Ver detalles
@@ -81,4 +82,33 @@ $concerts = $_SESSION['concerts'] ?? [];
             container.appendChild(col);
         });
     }
+
+    const salas = JSON.parse(`<?= addslashes($sales) ?>`);
+    const grupos = JSON.parse(`<?= addslashes($grups) ?>`);
+    const generos = JSON.parse(`<?= addslashes($generes) ?>`);
+
+    const selectorSalas = document.getElementById("selector-salas");
+    const selectorGrupos = document.getElementById("selector-grups");
+    const selectorGenero = document.getElementById("selector-genero");
+
+    salas.forEach(sala => {
+        const option = document.createElement("option");
+        option.value = sala.idSala;
+        option.textContent = sala.nom;
+        selectorSalas.appendChild(option);
+    });
+
+    grupos.forEach(grup => {
+        const option = document.createElement("option");
+        option.value = grup.idGrup;
+        option.textContent = grup.nomGrup;
+        selectorGrupos.appendChild(option);
+    });
+
+    generos.forEach(genero => {
+        const option = document.createElement("option");
+        option.value = genero.idGenere;
+        option.textContent = genero.nomGenere;
+        selectorGenero.appendChild(option);
+    });
 </script>

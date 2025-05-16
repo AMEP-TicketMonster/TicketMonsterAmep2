@@ -84,6 +84,7 @@ class Route
                     //Si visita esta dirección cargamos los conciertos
                     $concerts = new ConcertController();
                     $concerts->carregaConcerts();
+                    $concerts->getDadesCreaConcerts();
                 }
                 if ($requestUri === 'concierto') {
                     $id = $_GET['id'] ?? $_COOKIE['concert_id'] ?? null;
