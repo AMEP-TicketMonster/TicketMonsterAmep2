@@ -1,4 +1,4 @@
-
+<?php $salas = $_SESSION['datos_concierto'];?>
 
 <div class="container py-5">
   <div class="col-md-8 mx-auto">
@@ -16,7 +16,10 @@
 
           <input type="time" class="form-control mb-3" name="hora" required>
 
-          <input type="text" class="form-control mb-3" name="lugar" placeholder="Lugar / Sala" required>
+         <select class="form-control mb-3" name="lugar" id="selector-salas" required>
+            <option value="">Selecciona una sala</option>
+            <!-- esto lo cargo con el javascript de más abajo-->
+          </select>
 
           <input type="text" class="form-control mb-3" name="grupo_musical" placeholder="Grupo musical" required>
 
@@ -32,4 +35,24 @@
     </div>
   </div>
 </div>
+
+<script>
+  let salas = <?php echo $salas ?>
+  /*const salas = [
+    { id: 1, nombre: "Sala Apolo" },
+    { id: 2, nombre: "Razzmatazz" },
+    { id: 3, nombre: "Teatro Barceló" }
+  ];*/
+
+  const selector = document.getElementById("selector-salas");
+
+  // Cargar las opciones en el select
+  salas.forEach(sala => {
+    const option = document.createElement("option");
+    option.value = sala.id;
+    option.textContent = sala.nombre;
+    selector.appendChild(option);
+  });
+</script>
+
 

@@ -33,6 +33,22 @@ class ConcertController
         $_SESSION['concerts'] = $concerts;
     }
 
+    public function dadesConcerts(){
+        /*
+        cal carregar:
+            - idSala, nomSala
+            - idGenere, nomGenere
+            - idGrupMusical, nomGrup
+        */
+        //implementar función getSalas
+        //implementar función getGeneres
+        //implementar función getGrups
+
+        
+        $_SESSION['datos_concierto'] = $res;
+
+    }
+
     public function showConcert($id)
     {
         $concert = $this->concertGateway->getByConcertId($id);

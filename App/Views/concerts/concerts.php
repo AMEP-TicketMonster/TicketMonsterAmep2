@@ -67,9 +67,9 @@ $concerts = $_SESSION['concerts'] ?? [];
                         </h6>
                         <p class="card-text mb-1"><i class="bi bi-calendar-event"></i> Fecha: ${concert.dia}</p>
                         <p class="card-text mb-1"><i class="bi bi-geo-alt"></i> Ubicación: ${concert.ubicacio}</p>
-                        <p class="card-text mb-1"><i class="bi bi-tag"></i> Género: ${concert.genere}</p>
+                        <p class="card-text mb-1"><i class="bi bi-tag"></i> Género: ${concert.Genere}</p>
                         <p class="card-text mb-1"><i class="bi bi-building"></i> Sala: ${concert.sala}</p>
-                        <p class="card-text mb-3"><i class="bi bi-ticket-perforated"></i> Entradas: ${concert.entradesDisponibles}</p>
+                        
                         <div class="mt-auto">
                             <a href="/concierto?id=${concert.idConcert}" class="btn btn-primary w-100" style="background-color:#624DE3;">
                                 Ver detalles
