@@ -220,13 +220,17 @@ class ConcertGateway
     public function validarParametrosCrearConcert($idGrup, $idSala, $nomConcert, $dia, $horaInici, $horaFi, $preu, $idGenere)
     {
         // Validación 1: Campos requeridos
-        if (empty($idGrup) || empty($idSala) || empty($nomConcert) || empty($dia) || empty($hora) || empty($preu) || empty($idGenere)) {
+        if (empty($idGrup) || empty($idSala) || empty($nomConcert) || empty($dia) || empty($horaInici) || empty($horaFi) || empty($preu) || empty($idGenere)) {
             return "Tots els paràmetres són obligatoris.";
         }
 
         // Validación 2: Precio
         if ($preu <= 0) {
-            return "El preu ha ser superior a 0.";
+            return "El preu ha de ser superior a 0.";
+        }
+
+        if (strtotime($horaFi) <= strtotime($horaInici)) {
+            return "L'hora de finalització ha de ser superior a l'hora d'inici.";
         }
 
         // Validación 3: Fecha futura
