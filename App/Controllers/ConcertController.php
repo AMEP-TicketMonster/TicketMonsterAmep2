@@ -58,6 +58,9 @@ class ConcertController
         $_SESSION['datosConciert_Genero'] = json_encode($generes, JSON_UNESCAPED_UNICODE);
         $_SESSION['datosConcierto_Grups'] = json_encode($grups, JSON_UNESCAPED_UNICODE);
   
+        
+        //$_SESSION['datos_concierto'] = $res;
+
     }
 
     public function showConcert($id)
@@ -84,6 +87,7 @@ class ConcertController
         setcookie('concert_id', $id, time() + 3600, '/');
         //header("Location: /concierto");
     }*/
+
     public function creaConcert()
     {
         //habría que hacer ciertas comprobaciones sobre los datos.
@@ -94,26 +98,19 @@ class ConcertController
         $dia = $_POST['fecha'];
         $horaIni = $_POST['hora-ini'];
         $horaFin = $_POST['hora-fi'];
+        $horaIni = $_POST['hora-ini'];
+        $horaFin = $_POST['hora-fi'];
         $preu = $_POST['precio'];
         $idGenere = $_POST['genero'];
-        //a ver que sale xD
-        var_dump(
-            $idUsuariOrganitzador,
-            $idGrup,
-            $idSala,
-            $nomConcert,
-            $dia,
-            $horaIni,
-            $horaFin,
-            $preu,
-            $idGenere
 
+        $error = $this->concertGateway->validarParametrosCrearConcert($idGrup, $idSala, $nomConcert, $dia, $horaIni, $horaFin, $preu, $idGenere);
+        if ($error) {
+            $_SESSION['error_creacio_concert'] = $error;
+            header("Location: /crear-concert");
+            exit;
+        }
 
-
-        );
-        die();
-        //falta por coger el campo entradas disponibles
-        $this->createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere);
+        $this->createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $horaIni, $horaFin, $preu, $idGenere);
     }
     // Aquest mètode crea tantes entrades disponibles com capacitat té la sala
     public function createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere)
