@@ -52,6 +52,24 @@ class ConcertGateway
         $user = $stmt->fetch();
         return $user;
     }
+    public function getSalas()
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM Sales");
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+    public function getGeneres()
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM Generes");
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+    public function getGrupMusical()
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM GrupsMusicals");
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
 
     public function createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere)
     {
@@ -138,7 +156,7 @@ class ConcertGateway
         $existe = $stmt->fetchColumn();
         return $existe > 0;
     }
-    
+
     public function guardaImatge($idConcert, $img)
     {
         if ($this->consultaImatge($img)) {
@@ -165,11 +183,11 @@ class ConcertGateway
     Num entradas
     Genero
     Sala*/
-    public function concertFiltre($filtres = []) 
+    public function concertFiltre($filtres = [])
     {
-       $sql = "SELECT * FROM Concerts c WHERE 1=1";
+        $sql = "SELECT * FROM Concerts c WHERE 1=1";
 
-       $params = [];
+        $params = [];
 
         if (!empty($filtres['search'])) {
             $sql .= " AND c.idConcert = :idConcert";

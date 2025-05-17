@@ -37,7 +37,8 @@ class ConcertController
         $_SESSION['concerts'] = $concerts;
     }
 
-    public function dadesConcerts(){
+    public function getDadesCreaConcerts()
+    {
         /*
         cal carregar:
             - idSala, nomSala
@@ -47,7 +48,16 @@ class ConcertController
         //implementar función getSalas
         //implementar función getGeneres
         //implementar función getGrups
+        $sales = $this->concertGateway->getSalas();
+        $generes = $this->concertGateway->getGeneres();
+        $grups = $this->concertGateway->getGrupMusical();
 
+        //$res = [$sales, $generes, $grups];
+    
+        $_SESSION['datosConcierto_Salas'] = json_encode($sales, JSON_UNESCAPED_UNICODE);
+        $_SESSION['datosConciert_Genero'] = json_encode($generes, JSON_UNESCAPED_UNICODE);
+        $_SESSION['datosConcierto_Grups'] = json_encode($grups, JSON_UNESCAPED_UNICODE);
+  
         
         //$_SESSION['datos_concierto'] = $res;
 
@@ -86,6 +96,8 @@ class ConcertController
         $idSala = $_POST['lugar'];
         $nomConcert = $_POST['nombre_concierto'];
         $dia = $_POST['fecha'];
+        $horaIni = $_POST['hora-ini'];
+        $horaFin = $_POST['hora-fi'];
         $horaIni = $_POST['hora-ini'];
         $horaFin = $_POST['hora-fi'];
         $preu = $_POST['precio'];
@@ -131,6 +143,7 @@ class ConcertController
         $search = $_GET['search'] ?? $_POST['search'] ?? '';
         $genere = $_GET['genere'] ?? $_POST['genere'] ?? '';
         $sala = $_GET['sala'] ?? $_POST['sala'] ?? '';
+        $grup = $_GET['grupo_musical'] ?? $_POST['grupo_musical'] ?? '';
         $entradas = $_GET['entradas'] ?? $_POST['entradas'] ?? '';
 
         var_dump([
@@ -138,6 +151,7 @@ class ConcertController
             'genere' => $genere,
             'sala' => $sala,
             'entradas' => $entradas,
+            'grupMusical' => $grup
         ]);
         die();
     }
