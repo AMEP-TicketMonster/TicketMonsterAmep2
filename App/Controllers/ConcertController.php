@@ -101,15 +101,19 @@ class ConcertController
         $horaIni = $_POST['hora-ini'];
         $horaFin = $_POST['hora-fi'];
         $preu = $_POST['precio'];
-        $idGenere = $_POST['genero'];
+        $idGenere = $_POST['genero'];  
 
         $error = $this->concertGateway->validarParametrosCrearConcert($idGrup, $idSala, $nomConcert, $dia, $horaIni, $horaFin, $preu, $idGenere);
         if ($error) {
+            /*
             $_SESSION['error_creacio_concert'] = $error;
             header("Location: /crear-concert");
             exit;
+            */
+            echo $error;
+            die();
         }
-
+        die();
         $this->createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $horaIni, $horaFin, $preu, $idGenere);
     }
     // Aquest mètode crea tantes entrades disponibles com capacitat té la sala

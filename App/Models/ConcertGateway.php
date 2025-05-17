@@ -238,7 +238,7 @@ class ConcertGateway
     public function validarParametrosCrearConcert($idGrup, $idSala, $nomConcert, $dia, $horaInici, $horaFi, $preu, $idGenere)
     {
         // Validación 1: Campos requeridos
-        if (empty($idGrup) || empty($idSala) || empty($nomConcert) || empty($dia) || empty($horaInici) || empty($horaFi) || empty($preu) || empty($idGenere)) {
+        if (empty($idGrup) || empty($idSala) || empty($nomConcert) || empty($dia) || empty($horaInici) || empty($horaFi) || $preu == '' || empty($idGenere)) {
             return "Tots els paràmetres són obligatoris.";
         }
 
