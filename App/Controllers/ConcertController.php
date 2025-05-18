@@ -21,13 +21,9 @@ class ConcertController
 
     public function pruebas()
     {
-        $filtres = ([
-            'search' => '',
-            'genere' => '',
-            'sala' => '',
-            'entradas' => ''
-        ]);
-        $this->concertGateway->concertFiltre($filtres);
+        $id = 21;
+        $img = "../../public/img/default.png";
+        $this->concertGateway->guardaImatge($id, $img);
     }
 
     public function carregaConcerts()
@@ -105,14 +101,11 @@ class ConcertController
 
         $error = $this->concertGateway->validarParametrosCrearConcert($idGrup, $idSala, $nomConcert, $dia, $horaIni, $horaFin, $preu, $idGenere);
         if ($error) {
-            /*
             $_SESSION['error_creacio_concert'] = $error;
-            header("Location: /crear-concert");
+            header("Location: /crea-concert");
             exit;
-            */
-            echo $error;
-            die();
         }
+        echo "finish";
         die();
         $this->createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $horaIni, $horaFin, $preu, $idGenere);
     }

@@ -159,11 +159,8 @@ class ConcertGateway
 
     public function guardaImatge($idConcert, $img)
     {
-        if ($this->consultaImatge($img)) {
+        if ($img != "../../public/img/default.png" && $this->consultaImatge($img)) {
             echo "Ja existeix";
-            return true;
-        } else {
-            echo "No existeix";
             return true;
         }
 
