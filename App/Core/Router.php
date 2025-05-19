@@ -71,7 +71,8 @@ class Route
             'filtroConciertos' => 'concerts/concerts.php',
             'concierto'  => 'concerts/details.php',
             'salas'      => 'salas.php',
-            'crea-concert' => 'concerts/crearConcierto.php'
+            'crea-concert' => 'concerts/crearConcierto.php',
+            'info'       => 'info.php',
         ];
 
 
