@@ -71,7 +71,7 @@ class ConcertGateway
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    public function createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere)
+    public function createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora_ini, $hora_fi, $preu, $idGenere)
     {
         /*
         // Obtenim la capacitat de la sala que serà les entrades disponibles del concert
@@ -99,12 +99,51 @@ class ConcertGateway
         */
 
         //Lo de antes es el código que se había preparado. ..........
-        //Como apaño por ahora uso esto:
+        //Como apaño por ahora uso esto:column 'fecha' in '
+        $default = "";
+        $entrades_disponibles = 1000;
+
+        $idDataSala = $this->reservaSalaConcert($idSala, $hora_ini, $hora_fi, $dia);
+
+        // $this->ConcertGateway->getDataSala($idDataSala);
+       
+        //he hardcodeado las entradas, hay que hacer la consulta xD
+        $stmt = $this->pdo->prepare("INSERT INTO Concerts (idGrup, idSala, nomConcert, entrades_disponibles, idGenere, idDataSala, imatgeURL)
+            VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$idGrup, $idSala, $nomConcert, 1000, $idGenere, $idDataSala, '']);
+
+
+
+
+
+        /*
+        Una vez creado el concierto hay que crear las entradas!!
+        */
+        /*
+        
         $stmt = $this->pdo->prepare("INSERT INTO Concerts (nomConcert, fecha, hora, lugar, grupo, precio, entradas_disponibles)
             VALUES (?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([$nomConcert, $dia, $hora, $idSala, $idGrup, $preu, 1000]);
-        die();
+        */
+        
     }
+    public function reservaSalaConcert($idSala, $hora_ini, $hora_fi, $dia)
+    {
+        $stmt = $this->pdo->prepare("INSERT INTO DataSala (dia, hora_inici, hora_fi, idSala)
+                VALUES (?, ?, ?, ?)");
+        $stmt->execute([$dia, $hora_ini, $hora_fi, $idSala]);
+        //devolver la idDataSala
+        return $this->pdo->lastInsertId();
+    }
+    public function getDataSala($idDataSala)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM DataSala WHERE idDataSala = ?");
+        $stmt->execute([$idDataSala]);
+        $res = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        var_dump($res);
+    }
+
+
 
     // Nota: aquesta funció no actualitza les entrades disponibles del concert pq es complica la lògica per actualitzar les entrades
     //       però sí modifica el preu de totes les entrades disponibles d'aquest concert
@@ -304,11 +343,13 @@ class ConcertGateway
         }
 
         // Validación 7: FK válidas
-        foreach ([
-            ['table' => 'GrupsMusicals', 'field' => 'idGrup', 'value' => $idGrup],
-            ['table' => 'Sales', 'field' => 'idSala', 'value' => $idSala],
-            ['table' => 'Generes', 'field' => 'idGenere', 'value' => $idGenere]
-        ] as $check) {
+        foreach (
+            [
+                ['table' => 'GrupsMusicals', 'field' => 'idGrup', 'value' => $idGrup],
+                ['table' => 'Sales', 'field' => 'idSala', 'value' => $idSala],
+                ['table' => 'Generes', 'field' => 'idGenere', 'value' => $idGenere]
+            ] as $check
+        ) {
             $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM {$check['table']} WHERE {$check['field']} = ?");
             $stmt->execute([$check['value']]);
             if ($stmt->fetchColumn() == 0) {

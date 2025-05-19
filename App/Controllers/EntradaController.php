@@ -333,8 +333,10 @@ class EntradaController
             echo "<hr>";
         }
     }
-
-
+    //pasar parámetros... $idConcert, etc.
+    public function creaEntradesConcert($idConcert){
+        //to do...
+    }
 
     /**
      * Cancela una reserva del usuario actual.
