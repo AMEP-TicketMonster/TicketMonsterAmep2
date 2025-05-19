@@ -135,8 +135,7 @@ class ConcertGateway
         $stmt->execute([$preu, $idConcert, $idEstatEntrada]);
     }
 
-
-    public function guardaValoracio($idConcert, $puntuacio, $comentari)
+public function guardaValoracio($idConcert, $puntuacio, $comentari)
     {
         $stmt = $this->pdo->prepare(
             "INSERT INTO Valoracions (idConcert, puntuacio, comentari) 
@@ -315,4 +314,10 @@ class ConcertGateway
 
         return null; // Todo OK
     }
+
+  
+
 }
+
+
+
