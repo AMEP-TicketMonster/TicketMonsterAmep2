@@ -315,6 +315,50 @@ public function guardaValoracio($idConcert, $puntuacio, $comentari)
         return null; // Todo OK
     }
 
+public function guardarValoracion($usuario_id, $concert_id, $puntuacion, $comentario) {
+    $stmt = $this->pdo->prepare("
+        INSERT INTO Valoracions (idUsuariClient, idConcert, puntuacio, comentari, data)
+        VALUES (?, ?, ?, ?, CURDATE())
+        ON DUPLICATE KEY UPDATE puntuacio = VALUES(puntuacio), comentari = VALUES(comentari), data = CURDATE()
+    ");
+    $stmt->execute([$usuario_id, $concert_id, $puntuacion, $comentario]);
+}
+
+
+public function usuarioYaValoro($usuario_id, $concert_id) {
+    $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM Valoracions WHERE idUsuariClient = ? AND idConcert = ?");
+    $stmt->execute([$usuario_id, $concert_id]);
+    return $stmt->fetchColumn() > 0;
+}
+
+public function obtenerValoracionesPorConcierto($concert_id) {
+    $stmt = $this->pdo->prepare("
+        SELECT V.puntuacio, V.comentari, V.data, U.nom AS nombre_usuario
+        FROM Valoracions V
+        JOIN Usuaris U ON V.idUsuariClient = U.id
+        WHERE V.idConcert = ?
+        ORDER BY V.data DESC
+    ");
+    $stmt->execute([$concert_id]);
+    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+}
+public function obtenerTodasLasValoraciones()
+{
+    $stmt = $this->pdo->prepare("
+        SELECT V.puntuacio, V.comentari, V.data, 
+               U.nom AS nombre_usuario, 
+               C.nomConcert
+        FROM Valoracions V
+        JOIN Usuaris U ON V.idUsuariClient = U.idUsuari
+        JOIN Concerts C ON V.idConcert = C.idConcert
+        ORDER BY V.data DESC
+    ");
+    $stmt->execute();
+    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+}
+
+
+
   
 
 }

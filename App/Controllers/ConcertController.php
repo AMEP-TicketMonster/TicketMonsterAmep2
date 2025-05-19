@@ -59,6 +59,8 @@ class ConcertController
 
     }
 
+
+
     public function showConcert($id)
     {
         $concert = $this->concertGateway->getByConcertId($id);
@@ -75,7 +77,9 @@ class ConcertController
         setcookie('concert_id', $id, time() + 3600, '/');
     }
 
-    /*public function showConcert($id)
+
+
+   /* public function showConcert($id)
     {
         $concert = $this->concertGateway->getByConcertId($id);
 
@@ -153,7 +157,46 @@ class ConcertController
         die();
     }
 
-  
+  public function valorar()
+{
+    $usuario_id = $_SESSION['user']['idUsuari'] ?? null;
+    if (!$usuario_id) {
+        $_SESSION['mensaje'] = "Debes iniciar sesión para valorar.";
+        header("Location: /login");
+        exit;
+    }
+
+    $concert_id = $_POST['concierto_id'] ?? null;
+    $puntuacion = $_POST['puntuacion'] ?? null;
+    $comentario = $_POST['comentario'] ?? '';
+
+    if (!$concert_id || !$puntuacion || $puntuacion < 1 || $puntuacion > 5) {
+        $_SESSION['mensaje'] = "Valoración inválida.";
+        header("Location: /concierto?id=$concert_id");
+        exit;
+    }
+
+    // Verificar si tiene entrada
+    $entradaGateway = new \App\Models\EntradaGateway();
+    $tieneEntrada = $entradaGateway->usuarioTieneEntrada($usuario_id, $concert_id);
+
+    if (!$tieneEntrada) {
+        $_SESSION['mensaje'] = "No puedes valorar un concierto que no has comprado.";
+        header("Location: /concierto?id=$concert_id");
+        exit;
+    }
+
+    $this->concertGateway->guardarValoracion($usuario_id, $concert_id, $puntuacion, $comentario);
+
+    $_SESSION['mensaje'] = "¡Gracias por tu valoración!";
+    header("Location: /concierto?id=$concert_id");
+}
+public function mostrarTodasValoraciones()
+{
+    $valoraciones = $this->concertGateway->obtenerTodasLasValoraciones();
+    $_SESSION['valoraciones_globales'] = $valoraciones;
+}
+
 
 
 }

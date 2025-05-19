@@ -80,3 +80,26 @@
         padding: 0 15px;  /* Un poco de espacio en los bordes para pantallas pequeñas */
     }
 }
+
+/* Valoración con estrellas */
+.estrellas {
+    direction: rtl;
+    unicode-bidi: bidi-override;
+    font-size: 2em;
+    display: inline-block;
+}
+
+.estrellas input[type=radio] {
+    display: none;
+}
+
+.estrellas label {
+    color: lightgray;
+    cursor: pointer;
+}
+
+.estrellas input[type=radio]:checked ~ label,
+.estrellas label:hover,
+.estrellas label:hover ~ label {
+    color: gold;
+}

@@ -239,7 +239,33 @@ public function incrementarEntradesDisponiblesConcert($idConcert)
             return $stmt->fetch(\PDO::FETCH_ASSOC);
         }
     
-    
+ public function obtenerValoracionesPorConcierto($concert_id) {
+    $stmt = $this->pdo->prepare("
+        SELECT V.puntuacio, V.comentari, V.data, U.nom AS nombre_usuario
+        FROM Valoracions V
+        JOIN Usuaris U ON V.idUsuariClient = U.idUsuari
+        WHERE V.idConcert = ?
+        ORDER BY V.data DESC
+    ");
+    $stmt->execute([$concert_id]);
+    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+}
+
+public function usuarioTieneEntrada($usuario_id, $concert_id) {
+    $stmt = $this->pdo->prepare("
+        SELECT COUNT(*) 
+        FROM EntradesUsuari EU
+        JOIN Entrades E ON EU.idEntrada = E.idEntrada
+        WHERE EU.idUsuari = ? AND E.idConcert = ?
+    ");
+    $stmt->execute([$usuario_id, $concert_id]);
+    return $stmt->fetchColumn() > 0;
+}
+
+
+
+
+
 
 }
 

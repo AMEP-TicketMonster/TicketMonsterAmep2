@@ -138,7 +138,11 @@ class Route
                 $controller->register();
                 exit();
             }
-
+           if ($requestUri === 'valorar') {
+        $controller = new ConcertController();
+        $controller->valorar();
+        exit();
+             }
             if ($requestUri == 'delete-user') {
                 if (isset($_POST['idUsuari']) && !empty($_POST['idUsuari'])) {
                     $id = $_POST['idUsuari'];

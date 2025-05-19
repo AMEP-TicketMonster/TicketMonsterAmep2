@@ -1,5 +1,8 @@
 <?php
 $concert = $_SESSION['concert'] ?? null;
+$usuarioCompro = $_SESSION['usuarioCompro'] ?? false;
+$usuarioValoro = $_SESSION['usuarioValoro'] ?? false;
+$valoraciones = $_SESSION['valoraciones'] ?? [];
 ?>
 
 <div class="container my-5">
@@ -41,8 +44,61 @@ $concert = $_SESSION['concert'] ?? null;
             <?php endif; ?>
         </div>
     </div>
+
+    <!-- FORMULARIO DE VALORACIÓN -->
+    <?php if ($usuarioCompro && !$usuarioValoro): ?>
+        <div class="card mt-5 p-4">
+            <h4 class="mb-3">Valora este concierto</h4>
+            <form method="POST" action="/valorar">
+                <input type="hidden" name="concierto_id" value="<?= htmlspecialchars($concert['idConcert']) ?>">
+
+                <div class="mb-3">
+                    <label for="comentario" class="form-label">Comentario:</label>
+                    <textarea name="comentario" id="comentario" class="form-control" rows="3" required></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Puntuación:</label><br>
+                    <div class="estrellas">
+                        <?php for ($i = 5; $i >= 1; $i--): ?>
+                            <input type="radio" name="puntuacion" value="<?= $i ?>" id="estrella<?= $i ?>" required>
+                            <label for="estrella<?= $i ?>">★</label>
+                        <?php endfor; ?>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-warning">Enviar valoración</button>
+            </form>
+        </div>
+    <?php elseif ($usuarioValoro): ?>
+        <div class="alert alert-success mt-4">
+            Ya has valorado este concierto. ¡Gracias por tu opinión!
+        </div>
+    <?php endif; ?>
+
+    <!-- LISTADO DE VALORACIONES -->
+    <?php if (!empty($valoraciones)): ?>
+        <div class="mt-5">
+            <h4>Opiniones de otros asistentes:</h4>
+            <?php foreach ($valoraciones as $valoracion): ?>
+                <div class="card my-3 p-3">
+                    <div>
+                        <strong><?= htmlspecialchars($valoracion['nombre_usuario']) ?></strong> 
+                        — <?= htmlspecialchars($valoracion['data']) ?>
+                    </div>
+                    <div class="mb-1">
+                        <?php for ($i = 1; $i <= 5; $i++): ?>
+                            <?= $i <= $valoracion['puntuacio'] ? '★' : '☆' ?>
+                        <?php endfor; ?>
+                    </div>
+                    <p><?= htmlspecialchars($valoracion['comentari']) ?></p>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
 </div>
 
+<!-- IMAGEN DINÁMICA -->
 <script>
     const concert = <?= json_encode($concert, JSON_UNESCAPED_UNICODE) ?>;
 
