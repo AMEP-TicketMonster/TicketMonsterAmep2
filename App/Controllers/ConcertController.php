@@ -113,8 +113,9 @@ class ConcertController
         }
         $idDataSala = $this->salesGateway->reservaSalaConcert($idSala, $horaIni, $horaFin, $dia);
         $aforamentSala = $this->salesGateway->getAforamentSala($idSala);
-        var_dump($idDataSala, $aforamentSala);
-        $this->createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $horaIni, $horaFin, $preu, $idGenere, $idDataSala, $aforamentSala);
+        //var_dump($idDataSala, $aforamentSala);
+        $idConcert = $this->createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $horaIni, $horaFin, $preu, $idGenere, $idDataSala, $aforamentSala);
+        $this->entradaGateway->crearEntradesPerConcert($idConcert, $aforamentSala, $preu);
         header("location: /conciertos");
     }
     // Aquest mètode crea tantes entrades disponibles com capacitat té la sala

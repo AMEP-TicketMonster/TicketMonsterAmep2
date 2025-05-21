@@ -99,11 +99,10 @@ class ConcertGateway
         // $this->ConcertGateway->getDataSala($idDataSala);
 
         //he hardcodeado las entradas, hay que hacer la consulta xD
-        $stmt = $this->pdo->prepare("INSERT INTO Concerts (idGrup, idSala, nomConcert, entrades_disponibles, idGenere, idDataSala, imatgeURL)
-            VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$idGrup, $idSala, $nomConcert, $aforamentSala, $idGenere, $idDataSala, '']);
-
-
+        $stmt = $this->pdo->prepare("INSERT INTO Concerts (idGrup, idSala, nomConcert, entrades_disponibles, idGenere, idDataSala, imatge) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$idGrup, $idSala, $nomConcert, $aforamentSala, $idGenere, $idDataSala, NULL]);
+        //devuelve id del concierto
+        return $this->pdo->lastInsertId();
 
 
 

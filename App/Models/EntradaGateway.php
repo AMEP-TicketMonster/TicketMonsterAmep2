@@ -242,8 +242,8 @@ public function incrementarEntradesDisponiblesConcert($idConcert)
     
         public function crearEntradesPerConcert($idConcert, $quantitat, $preu)
         {
-            $sql = "INSERT INTO Entrades (idEsdeveniment, tipus, preu, idEstatEntrada, idConcert)
-                    VALUES (:idEsdeveniment, 'Concert', :preu, :idEstatEntrada, :idConcert)";
+            $sql = "INSERT INTO Entrades (tipus, preu, idEstatEntrada, idConcert)
+                    VALUES ('Concert', :preu, :idEstatEntrada, :idConcert)";
         
             $stmt = $this->pdo->prepare($sql);
         
@@ -251,7 +251,6 @@ public function incrementarEntradesDisponiblesConcert($idConcert)
         
             for ($i = 0; $i < $quantitat; $i++) {
                 $stmt->execute([
-                    ':idEsdeveniment' => $idConcert,
                     ':preu' => $preu,
                     ':idEstatEntrada' => $idEstatEntrada,
                     ':idConcert' => $idConcert
