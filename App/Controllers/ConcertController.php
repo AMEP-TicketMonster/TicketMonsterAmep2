@@ -6,10 +6,12 @@ use App\Models\ConcertGateway;
 use Core\Route;
 use Core\Auth;
 use Core\Session;
+use App\Models\EntradaGateway;
 
 class ConcertController
 {
     private $concertGateway;
+    private $entradaGateway;
 
     public function __construct()
     {
@@ -17,13 +19,16 @@ class ConcertController
         if (session_status() === PHP_SESSION_NONE) {
             Session::sessionStart("ticketmonster_session");
         }
+        $this->entradaGateway = new EntradaGateway();
     }
 
     public function pruebas()
     {
-        $id = 21;
-        $img = "../../public/img/default.png";
-        $this->concertGateway->guardaImatge($id, $img);
+        $idConcert = 23;
+        $quantitat = 10;
+        $preu = 20.0;
+        $this->entradaGateway->crearEntradesPerConcert($idConcert, $quantitat, $preu);
+
     }
 
     public function carregaConcerts()
