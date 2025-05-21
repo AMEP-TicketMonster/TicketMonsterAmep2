@@ -1,13 +1,11 @@
 {
-    "name": "dani/ticket-monster",
-    "description": "xd",
+    "name": "amep06/ticketmonster",
     "autoload": {
         "psr-4": {
-            "Dani\\TicketMonster\\": "src/"
+            "App\\": "App/"
         }
     },
     "require": {
         "vlucas/phpdotenv": "^5.6"
     }
 }
-         

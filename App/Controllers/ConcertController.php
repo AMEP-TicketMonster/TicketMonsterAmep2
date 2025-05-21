@@ -6,6 +6,7 @@ use App\Models\ConcertGateway;
 use Core\Route;
 use Core\Auth;
 use Core\Session;
+use App\Controllers\GrupMusicalController;
 
 class ConcertController
 {
@@ -19,16 +20,16 @@ class ConcertController
         }
     }
 
-    public function pruebas()
-    {
-        $filtres = ([
-            'search' => '',
-            'genere' => '',
-            'sala' => '',
-            'entradas' => ''
-        ]);
-        $this->concertGateway->concertFiltre($filtres);
-    }
+public function pruebas()
+{
+    $controller = new \App\Controllers\GrupMusicalController();
+    $resultado = $controller->consultaGrup(4); // Usa un ID existente
+
+    echo "<pre>";
+    echo "Resultado de la consulta del grupo musical:";
+    print_r($resultado);
+    echo "</pre>";
+}
 
     public function carregaConcerts()
     {

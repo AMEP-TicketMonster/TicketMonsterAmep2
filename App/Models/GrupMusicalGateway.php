@@ -3,204 +3,61 @@
 namespace App\Models;
 
 use App\Config\Database;
-use Exception;
+use PDO;
 
-class ConcertGateway
+class GrupMusicalGateway
 {
     private $pdo;
-    private $id;
-    private $nomConcert;
-    private $data;
-    private $aforament;
-    private $preu;
-    private $idUsuariOrganitzador;
 
     public function __construct()
     {
-        $this->pdo = Database::getConnection(); // patrón singleton
+        $this->pdo = Database::getConnection();
     }
 
-    // Cargar todos los conciertos
-    public function getConcertList()
+    // Obtener grupo por nombre
+    public function getByNomGrup($nomGrup)
     {
-        $stmt = $this->pdo->prepare("SELECT idConcert, nomConcert AS nom, dia, nomGrup AS grup, nomGenere AS Genere, Sales.nom AS sala, Sales.ciutat AS ubicacio  
-            FROM Concerts 
-            JOIN DataSala ON Concerts.idDataSala = DataSala.idDataSala 
-            JOIN GrupsMusicals ON Concerts.idGrup = GrupsMusicals.idGrup 
-            JOIN Sales ON Concerts.idSala = Sales.idSala 
-            JOIN Generes ON Concerts.idGenere = Generes.idGenere 
-            AND DataSala.dia > CURDATE();
-        ");
-        $stmt->execute();
-        $concerts = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-
-        return $concerts;
+        $stmt = $this->pdo->prepare("SELECT * FROM GrupsMusicals WHERE nomGrup = ?");
+        $stmt->execute([$nomGrup]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function getByConcertId($id)
+    // Obtener grupo por ID
+    public function getByIdGrup($idGrup)
     {
-        $stmt = $this->pdo->prepare("
-        SELECT * 
-        FROM Concerts
-        JOIN DataSala ON Concerts.idDataSala = DataSala.idDataSala
-        JOIN GrupsMusicals ON Concerts.idGrup = GrupsMusicals.idGrup
-        JOIN Sales ON Concerts.idSala = Sales.idSala
-        JOIN Generes ON Concerts.idGenere = Generes.idGenere
-        JOIN Entrades ON Concerts.idConcert = Entrades.idConcert
-        WHERE Concerts.idConcert = ?
-    ");
-        $stmt->execute([$id]);
-        $user = $stmt->fetch();
-        return $user;
+        $stmt = $this->pdo->prepare("SELECT * FROM GrupsMusicals WHERE idGrup = ?");
+        $stmt->execute([$idGrup]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-    
-    public function getSalas()
+
+    // Crear nuevo grupo
+    public function createGrup($nomGrup, $dataCreacio, $descripcio)
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM Sales");
-        $stmt->execute();
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $stmt = $this->pdo->prepare("INSERT INTO GrupsMusicals (nomGrup, dataCreacio, descripcio) VALUES (?, ?, ?)");
+        $stmt->execute([$nomGrup, $dataCreacio, $descripcio]);
+        return $this->pdo->lastInsertId(); // Devuelve el ID del nuevo grupo
     }
-    
-    public function getGeneres()
+
+    // Actualizar grupo
+    public function updateGrup($idGrup, $nomGrup, $dataCreacio, $descripcio)
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM Generes");
-        $stmt->execute();
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $stmt = $this->pdo->prepare("UPDATE GrupsMusicals SET nomGrup = ?, dataCreacio = ?, descripcio = ? WHERE idGrup = ?");
+        return $stmt->execute([$nomGrup, $dataCreacio, $descripcio, $idGrup]);
     }
-    
-    public function getGrupMusical()
+
+    // Eliminar grupo
+    public function delete($idGrup)
     {
-        $stmt = $this->pdo->prepare("SELECT idGrup, nomGrup, descripcio, dataCreacio FROM GrupsMusicals");
-        $stmt->execute();
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $stmt = $this->pdo->prepare("DELETE FROM GrupsMusicals WHERE idGrup = ?");
+        return $stmt->execute([$idGrup]);
     }
 
-    public function createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere)
+
+        // Obtener todos los grupos musicales
+    public function getAllGrups()
     {
-        // Versió simplificada per ara
-        $stmt = $this->pdo->prepare("INSERT INTO Concerts (nomConcert, fecha, hora, lugar, grupo, precio, entradas_disponibles)
-            VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$nomConcert, $dia, $hora, $idSala, $idGrup, $preu, 1000]);
-        die();
+        $stmt = $this->pdo->query("SELECT * FROM GrupsMusicals ORDER BY nomGrup ASC");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Nota: aquesta funció no actualitza les entrades disponibles del concert pq es complica la lògica per actualitzar les entrades
-    //       però sí modifica el preu de totes les entrades disponibles d'aquest concert
-    public function modificaConcert($idConcert, $idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere)
-    {
-        // Modifica el concert
-        $sql = "UPDATE Concerts
-                SET idGrup = ?, 
-                idSala = ?, 
-                nomConcert = ?, 
-                dia = ?, 
-                hora = ?, 
-                preu = ?, 
-                idGenere = ?, 
-                idUsuari = ?
-                WHERE idConcert = ?";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere, $idUsuariOrganitzador, $idConcert]);
-
-        // Obtenim el id del estat "Disponible"
-        $stmt = $this->pdo->prepare("SELECT idEstatEntrada FROM EstatEntrada WHERE estat = 'Disponible'");
-        $stmt->execute();
-        $idEstatEntrada = $stmt->fetch(\PDO::FETCH_ASSOC)['idEstatEntrada'];
-
-        // Actualitzem els preus de totes les entrades per aquest concert que encara no s'han venut ni reservat
-        $sql = "UPDATE EntradesConcert SET preu = ? WHERE idConcert = ? AND idEstatEntrada = ?";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$preu, $idConcert, $idEstatEntrada]);
-    }
-
-    public function guardaValoracio($idConcert, $puntuacio, $comentari)
-    {
-        $stmt = $this->pdo->prepare(
-            "INSERT INTO Valoracions (idConcert, puntuacio, comentari) 
-            VALUES (?, ?, ?)"
-        );
-        $stmt->execute([$idConcert, $puntuacio, $comentari]);
-        return true;
-    }
-
-    public function consultaImatge($img)
-    {
-        $rutaImg = trim($img);
-        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM Concerts WHERE imatgeURL = :ruta");
-        $stmt->bindParam(':ruta', $rutaImg, \PDO::PARAM_STR);
-        $stmt->execute();
-
-        $existe = $stmt->fetchColumn();
-        return $existe > 0;
-    }
-
-    public function guardaImatge($idConcert, $img)
-    {
-        if ($this->consultaImatge($img)) {
-            echo "Ja existeix";
-            return true;
-        } else {
-            echo "No existeix";
-            return true;
-        }
-
-        $rutaImg = trim($img);
-
-        $stmt = $this->pdo->prepare("UPDATE Concerts SET imatgeURL = ? WHERE idConcert = ?");
-        $stmt->execute([$rutaImg, $idConcert]);
-
-        if ($stmt->rowCount() == 0) {
-            throw new Exception("No s'ha pogut actualitzar la imatge del concert.");
-        }
-        return true;
-    }
-    
-    /*Nombre concierto
-    Nombre grupo
-    Num entradas
-    Genero
-    Sala*/
-    public function concertFiltre($filtres = [])
-    {
-        $sql = "SELECT c.*, g.nomGrup
-               FROM Concerts c
-               JOIN GrupsMusicals g ON c.idGrup = g.idGrup
-               WHERE 1=1";
-
-        $params = [];
-
-        if (!empty($filtres['search'])) {
-            $sql .= " AND c.idConcert = :idConcert";
-            $params[':idConcert'] = (int) $filtres['search'];
-        }
-
-        if (!empty($filtres['genere'])) {
-            $sql .= " AND c.idGenere = :idGenere";
-            $params[':idGenere'] = (int) $filtres['genere'];
-        }
-
-        if (!empty($filtres['sala'])) {
-            $sql .= " AND c.idSala = :idSala";
-            $params[':idSala'] = (int) $filtres['sala'];
-        }
-
-        if (!empty($filtres['entradas'])) {
-            $sql .= " AND c.entrades_disponibles >= :entrades_disponibles";
-            $params[':entrades_disponibles'] = (int) $filtres['entradas'];
-        }
-
-        if (!empty($filtres['grup'])) {
-            $sql .= " AND g.idGrup = :idGrup";
-            $params[':idGrup'] = (int) $filtres['grup'];
-        }
-
-        if (empty($params)) {
-            return [];
-        }
-
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute($params);
-
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    }
 }
