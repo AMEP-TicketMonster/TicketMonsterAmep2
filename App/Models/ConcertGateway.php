@@ -157,23 +157,29 @@ class ConcertGateway
         return $existe > 0;
     }
 
-    public function guardaImatge($idConcert, $img)
+    public function guardarImatgeConcert($idConcert, $file)
     {
-        if ($img != "../../public/img/default.png" && $this->consultaImatge($img)) {
-            echo "Ja existeix";
-            return true;
+        // Validación básica
+        if ($file['error'] !== UPLOAD_ERR_OK) {
+            echo "megapene";
+            die(); 
         }
-
-        $rutaImg = trim($img);
-
-        $stmt = $this->pdo->prepare("UPDATE Concerts SET imatgeURL = ? WHERE idConcert = ?");
-        $stmt->execute([$rutaImg, $idConcert]);
-
-        if ($stmt->rowCount() == 0) {
-            throw new Exception("No s'ha pogut actualitzar la imatge del concert.");
+    
+        // Leer el contenido del archivo
+        $contenido = file_get_contents($file['tmp_name']);
+    
+        // Insertar el binario en la base de datos
+        $stmt = $this->pdo->prepare("UPDATE Concerts SET imatge = :img WHERE idConcert = :id");
+        $stmt->bindParam(':img', $contenido, \PDO::PARAM_LOB);
+        $stmt->bindParam(':id', $idConcert, \PDO::PARAM_INT);
+        $stmt->execute();
+    
+        if ($stmt->rowCount() === 0) {
+            echo "entusiasmo";
+            die(); // entusiasmo 
         }
-        return true;
     }
+    
 
     /*Nombre concierto
     Nombre grupo

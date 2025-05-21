@@ -21,9 +21,11 @@ class ConcertController
 
     public function pruebas()
     {
+        /*
         $id = 21;
         $img = "../../public/img/default.png";
         $this->concertGateway->guardaImatge($id, $img);
+        */
     }
 
     public function carregaConcerts()
@@ -110,7 +112,7 @@ class ConcertController
         $this->createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $horaIni, $horaFin, $preu, $idGenere);
     }
     // Aquest mètode crea tantes entrades disponibles com capacitat té la sala
-    public function createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere)
+    public function createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $horaIni, $horaFin, $horaFinora, $preu, $idGenere)
     {
 
         $this->concertGateway->createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere);

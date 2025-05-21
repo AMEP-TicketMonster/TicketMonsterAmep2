@@ -238,9 +238,6 @@ public function incrementarEntradesDisponiblesConcert($idConcert)
             $stmt->execute([$idConcert]);
             return $stmt->fetch(\PDO::FETCH_ASSOC);
         }
-    
-    
-
 }
 
 
