@@ -71,7 +71,7 @@ class ConcertGateway
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    public function createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere)
+public function createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere)
     {
         /*
         // Obtenim la capacitat de la sala que serà les entrades disponibles del concert
@@ -103,6 +103,13 @@ class ConcertGateway
         $stmt = $this->pdo->prepare("INSERT INTO Concerts (nomConcert, fecha, hora, lugar, grupo, precio, entradas_disponibles)
             VALUES (?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([$nomConcert, $dia, $hora, $idSala, $idGrup, $preu, 1000]);
+
+        $stmt = $this->pdo->prepare("SELECT idConcert FROM Concerts WHERE nomConcert = ?");
+        $stmt->execute([$nomConcert]);
+        $idConcert = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        $img = "../../public/img/default.png";
+        $this->guardaImatge($idConcert, $img);
         die();
     }
 
@@ -159,9 +166,8 @@ class ConcertGateway
 
     public function guardaImatge($idConcert, $img)
     {
-        if ($img != "../../public/img/default.png" && $this->consultaImatge($img)) {
-            echo "Ja existeix";
-            return true;
+        if ($this->consultaImatge($img)) {
+            $img = "../../public/img/default.png";
         }
 
         $rutaImg = trim($img);

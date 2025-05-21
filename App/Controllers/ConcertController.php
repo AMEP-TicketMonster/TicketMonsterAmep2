@@ -105,8 +105,6 @@ class ConcertController
             header("Location: /crea-concert");
             exit;
         }
-        echo "finish";
-        die();
         $this->createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $horaIni, $horaFin, $preu, $idGenere);
     }
     // Aquest mètode crea tantes entrades disponibles com capacitat té la sala
