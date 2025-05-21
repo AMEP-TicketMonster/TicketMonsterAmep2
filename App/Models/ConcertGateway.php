@@ -52,12 +52,7 @@ class ConcertGateway
         $user = $stmt->fetch();
         return $user;
     }
-    public function getSalas()
-    {
-        $stmt = $this->pdo->prepare("SELECT * FROM Sales");
-        $stmt->execute();
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    }
+
     public function getGeneres()
     {
         $stmt = $this->pdo->prepare("SELECT * FROM Generes");
@@ -71,7 +66,7 @@ class ConcertGateway
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    public function createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora_ini, $hora_fi, $preu, $idGenere)
+    public function createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora_ini, $hora_fi, $preu, $idGenere, $idDataSala, $aforamentSala)
 
     {
         /*
@@ -99,19 +94,14 @@ class ConcertGateway
         $stmt->execute($params);
         */
 
-        //Lo de antes es el código que se había preparado. ..........
-        //Como apaño por ahora uso esto:column 'fecha' in '
-        $default = "";
-        $entrades_disponibles = 1000;
-
-        $idDataSala = $this->reservaSalaConcert($idSala, $hora_ini, $hora_fi, $dia);
+        //$idDataSala = $this->reservaSalaConcert($idSala, $hora_ini, $hora_fi, $dia);
 
         // $this->ConcertGateway->getDataSala($idDataSala);
-       
+
         //he hardcodeado las entradas, hay que hacer la consulta xD
         $stmt = $this->pdo->prepare("INSERT INTO Concerts (idGrup, idSala, nomConcert, entrades_disponibles, idGenere, idDataSala, imatgeURL)
             VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$idGrup, $idSala, $nomConcert, 1000, $idGenere, $idDataSala, '']);
+        $stmt->execute([$idGrup, $idSala, $nomConcert, $aforamentSala, $idGenere, $idDataSala, '']);
 
 
 
@@ -127,23 +117,14 @@ class ConcertGateway
         $stmt->execute([$nomConcert, $dia, $hora, $idSala, $idGrup, $preu, 1000]);
 
         */
-        
     }
-    public function reservaSalaConcert($idSala, $hora_ini, $hora_fi, $dia)
-    {
-        $stmt = $this->pdo->prepare("INSERT INTO DataSala (dia, hora_inici, hora_fi, idSala)
-                VALUES (?, ?, ?, ?)");
-        $stmt->execute([$dia, $hora_ini, $hora_fi, $idSala]);
-        //devolver la idDataSala
-        return $this->pdo->lastInsertId();
-    }
+
     public function getDataSala($idDataSala)
     {
         $stmt = $this->pdo->prepare("SELECT * FROM DataSala WHERE idDataSala = ?");
         $stmt->execute([$idDataSala]);
         $res = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         var_dump($res);
-
     }
 
 

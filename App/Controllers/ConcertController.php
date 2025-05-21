@@ -7,19 +7,22 @@ use Core\Route;
 use Core\Auth;
 use Core\Session;
 use App\Models\EntradaGateway;
+use App\Models\SalesGateway;
 
 class ConcertController
 {
     private $concertGateway;
     private $entradaGateway;
+    private $salesGateway;
 
     public function __construct()
     {
         $this->concertGateway = new ConcertGateway();
+        $this->entradaGateway = new EntradaGateway();
+        $this->salesGateway = new SalesGateway();
         if (session_status() === PHP_SESSION_NONE) {
             Session::sessionStart("ticketmonster_session");
         }
-        $this->entradaGateway = new EntradaGateway();
     }
 
     public function pruebas()
@@ -28,7 +31,6 @@ class ConcertController
         $quantitat = 10;
         $preu = 20.0;
         $this->entradaGateway->crearEntradesPerConcert($idConcert, $quantitat, $preu);
-
     }
 
     public function carregaConcerts()
@@ -49,17 +51,18 @@ class ConcertController
         //implementar función getSalas
         //implementar función getGeneres
         //implementar función getGrups
-        $sales = $this->concertGateway->getSalas();
+        $sales = $this->salesGateway->getSalas();
         $generes = $this->concertGateway->getGeneres();
+        //hay que incluir el grupMusical
         $grups = $this->concertGateway->getGrupMusical();
 
         //$res = [$sales, $generes, $grups];
-    
+
         $_SESSION['datosConcierto_Salas'] = json_encode($sales, JSON_UNESCAPED_UNICODE);
         $_SESSION['datosConciert_Genero'] = json_encode($generes, JSON_UNESCAPED_UNICODE);
         $_SESSION['datosConcierto_Grups'] = json_encode($grups, JSON_UNESCAPED_UNICODE);
-  
-        
+
+
         //$_SESSION['datos_concierto'] = $res;
 
     }
@@ -100,7 +103,7 @@ class ConcertController
         $horaIni = $_POST['hora-ini'];
         $horaFin = $_POST['hora-fi'];
         $preu = $_POST['precio'];
-        $idGenere = $_POST['genero'];  
+        $idGenere = $_POST['genero'];
 
         $error = $this->concertGateway->validarParametrosCrearConcert($idGrup, $idSala, $nomConcert, $dia, $horaIni, $horaFin, $preu, $idGenere);
         if ($error) {
@@ -108,14 +111,17 @@ class ConcertController
             header("Location: /crea-concert");
             exit;
         }
-        $this->createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $horaIni, $horaFin, $preu, $idGenere);
+        $idDataSala = $this->salesGateway->reservaSalaConcert($idSala, $horaIni, $horaFin, $dia);
+        $aforamentSala = $this->salesGateway->getAforamentSala($idSala);
+        var_dump($idDataSala, $aforamentSala);
+        $this->createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $horaIni, $horaFin, $preu, $idGenere, $idDataSala, $aforamentSala);
         header("location: /conciertos");
     }
     // Aquest mètode crea tantes entrades disponibles com capacitat té la sala
-    public function createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora_ini, $hora_fi, $preu, $idGenere)
+    public function createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora_ini, $hora_fi, $preu, $idGenere, $idDataSala, $aforamentSala)
     {
 
-        $this->concertGateway->createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora_ini, $hora_fi, $preu, $idGenere);
+        $this->concertGateway->createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora_ini, $hora_fi, $preu, $idGenere, $idDataSala, $aforamentSala);
     }
 
     // Aquest mètode actualitza també el preu de totes les entrades disponibles d'aquest concert
