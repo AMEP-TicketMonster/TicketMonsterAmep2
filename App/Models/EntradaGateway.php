@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Config\Database;
+use Composer\InstalledVersions;
 
 class EntradaGateway
 {
@@ -239,7 +240,25 @@ public function incrementarEntradesDisponiblesConcert($idConcert)
             return $stmt->fetch(\PDO::FETCH_ASSOC);
         }
     
-    
+        public function crearEntradesPerConcert($idConcert, $quantitat, $preu)
+        {
+            $sql = "INSERT INTO Entrades (idEsdeveniment, tipus, preu, idEstatEntrada, idConcert)
+                    VALUES (:idEsdeveniment, 'Concert', :preu, :idEstatEntrada, :idConcert)";
+        
+            $stmt = $this->pdo->prepare($sql);
+        
+            $idEstatEntrada = 3;
+        
+            for ($i = 0; $i < $quantitat; $i++) {
+                $stmt->execute([
+                    ':idEsdeveniment' => $idConcert,
+                    ':preu' => $preu,
+                    ':idEstatEntrada' => $idEstatEntrada,
+                    ':idConcert' => $idConcert
+                ]);
+            }
+        }
+        
 
 }
 

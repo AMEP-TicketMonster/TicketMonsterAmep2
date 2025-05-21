@@ -72,6 +72,7 @@ class ConcertGateway
     }
 
     public function createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora_ini, $hora_fi, $preu, $idGenere)
+
     {
         /*
         // Obtenim la capacitat de la sala que serà les entrades disponibles del concert
@@ -124,6 +125,7 @@ class ConcertGateway
         $stmt = $this->pdo->prepare("INSERT INTO Concerts (nomConcert, fecha, hora, lugar, grupo, precio, entradas_disponibles)
             VALUES (?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([$nomConcert, $dia, $hora, $idSala, $idGrup, $preu, 1000]);
+
         */
         
     }
@@ -141,6 +143,7 @@ class ConcertGateway
         $stmt->execute([$idDataSala]);
         $res = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         var_dump($res);
+
     }
 
 
@@ -199,11 +202,7 @@ class ConcertGateway
     public function guardaImatge($idConcert, $img)
     {
         if ($this->consultaImatge($img)) {
-            echo "Ja existeix";
-            return true;
-        } else {
-            echo "No existeix";
-            return true;
+            $img = "../../public/img/default.png";
         }
 
         $rutaImg = trim($img);
@@ -277,7 +276,7 @@ class ConcertGateway
     public function validarParametrosCrearConcert($idGrup, $idSala, $nomConcert, $dia, $horaInici, $horaFi, $preu, $idGenere)
     {
         // Validación 1: Campos requeridos
-        if (empty($idGrup) || empty($idSala) || empty($nomConcert) || empty($dia) || empty($horaInici) || empty($horaFi) || empty($preu) || empty($idGenere)) {
+        if (empty($idGrup) || empty($idSala) || empty($nomConcert) || empty($dia) || empty($horaInici) || empty($horaFi) || $preu == '' || empty($idGenere)) {
             return "Tots els paràmetres són obligatoris.";
         }
 

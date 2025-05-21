@@ -6,10 +6,12 @@ use App\Models\ConcertGateway;
 use Core\Route;
 use Core\Auth;
 use Core\Session;
+use App\Models\EntradaGateway;
 
 class ConcertController
 {
     private $concertGateway;
+    private $entradaGateway;
 
     public function __construct()
     {
@@ -17,17 +19,16 @@ class ConcertController
         if (session_status() === PHP_SESSION_NONE) {
             Session::sessionStart("ticketmonster_session");
         }
+        $this->entradaGateway = new EntradaGateway();
     }
 
     public function pruebas()
     {
-        $filtres = ([
-            'search' => '',
-            'genere' => '',
-            'sala' => '',
-            'entradas' => ''
-        ]);
-        $this->concertGateway->concertFiltre($filtres);
+        $idConcert = 23;
+        $quantitat = 10;
+        $preu = 20.0;
+        $this->entradaGateway->crearEntradesPerConcert($idConcert, $quantitat, $preu);
+
     }
 
     public function carregaConcerts()
@@ -99,15 +100,14 @@ class ConcertController
         $horaIni = $_POST['hora-ini'];
         $horaFin = $_POST['hora-fi'];
         $preu = $_POST['precio'];
-        $idGenere = $_POST['genero'];
+        $idGenere = $_POST['genero'];  
 
         $error = $this->concertGateway->validarParametrosCrearConcert($idGrup, $idSala, $nomConcert, $dia, $horaIni, $horaFin, $preu, $idGenere);
         if ($error) {
             $_SESSION['error_creacio_concert'] = $error;
-            header("Location: /crear-concert");
+            header("Location: /crea-concert");
             exit;
         }
-
         $this->createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $horaIni, $horaFin, $preu, $idGenere);
         header("location: /conciertos");
     }
