@@ -99,8 +99,6 @@ class ConcertController
         $dia = $_POST['fecha'];
         $horaIni = $_POST['hora-ini'];
         $horaFin = $_POST['hora-fi'];
-        $horaIni = $_POST['hora-ini'];
-        $horaFin = $_POST['hora-fi'];
         $preu = $_POST['precio'];
         $idGenere = $_POST['genero'];  
 
@@ -111,12 +109,13 @@ class ConcertController
             exit;
         }
         $this->createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $horaIni, $horaFin, $preu, $idGenere);
+        header("location: /conciertos");
     }
     // Aquest mètode crea tantes entrades disponibles com capacitat té la sala
-    public function createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere)
+    public function createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora_ini, $hora_fi, $preu, $idGenere)
     {
 
-        $this->concertGateway->createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora, $preu, $idGenere);
+        $this->concertGateway->createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora_ini, $hora_fi, $preu, $idGenere);
     }
 
     // Aquest mètode actualitza també el preu de totes les entrades disponibles d'aquest concert
