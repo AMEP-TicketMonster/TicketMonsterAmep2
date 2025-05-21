@@ -70,7 +70,7 @@ class Route
             'conciertos' => 'concerts/concerts.php',
             'filtroConciertos' => 'concerts/concerts.php',
             'concierto'  => 'concerts/details.php',
-            'salas'      => 'salas.php',
+            'salas'      => 'salas/salas.php',
             'crea-concert' => 'concerts/crearConcierto.php',
             'info'       => 'info.php',
         ];
