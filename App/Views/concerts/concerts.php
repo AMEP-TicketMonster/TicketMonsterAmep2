@@ -15,19 +15,19 @@ $grups = $_SESSION['datosConcierto_Grups'];
             </div>
 
             <div class="col-6 col-md-2">
-                <select class="form-select" name="genere" id="selector-genero" required>
+                <select class="form-select" name="genere" id="selector-genero">
                     <option value="">Género</option>
                 </select>
             </div>
 
             <div class="col-6 col-md-2">
-                <select class="form-select" name="sala" id="selector-salas" required>
+                <select class="form-select" name="sala" id="selector-salas">
                     <option value="">Sala</option>
                 </select>
             </div>
 
             <div class="col-6 col-md-2">
-                <select class="form-select" name="grupo_musical" id="selector-grups" required>
+                <select class="form-select" name="grupo_musical" id="selector-grups">
                     <option value="">Grupo</option>
                 </select>
             </div>

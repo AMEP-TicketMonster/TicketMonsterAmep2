@@ -40,6 +40,13 @@ class ConcertController
         $_SESSION['concerts'] = $concerts;
     }
 
+    public function carregaConcertsFiltered($ids)
+    {
+        $concerts = $this->concertGateway->getConcertListFiltered($ids);
+        //pasar a json y ya lo tratará el frontend.
+        $_SESSION['concerts'] = $concerts;
+    }
+
     public function getDadesCreaConcerts()
     {
         /*
@@ -144,12 +151,29 @@ class ConcertController
     {
         // Filtros por la URL
         $search = $_GET['search'] ?? $_POST['search'] ?? '';
+
         $genere = $_GET['genere'] ?? $_POST['genere'] ?? '';
         $sala = $_GET['sala'] ?? $_POST['sala'] ?? '';
         $grup = $_GET['grupo_musical'] ?? $_POST['grupo_musical'] ?? '';
         $entradas = $_GET['entradas'] ?? $_POST['entradas'] ?? '';
+        if ($search != '' or $genere != '' or $sala != '' or $entradas != '') {
+            $res = $this->concertGateway->concertFiltre([
+                'search' => $search,
+                'genere' => $genere,
+                'sala' => $sala,
+                'entradas' => $entradas
+            ]);
+            $ids = [];
+            $i = 0;
+            foreach ($res as $elem) {
+                $ids[$i] = $elem['idConcert'];
+                $i++;
+            }
+            $this->carregaConcertsFiltered($ids);
+            // $_SESSION['concerts'] = "";
+        }
 
-        var_dump([
+        /*  var_dump([
             'search' => $search,
             'genere' => $genere,
             'sala' => $sala,
@@ -157,5 +181,6 @@ class ConcertController
             'grupMusical' => $grup
         ]);
         die();
+        */
     }
 }

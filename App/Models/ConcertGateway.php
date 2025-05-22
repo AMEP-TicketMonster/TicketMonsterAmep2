@@ -36,6 +36,33 @@ class ConcertGateway
         return $concerts;
     }
 
+    public function getConcertListFiltered($ids)
+    {
+        // Asegúrate de que $ids no esté vacío
+        if (empty($ids)) {
+            return []; // O lanza una excepción si lo prefieres
+        }
+
+        // Generamos tantos signos de interrogación como IDs haya
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+
+        $sql = "SELECT idConcert, nomConcert AS nom, dia, nomGrup AS grup, nomGenere AS Genere,
+                   Sales.nom AS sala, Sales.ciutat AS ubicacio  
+            FROM Concerts 
+            JOIN DataSala ON Concerts.idDataSala = DataSala.idDataSala 
+            JOIN GrupsMusicals ON Concerts.idGrup = GrupsMusicals.idGrup 
+            JOIN Sales ON Concerts.idSala = Sales.idSala 
+            JOIN Generes ON Concerts.idGenere = Generes.idGenere 
+            WHERE DataSala.dia > CURDATE()
+            AND idConcert IN ($placeholders)";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($ids);
+
+        $concerts = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return $concerts;
+    }
+
     public function getByConcertId($id)
     {
         $stmt = $this->pdo->prepare("
@@ -69,13 +96,13 @@ class ConcertGateway
     public function createConcert($idGrup, $idSala, $nomConcert, $idGenere, $idDataSala, $aforamentSala)
 
     {
-       
-        
+
+
         $stmt = $this->pdo->prepare("INSERT INTO Concerts (idGrup, idSala, nomConcert, entrades_disponibles, idGenere, idDataSala, imatge) VALUES (?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([(int)$idGrup, (int)$idSala, $nomConcert, (int)$aforamentSala, (int)$idGenere, (int)$idDataSala, '../../public/img/default.png']);
 
         //devuelve id del concierto
-       
+
         return $this->pdo->lastInsertId();
     }
 
@@ -162,15 +189,17 @@ class ConcertGateway
     Num entradas
     Genero
     Sala*/
-    public function concertFiltre($filtres = [])
+    public function concertFiltre($filtres)
     {
+
         $sql = "SELECT * FROM Concerts c WHERE 1=1";
 
         $params = [];
 
         if (!empty($filtres['search'])) {
-            $sql .= " AND c.idConcert = :idConcert";
-            $params[':idConcert'] = (int) $filtres['search'];
+
+            $sql .= " AND c.nomConcert = :nomConcert";
+            $params[':nomConcert'] = $filtres['search'];
         }
 
         if (!empty($filtres['genere'])) {
@@ -188,16 +217,15 @@ class ConcertGateway
             $params[':entrades_disponibles'] = (int) $filtres['entradas'];
         }
 
+
         if (empty($params)) {
+
             return [];
         }
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
 
-        $res = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        var_dump($res);
-        die();
 
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
