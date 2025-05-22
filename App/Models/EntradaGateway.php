@@ -17,9 +17,11 @@ class EntradaGateway
     }
 
     //cargar entradas
-    public function getEntradesComprades($idUsuari){
+    public function getEntradesComprades($idUsuari)
+    {
         //tipus, nomConcert, nomGrup
-        $stmt = $this->pdo->prepare("
+        $stmt = $this->pdo->prepare(
+            "
         SELECT Entrades.idEntrada,
         EntradesUsuari.data_transaccio,
         Entrades.preu,
@@ -36,7 +38,7 @@ class EntradaGateway
         JOIN DataSala ON Concerts.idDataSala = DataSala.idDataSala
 
         WHERE idUsuari = ?"
-    );
+        );
         $stmt->execute([$idUsuari]);
         return  $stmt->fetchAll();
     }
@@ -70,26 +72,26 @@ class EntradaGateway
         return $stmt->fetch(\PDO::FETCH_ASSOC)['estat'];
     }
 
-public function getEstatId($estat)
-{
-    $stmt = $this->pdo->prepare("SELECT idEstatEntrada FROM EstatEntrada WHERE estat = ?");
-    $stmt->execute([$estat]);
-    $res = $stmt->fetch(\PDO::FETCH_ASSOC);
-    return $res ? $res['idEstatEntrada'] : null;
-}
+    public function getEstatId($estat)
+    {
+        $stmt = $this->pdo->prepare("SELECT idEstatEntrada FROM EstatEntrada WHERE estat = ?");
+        $stmt->execute([$estat]);
+        $res = $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $res ? $res['idEstatEntrada'] : null;
+    }
 
-public function getById($idEntrada)
-{
-    $stmt = $this->pdo->prepare("SELECT * FROM Entrades WHERE idEntrada = ?");
-    $stmt->execute([$idEntrada]);
-    return $stmt->fetch(\PDO::FETCH_ASSOC);
-}
-public function cancelarReserva($idEntrada, $idUsuari)
-{
-    $stmt = $this->pdo->prepare("DELETE FROM EntradesUsuari WHERE idEntrada = ? AND idUsuari = ?");
-    $stmt->execute([$idEntrada, $idUsuari]);
-    return $stmt->rowCount(); // Devuelve cuántas filas eliminó
-}
+    public function getById($idEntrada)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM Entrades WHERE idEntrada = ?");
+        $stmt->execute([$idEntrada]);
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
+    public function cancelarReserva($idEntrada, $idUsuari)
+    {
+        $stmt = $this->pdo->prepare("DELETE FROM EntradesUsuari WHERE idEntrada = ? AND idUsuari = ?");
+        $stmt->execute([$idEntrada, $idUsuari]);
+        return $stmt->rowCount(); // Devuelve cuántas filas eliminó
+    }
 
 
     public function assignarEntradaAssaig($idEntrada, $idUsuari, $nou_estat)
@@ -112,11 +114,11 @@ public function cancelarReserva($idEntrada, $idUsuari)
         $stmt = $this->pdo->prepare("SELECT idEstatEntrada FROM EstatEntrada WHERE estat = ?");
         $stmt->execute([$nou_estat]);
         $nouEstatId = $stmt->fetch(\PDO::FETCH_ASSOC)['idEstatEntrada'];
-    
+
         // 2. Actualizar el estado de la entrada (sin tocar idUsuari)
         $stmt = $this->pdo->prepare("UPDATE Entrades SET idEstatEntrada = ? WHERE idEntrada = ?");
         $stmt->execute([$nouEstatId, $idEntrada]);
-    
+
         // 3. Insertar la relación usuario-entrada
         $stmt = $this->pdo->prepare("
             INSERT INTO EntradesUsuari (idEntrada, idUsuari, data_transaccio)
@@ -124,7 +126,7 @@ public function cancelarReserva($idEntrada, $idUsuari)
         ");
         $stmt->execute([$idEntrada, $idUsuari]);
     }
-    
+
     /*public function assignarEntradaConcert($idEntrada, $idUsuari, $nou_estat)
     {
         // Falta por tratar el tema del aforo, ver si quedan entradas disponibles. En el controlador también debe de comprobarlo.
@@ -210,24 +212,25 @@ public function cancelarReserva($idEntrada, $idUsuari)
 
 
     public function actualizarEstatEntrada($idEntrada, $nouEstat)
-{
-    $idEstat = $this->getEstatId($nouEstat);
-    $stmt = $this->pdo->prepare("UPDATE Entrades SET idEstatEntrada = ? WHERE idEntrada = ?");
-    $stmt->execute([$idEstat, $idEntrada]);
-}
+    {
+        $idEstat = $this->getEstatId($nouEstat);
+        $stmt = $this->pdo->prepare("UPDATE Entrades SET idEstatEntrada = ? WHERE idEntrada = ?");
+        $stmt->execute([$idEstat, $idEntrada]);
+    }
 
-public function incrementarEntradesDisponiblesConcert($idConcert)
-{
-    $stmt = $this->pdo->prepare("UPDATE Concerts SET entrades_disponibles = entrades_disponibles + 1 WHERE idConcert = ?");
-    $stmt->execute([$idConcert]);
-}
+    public function incrementarEntradesDisponiblesConcert($idConcert)
+    {
+        $stmt = $this->pdo->prepare("UPDATE Concerts SET entrades_disponibles = entrades_disponibles + 1 WHERE idConcert = ?");
+        $stmt->execute([$idConcert]);
+    }
 
 
 
-        // Retorna una entrada disponible para un concierto
+    // Retorna una entrada disponible para un concierto
     public function getEntradaDisponiblePorConcert($idConcert)
-        {
-            $stmt = $this->pdo->prepare("
+    {
+
+        $stmt = $this->pdo->prepare("
                 SELECT idEntrada 
                 FROM Entrades 
                 WHERE idConcert = ? 
@@ -236,6 +239,7 @@ public function incrementarEntradesDisponiblesConcert($idConcert)
                 )
                 LIMIT 1
             ");
+<<<<<<< HEAD
             $stmt->execute([$idConcert]);
             return $stmt->fetch(\PDO::FETCH_ASSOC);
         }
@@ -257,8 +261,24 @@ public function incrementarEntradesDisponiblesConcert($idConcert)
             ]);
         }
         
+=======
 
+        $stmt->execute([$idConcert]);
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
+
+    public function crearEntradesPerConcert($idConcert, $quantitat, $preu)
+    {
+        $sql = "INSERT INTO Entrades (tipus, preu, idEstatEntrada, idConcert)
+                    VALUES ('Concert', :preu, :idEstatEntrada, :idConcert)";
+>>>>>>> 9e3be27345fc8dab74ab7234f78e7f1f83e07d60
+
+        $stmt = $this->pdo->prepare($sql);
+        $idEstatEntrada = 3;
+        $stmt->execute([
+            ':preu' => $preu,
+            ':idEstatEntrada' => $idEstatEntrada,
+            ':idConcert' => $idConcert
+        ]);
+    }
 }
-
-
-

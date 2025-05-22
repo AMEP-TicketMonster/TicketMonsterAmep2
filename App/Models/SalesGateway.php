@@ -61,7 +61,6 @@ class SalesGateway
             $reservasExistentes = $stmt->fetchColumn();
 
             return $reservasExistentes == 0;
-
         } catch (PDOException $e) {
 
             error_log("Error en hiHaDisponibilitat: " . $e->getMessage());
@@ -80,7 +79,6 @@ class SalesGateway
             );
             $stmt->execute([$idUsuari, $idSala, $idDataSala]);
             return $stmt->rowCount() > 0;
-
         } catch (PDOException $e) {
 
             error_log("Error en crearReserva: " . $e->getMessage());
@@ -101,7 +99,6 @@ class SalesGateway
             );
             $stmt->execute([$idSala]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
-
         } catch (PDOException $e) {
 
             error_log("Error en getReservesSala: " . $e->getMessage());
@@ -123,7 +120,6 @@ class SalesGateway
             );
             $stmt->execute([$idUsuari]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
-
         } catch (PDOException $e) {
 
             error_log("Error en getReservesUsuari: " . $e->getMessage());
@@ -143,7 +139,6 @@ class SalesGateway
             );
             $stmt->execute([$idAssaig, $idUsuari]);
             return $stmt->fetchColumn() > 0;
-
         } catch (PDOException $e) {
 
             error_log("Error en esReservaUsuari: " . $e->getMessage());
@@ -162,7 +157,6 @@ class SalesGateway
             );
             $stmt->execute([$nouIdSala, $nouIdDataSala, $idAssaig]);
             return $stmt->rowCount() > 0;
-
         } catch (PDOException $e) {
 
             error_log("Error en actualitzarReserva: " . $e->getMessage());
@@ -181,7 +175,6 @@ class SalesGateway
             );
             $stmt->execute([$idAssaig]);
             return $stmt->rowCount() > 0;
-
         } catch (PDOException $e) {
 
             error_log("Error en eliminarReserva: " . $e->getMessage());
@@ -190,31 +183,84 @@ class SalesGateway
     }
 
     public function getSalas()
+
+
+
     {
+
+
         $stmt = $this->pdo->prepare("SELECT * FROM Sales");
+
+
         $stmt->execute();
+
+
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
+
+
     public function reservaSalaConcert($idSala, $hora_ini, $hora_fi, $dia)
+
+
     {
+
+
         $stmt = $this->pdo->prepare("INSERT INTO DataSala (dia, hora_inici, hora_fi, idSala)
+
+
                 VALUES (?, ?, ?, ?)");
+
+
         $stmt->execute([$dia, $hora_ini, $hora_fi, $idSala]);
+
+
         //devolver la idDataSala
+
+
         return $this->pdo->lastInsertId();
     }
+
+
     public function getDataSala($idDataSala)
+
+
     {
+
+
         $stmt = $this->pdo->prepare("SELECT * FROM DataSala WHERE idDataSala = ?");
+
+
         $stmt->execute([$idDataSala]);
+
+
         $res = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+
         //var_dump($res);
+<<<<<<< HEAD
     }
     public function getAforamentSala($id){
         $stmt = $this->pdo->prepare("SELECT capacitat FROM Sales WHERE idSala = ? LIMIT 1");
         $stmt->execute([$id]);
         $res = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         return $res;
+=======
+
+
+>>>>>>> 9e3be27345fc8dab74ab7234f78e7f1f83e07d60
     }
 
+
+    public function getAforamentSala($id)
+    {
+
+
+        $stmt = $this->pdo->prepare("SELECT capacitat FROM Sales WHERE idSala = ? LIMIT 1");
+
+
+        $stmt->execute([$id]);
+
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
 }

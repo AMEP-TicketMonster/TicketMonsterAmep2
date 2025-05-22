@@ -1,5 +1,6 @@
 <?php
 $concert = $_SESSION['concert'] ?? null;
+
 ?>
 
 <div class="container my-5">
