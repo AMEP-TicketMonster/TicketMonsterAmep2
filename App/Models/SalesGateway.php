@@ -70,6 +70,7 @@ class SalesGateway
     }
 
     public function crearReserva($idUsuari, $idSala, $idDataSala)
+    {
 
         try {
 
@@ -210,9 +211,10 @@ class SalesGateway
         //var_dump($res);
     }
     public function getAforamentSala($id){
-          $stmt = $this->pdo->prepare("SELECT * FROM Sales WHERE idSala = ?");
+        $stmt = $this->pdo->prepare("SELECT capacitat FROM Sales WHERE idSala = ? LIMIT 1");
         $stmt->execute([$id]);
         $res = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return $res;
     }
 
 }

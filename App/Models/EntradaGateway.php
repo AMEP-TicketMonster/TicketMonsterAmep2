@@ -242,6 +242,7 @@ public function incrementarEntradesDisponiblesConcert($idConcert)
     
         public function crearEntradesPerConcert($idConcert, $quantitat, $preu)
         {
+            var_dump($idConcert, $quantitat, $preu);
             $sql = "INSERT INTO Entrades (tipus, preu, idEstatEntrada, idConcert)
                     VALUES ('Concert', :preu, :idEstatEntrada, :idConcert)";
         
@@ -249,13 +250,11 @@ public function incrementarEntradesDisponiblesConcert($idConcert)
         
             $idEstatEntrada = 3;
         
-            for ($i = 0; $i < $quantitat; $i++) {
-                $stmt->execute([
-                    ':preu' => $preu,
-                    ':idEstatEntrada' => $idEstatEntrada,
-                    ':idConcert' => $idConcert
-                ]);
-            }
+            $stmt->execute([
+                ':preu' => $preu,
+                ':idEstatEntrada' => $idEstatEntrada,
+                ':idConcert' => $idConcert
+            ]);
         }
         
 
