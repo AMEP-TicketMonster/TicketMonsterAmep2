@@ -160,4 +160,8 @@ class GrupMusicalController
             exit;
         }
     }
+    public function mostraGrups()
+    {
+        $_SESSION['grupos'] = $this->GrupMusicalController->getAllGrups();
+    }
 }

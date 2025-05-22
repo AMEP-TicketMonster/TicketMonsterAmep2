@@ -5,6 +5,7 @@ namespace Core;
 use App\Controllers\UserController;
 use App\Controllers\ConcertController;
 use App\Controllers\EntradaController;
+use App\Controllers\GrupMusicalController;
 use App\Core\Auth;
 
 class Route
@@ -43,7 +44,9 @@ class Route
             'crea-concert',
             'saldo',
             'recargar-saldo',
-            'filtroConciertos'
+            'filtroConciertos',
+            'grupMusical',
+            'grupos'
         ];
 
 
@@ -73,6 +76,7 @@ class Route
             'salas'      => 'salas/salas.php',
             'crea-concert' => 'concerts/crearConcierto.php',
             'info'       => 'info.php',
+            'grupos'    => 'grupmusical/grupmusical.php',
         ];
 
 
@@ -103,7 +107,11 @@ class Route
                     $concertDades = new ConcertController();
                     $concertDades->getDadesCreaConcerts();
                 }
-
+                if($requestUri == 'grupos')
+                {
+                    $grupMusical = new GrupMusicalController();
+                    $grupMusical->mostraGrups();
+                }
 
 
 
