@@ -48,7 +48,7 @@ class SalesController
 
         if (!$this->salesGateway->existeFranjaHoraria($idDataSala, $idSala))
         {
-            echo "Error: Franja horària no vàlida per aquesta sala.";
+            echo "Error: Franja horï¿½ria no vï¿½lida per aquesta sala.";
             return;
         }
 
@@ -107,7 +107,7 @@ class SalesController
         }
         else
         {
-            echo "Error: No s'ha proporcionat sala ni hi ha sessió d'usuari.";
+            echo "Error: No s'ha proporcionat sala ni hi ha sessiï¿½ d'usuari.";
         }
     }
 
@@ -135,7 +135,7 @@ class SalesController
             !$this->salesGateway->existeFranjaHoraria($nouIdDataSala, $nouIdSala)
         )
         {
-            echo "Error: Nova sala o franja horària no vàlida.";
+            echo "Error: Nova sala o franja horï¿½ria no vï¿½lida.";
             return;
         }
 
@@ -164,13 +164,13 @@ class SalesController
 
         if (!$idUsuari || !$idAssaig)
         {
-            echo "Error: Falten dades per cancel·lar la reserva.";
+            echo "Error: Falten dades per cancelï¿½lar la reserva.";
             return;
         }
 
         if (!$this->salesGateway->esReservaUsuari($idUsuari, $idAssaig))
         {
-            echo "Error: No tens permisos per cancel·lar aquesta reserva.";
+            echo "Error: No tens permisos per cancelï¿½lar aquesta reserva.";
             return;
         }
 
@@ -178,11 +178,12 @@ class SalesController
 
         if ($resultat)
         {
-            echo "Reserva cancel·lada correctament.";
+            echo "Reserva cancelï¿½lada correctament.";
         }
         else
         {
-            echo "Error al cancel·lar la reserva.";
+            echo "Error al cancelï¿½lar la reserva.";
         }
     }
+    
 }
