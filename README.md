@@ -1,2 +1,2 @@
-# TicketMonsterAmep2
+# TicketMonster - Amep2
 TicketMonster AMEP
