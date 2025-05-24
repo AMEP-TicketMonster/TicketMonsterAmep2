@@ -54,6 +54,7 @@ class Route
             'filtroConciertos',
             'grupMusical',
             'grupos',
+            'delete-grupos',
             'crea-grup',
             'crea-grup-backend'
         ];
@@ -86,12 +87,22 @@ class Route
             'crea-concert' => 'concerts/crearConcierto.php',
             'info'       => 'info.php',
             'grupos'    => 'grupmusical/grupmusical.php',
+            'grupos_admin' => 'grupmusical/grupmusical_admin.php',
             'crea-grup' => 'grupmusical/crea_grup.php'
         ];
 
 
 
         if ($requestMethod === 'GET') {
+            //excepcionalmente, esta URL
+            if (str_contains($requestUri, 'delete-grupos')) {
+
+                $id = $_GET['id'] ?? $_COOKIE['id'] ?? null;
+                if ($id !== null) {
+                    $controller = new GrupMusicalController();
+                    $controller->baixaGrup($id);
+                }
+            }
 
             //Para el caso de las vistas
             if (array_key_exists($requestUri, $routes)) {
@@ -151,9 +162,12 @@ class Route
                 if ($requestUri == 'grupos') {
                     $grupMusical = new GrupMusicalController();
                     $grupMusical->mostraGrups();
+                    if (Auth::isAdmin()) {
+                        $requestUri = 'grupos_admin';
+                    }
                 }
 
-                if($requestUri == 'dashboard'){
+                if ($requestUri == 'dashboard') {
                     $controller = new GrupMusicalController();
                     $controller->mostraGrups();
                 }
@@ -201,6 +215,13 @@ class Route
                     exit();
                 }
             }
+
+
+
+
+
+
+
             if ($requestUri == 'edit-user') {
                 $controller = new UserController();
                 $controller->updateProfile();
