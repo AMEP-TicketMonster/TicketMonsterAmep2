@@ -6,6 +6,8 @@ use App\Controllers\UserController;
 use App\Controllers\ConcertController;
 use App\Controllers\EntradaController;
 use App\Controllers\GrupMusicalController;
+use App\Controllers\SalaController;
+
 use App\Core\Auth;
 
 class Route
@@ -34,6 +36,11 @@ class Route
             'conciertos',
             'concierto',
             'salas',
+            'mis-reservas',
+             'eliminar-reserva',
+             'editar-reserva',
+             'guardar-edicion',
+
             'dashboard',
             'logout',
             'profile',
@@ -106,7 +113,8 @@ class Route
                     $concertFiltro = new ConcertController();
                     $concertFiltro->filtroConciertos();
                 }
-                if ($requestUri == 'crea-concert') {
+
+        if ($requestUri == 'crea-grup') {
                     if (Auth::isAdmin()) {
                         $concertDades = new ConcertController();
                         $concertDades->getDadesCreaConcerts();
@@ -114,8 +122,23 @@ class Route
                         $_SESSION[''];
                         header('location: /dashboard');
                     }
+    if ($requestUri == 'salas') {
+                $salaController = new SalaController();
+                $salaController->index(); // Cargar salas y slots
                 }
-                 if ($requestUri == 'crea-grup') {
+   if ($requestUri === 'mis-reservas') {
+    $controller = new SalaController();
+    $controller->verMisReservas();
+    exit();
+}
+
+if ($requestUri === 'editar-reserva') {
+    $controller = new SalaController();
+    $controller->editarReserva();
+    exit();
+}
+
+                  if ($requestUri == 'crea-concert') {
                     if (Auth::isAdmin()) {
                         $concertDades = new ConcertController();
                         $concertDades->getDadesCreaConcerts();
@@ -205,6 +228,24 @@ class Route
                 $controller = new UserController();
                 $controller->updateSaldo();
             }
+            if ($requestUri === 'reservar-sala') {
+    $controller = new SalaController();
+    $controller->reservarSala();
+    exit();
+}
+if ($requestUri === 'eliminar-reserva') {
+    $controller = new SalaController();
+    $controller->eliminarReserva();
+    exit();
+}
+
+if ($requestUri === 'guardar-edicion') {
+    $controller = new SalaController();
+    $controller->guardarEdicion();
+    exit();
+}
+
+
         }
 
         return __DIR__ . '/../Views/404.php'; // Si la ruta no está en la lista, mostrar 404
