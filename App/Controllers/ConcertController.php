@@ -72,8 +72,17 @@ class ConcertController
         if ($entradaDisponible) {
             $concert['idEntrada'] = $entradaDisponible['idEntrada'];
         }
+        
+        $valoracions = $this->concertGateway->obtenerValoracionesPorConcierto($id);
+        $mitjana = 0;
+        if (count($valoracions) > 0) {
+            $total = array_sum(array_column($valoracions, 'puntuacio'));
+            $mitjana = $total / count($valoracions);
+        }
 
         $_SESSION['concert'] = $concert;
+        $_SESSION['valoracions'] = $valoracions;
+        $_SESSION['mitjana_valoracio'] = round($mitjana, 1);
         setcookie('concert_id', $id, time() + 3600, '/');
     }
 
