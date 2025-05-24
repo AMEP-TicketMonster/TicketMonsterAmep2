@@ -23,13 +23,13 @@ class GrupMusicalController
     public function altaGrup()
     {
         $nomGrup = trim($_POST["nomGrup"]);
-        $dataCreacio = trim($_POST["dataCreacio"]);
+        $dataCreacio = date("Y/m/d");
         $descripcio = trim($_POST["descripcio"]);
 
         // Validar que los campos requeridos no estén vacíos
-        if (empty($nomGrup) || empty($dataCreacio)) {
-            $_SESSION['error_grup'] = "El nombre y la fecha de creación son obligatorios.";
-            header("Location: /grup/nou");
+        if (empty($nomGrup)) {
+            $_SESSION['error_grup'] = "El nombre es obligatorio.";
+            header("Location: /crea-grup");
             exit;
         }
 
@@ -37,7 +37,7 @@ class GrupMusicalController
         $existingGrup = $this->grupMusicalGateway->getByNomGrup($nomGrup);
         if ($existingGrup) {
             $_SESSION['error_grup'] = "Este grupo musical ya está registrado.";
-            header("Location: /grup/nou");
+            header("Location: /crea-grup");
             exit;
         }
 
@@ -46,11 +46,12 @@ class GrupMusicalController
 
         if ($idGrup) {
             $_SESSION['success_grup'] = "Grupo musical creado correctamente.";
-            header("Location: /grup/detalle/" . $idGrup);
+            //header("Location: /grup/detalle/" . $idGrup);
+             header("Location: /grupos");
             exit;
         } else {
             $_SESSION['error_grup'] = "Hubo un error al crear el grupo musical.";
-            header("Location: /grup/nou");
+            header("Location: /crea-grup");
             exit;
         }
     }
