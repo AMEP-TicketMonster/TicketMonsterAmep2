@@ -111,13 +111,17 @@ class EntradaGateway
     public function assignarEntradaConcert($idEntrada, $idUsuari, $nou_estat)
     {
         // 1. Obtener el ID del estado ("Comprada" o "Reservada")
+        /*
         $stmt = $this->pdo->prepare("SELECT idEstatEntrada FROM EstatEntrada WHERE estat = ?");
         $stmt->execute([$nou_estat]);
         $nouEstatId = $stmt->fetch(\PDO::FETCH_ASSOC)['idEstatEntrada'];
+*/
 
         // 2. Actualizar el estado de la entrada (sin tocar idUsuari)
+        /*  
         $stmt = $this->pdo->prepare("UPDATE Entrades SET idEstatEntrada = ? WHERE idEntrada = ?");
         $stmt->execute([$nouEstatId, $idEntrada]);
+        */
 
         // 3. Insertar la relación usuario-entrada
         $stmt = $this->pdo->prepare("
@@ -239,24 +243,24 @@ class EntradaGateway
                 )
                 LIMIT 1
             ");
-            $stmt->execute([$idConcert]);
-            return $stmt->fetch(\PDO::FETCH_ASSOC);
-        }
-    
-        public function crearEntradesPerConcert($idConcert, $quantitat, $preu)
-        {
-            var_dump($idConcert, $quantitat, $preu);
-            $sql = "INSERT INTO Entrades (tipus, preu, idEstatEntrada, idConcert)
+        $stmt->execute([$idConcert]);
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
+
+    public function crearEntradesPerConcert($idConcert, $quantitat, $preu)
+    {
+        var_dump($idConcert, $quantitat, $preu);
+        $sql = "INSERT INTO Entrades (tipus, preu, idEstatEntrada, idConcert)
                     VALUES ('Concert', :preu, :idEstatEntrada, :idConcert)";
-        
-            $stmt = $this->pdo->prepare($sql);
-        
-            $idEstatEntrada = 3;
-        
-            $stmt->execute([
-                ':preu' => $preu,
-                ':idEstatEntrada' => $idEstatEntrada,
-                ':idConcert' => $idConcert
-            ]);
-        }
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $idEstatEntrada = 3;
+
+        $stmt->execute([
+            ':preu' => $preu,
+            ':idEstatEntrada' => $idEstatEntrada,
+            ':idConcert' => $idConcert
+        ]);
+    }
 }

@@ -26,12 +26,14 @@ $concert = $_SESSION['concert'] ?? null;
             <p><strong>Género:</strong> <?= htmlspecialchars($concert['nomGenere']) ?></p>
 
             <?php if (!empty($concert['idEntrada'])): ?>
-                <div class="d-flex justify-content-between mt-4 flex-wrap gap-2">
+                <div class="d-flex justify-content-center mt-4 flex-wrap gap-2">
+                    <!--
+                No ha dado tiempo :(
                     <form method="POST" action="/reserva-entrada-concert">
                         <input type="hidden" name="idEntrada" value="<?= htmlspecialchars($concert['idEntrada']) ?>">
                         <button type="submit" class="btn btn-success w-100">Hacer una Reserva</button>
                     </form>
-
+            -->
                     <form method="POST" action="/compra-entrada-concert">
                         <input type="hidden" name="idEntrada" value="<?= htmlspecialchars($concert['idEntrada']) ?>">
                         <button type="submit" class="btn btn-primary w-100">Comprar Entrada</button>
