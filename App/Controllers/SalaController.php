@@ -17,7 +17,8 @@ class SalaController
     {
         $salasConSlots = $this->salaGateway->fetchSalasConSlots();
         $_SESSION['salas_con_slots'] = $salasConSlots;
-        include_once __DIR__ . '/../Views/salas/index.php';
+        //header('location: /salas');
+        //include_once __DIR__ . '/../Views/salas/index.php';
     }
 
     public function reservarSala(): void

@@ -32,6 +32,11 @@ class GrupMusicalController
             header("Location: /crea-grup");
             exit;
         }
+        if (strlen($descripcio) > 240) {
+            $_SESSION['error_grup'] = "Descripción muy larga";
+            header("Location: /crea-grup");
+            exit;
+        }
 
         // Verificar si el grupo ya existe
         $existingGrup = $this->grupMusicalGateway->getByNomGrup($nomGrup);
@@ -47,7 +52,7 @@ class GrupMusicalController
         if ($idGrup) {
             $_SESSION['success_grup'] = "Grupo musical creado correctamente.";
             //header("Location: /grup/detalle/" . $idGrup);
-             header("Location: /grupos");
+            header("Location: /grupos");
             exit;
         } else {
             $_SESSION['error_grup'] = "Hubo un error al crear el grupo musical.";
@@ -72,7 +77,7 @@ class GrupMusicalController
         }
 
         $grup = $this->grupMusicalGateway->getByIdGrup($idGrup);
-        
+
         if ($grup) {
             // Aquí se pueden cargar datos adicionales del grupo si es necesario
             return $grup;
@@ -125,15 +130,13 @@ class GrupMusicalController
     /**
      * Método para dar de baja un grupo musical
      */
-    public function baixaGrup($idGrup = null)
+    public function baixaGrup($idGrup)
     {
-        if (!$idGrup && isset($_POST['idGrup'])) {
-            $idGrup = $_POST['idGrup'];
-        }
+
 
         if (!$idGrup) {
             $_SESSION['error_grup'] = "ID de grupo no especificado.";
-            header("Location: /grups");
+            header("Location: /grupos");
             exit;
         }
 
@@ -141,25 +144,20 @@ class GrupMusicalController
         $existingGrup = $this->grupMusicalGateway->getByIdGrup($idGrup);
         if (!$existingGrup) {
             $_SESSION['error_grup'] = "El grupo musical no existe.";
-            header("Location: /grups");
+            header("Location: /grupos");
             exit;
         }
 
         // Antes de eliminar, verificar si hay relaciones que impidan la eliminación
         // Por ejemplo, conciertos asociados, álbumes, etc.
-        
+
         // Eliminar de la base de datos
         $result = $this->grupMusicalGateway->delete($idGrup);
 
         if ($result) {
             $_SESSION['success_grup'] = "Grupo musical eliminado correctamente.";
-            header("Location: /grups");
-            exit;
-        } else {
-            $_SESSION['error_grup'] = "Hubo un error al eliminar el grupo musical.";
-            header("Location: /grup/detalle/" . $idGrup);
-            exit;
         }
+        header("Location: /grupos");
     }
     public function mostraGrups()
     {
