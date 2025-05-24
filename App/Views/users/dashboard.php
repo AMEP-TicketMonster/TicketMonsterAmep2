@@ -114,4 +114,7 @@ $entrades->consultarEntrades();
     },
   });
 
+  document.querySelector('.slider-container').addEventListener('click', function() {
+    window.location.href = '/grupos'; // Aquí pon la URL a la que quieres redirigir
+  });
 </script>
