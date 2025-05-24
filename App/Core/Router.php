@@ -153,7 +153,10 @@ class Route
                     $grupMusical->mostraGrups();
                 }
 
-
+                if($requestUri == 'dashboard'){
+                    $controller = new GrupMusicalController();
+                    $controller->mostraGrups();
+                }
 
 
 

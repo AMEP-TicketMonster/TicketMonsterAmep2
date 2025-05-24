@@ -1,4 +1,3 @@
-<?php include_once __DIR__ . '/../partials/navbar_user.php'; ?>
 
 <style>
     .contenedor-salas {
@@ -144,4 +143,4 @@
     <?php else: ?>
         <p class="mensaje error">No hay información de salas o slots.</p>
     <?php endif; ?>
-</div>
+
