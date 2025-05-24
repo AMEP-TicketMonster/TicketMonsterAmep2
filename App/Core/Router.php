@@ -53,7 +53,9 @@ class Route
             'recargar-saldo',
             'filtroConciertos',
             'grupMusical',
-            'grupos'
+            'grupos',
+            'crea-grup',
+            'crea-grup-backend'
         ];
 
 
@@ -84,6 +86,7 @@ class Route
             'crea-concert' => 'concerts/crearConcierto.php',
             'info'       => 'info.php',
             'grupos'    => 'grupmusical/grupmusical.php',
+            'crea-grup' => 'grupmusical/crea_grup.php'
         ];
 
 
@@ -110,11 +113,20 @@ class Route
                     $concertFiltro = new ConcertController();
                     $concertFiltro->filtroConciertos();
                 }
-                if ($requestUri == 'salas') {
+
+        if ($requestUri == 'crea-grup') {
+                    if (Auth::isAdmin()) {
+                        $concertDades = new ConcertController();
+                        $concertDades->getDadesCreaConcerts();
+                    } else {
+                        $_SESSION[''];
+                        header('location: /dashboard');
+                    }
+    if ($requestUri == 'salas') {
                 $salaController = new SalaController();
                 $salaController->index(); // Cargar salas y slots
                 }
-                if ($requestUri === 'mis-reservas') {
+   if ($requestUri === 'mis-reservas') {
     $controller = new SalaController();
     $controller->verMisReservas();
     exit();
@@ -126,13 +138,16 @@ if ($requestUri === 'editar-reserva') {
     exit();
 }
 
-
-                if($requestUri == 'crea-concert'){
-                    $concertDades = new ConcertController();
-                    $concertDades->getDadesCreaConcerts();
+                  if ($requestUri == 'crea-concert') {
+                    if (Auth::isAdmin()) {
+                        $concertDades = new ConcertController();
+                        $concertDades->getDadesCreaConcerts();
+                    } else {
+                        $_SESSION[''];
+                        header('location: /dashboard');
+                    }
                 }
-                if($requestUri == 'grupos')
-                {
+                if ($requestUri == 'grupos') {
                     $grupMusical = new GrupMusicalController();
                     $grupMusical->mostraGrups();
                 }
@@ -204,6 +219,10 @@ if ($requestUri === 'editar-reserva') {
             if ($requestUri == 'crea-concert-backend') {
                 $controller = new ConcertController();
                 $controller->creaConcert();
+            }
+            if($requestUri == 'crea-grup-backend'){
+                $controller = new GrupMusicalController();
+                $controller->altaGrup();
             }
             if ($requestUri == 'recargar-saldo') {
                 $controller = new UserController();
