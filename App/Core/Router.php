@@ -37,9 +37,9 @@ class Route
             'concierto',
             'salas',
             'mis-reservas',
-             'eliminar-reserva',
-             'editar-reserva',
-             'guardar-edicion',
+            'eliminar-reserva',
+            'editar-reserva',
+            'guardar-edicion',
 
             'dashboard',
             'logout',
@@ -114,7 +114,7 @@ class Route
                     $concertFiltro->filtroConciertos();
                 }
 
-        if ($requestUri == 'crea-grup') {
+                if ($requestUri == 'crea-grup') {
                     if (Auth::isAdmin()) {
                         $concertDades = new ConcertController();
                         $concertDades->getDadesCreaConcerts();
@@ -122,23 +122,24 @@ class Route
                         $_SESSION[''];
                         header('location: /dashboard');
                     }
-    if ($requestUri == 'salas') {
-                $salaController = new SalaController();
-                $salaController->index(); // Cargar salas y slots
                 }
-   if ($requestUri === 'mis-reservas') {
-    $controller = new SalaController();
-    $controller->verMisReservas();
-    exit();
-}
+                if ($requestUri == 'salas') {
+                    $salaController = new SalaController();
+                    $salaController->index(); // Cargar salas y slots
+                }
+                if ($requestUri === 'mis-reservas') {
+                    $controller = new SalaController();
+                    $controller->verMisReservas();
+                    exit();
+                }
 
-if ($requestUri === 'editar-reserva') {
-    $controller = new SalaController();
-    $controller->editarReserva();
-    exit();
-}
+                if ($requestUri === 'editar-reserva') {
+                    $controller = new SalaController();
+                    $controller->editarReserva();
+                    exit();
+                }
 
-                  if ($requestUri == 'crea-concert') {
+                if ($requestUri == 'crea-concert') {
                     if (Auth::isAdmin()) {
                         $concertDades = new ConcertController();
                         $concertDades->getDadesCreaConcerts();
@@ -220,7 +221,7 @@ if ($requestUri === 'editar-reserva') {
                 $controller = new ConcertController();
                 $controller->creaConcert();
             }
-            if($requestUri == 'crea-grup-backend'){
+            if ($requestUri == 'crea-grup-backend') {
                 $controller = new GrupMusicalController();
                 $controller->altaGrup();
             }
@@ -229,23 +230,21 @@ if ($requestUri === 'editar-reserva') {
                 $controller->updateSaldo();
             }
             if ($requestUri === 'reservar-sala') {
-    $controller = new SalaController();
-    $controller->reservarSala();
-    exit();
-}
-if ($requestUri === 'eliminar-reserva') {
-    $controller = new SalaController();
-    $controller->eliminarReserva();
-    exit();
-}
+                $controller = new SalaController();
+                $controller->reservarSala();
+                exit();
+            }
+            if ($requestUri === 'eliminar-reserva') {
+                $controller = new SalaController();
+                $controller->eliminarReserva();
+                exit();
+            }
 
-if ($requestUri === 'guardar-edicion') {
-    $controller = new SalaController();
-    $controller->guardarEdicion();
-    exit();
-}
-
-
+            if ($requestUri === 'guardar-edicion') {
+                $controller = new SalaController();
+                $controller->guardarEdicion();
+                exit();
+            }
         }
 
         return __DIR__ . '/../Views/404.php'; // Si la ruta no está en la lista, mostrar 404
