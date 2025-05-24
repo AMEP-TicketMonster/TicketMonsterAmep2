@@ -239,7 +239,6 @@ class EntradaGateway
                 )
                 LIMIT 1
             ");
-<<<<<<< HEAD
             $stmt->execute([$idConcert]);
             return $stmt->fetch(\PDO::FETCH_ASSOC);
         }
@@ -260,25 +259,4 @@ class EntradaGateway
                 ':idConcert' => $idConcert
             ]);
         }
-        
-=======
-
-        $stmt->execute([$idConcert]);
-        return $stmt->fetch(\PDO::FETCH_ASSOC);
-    }
-
-    public function crearEntradesPerConcert($idConcert, $quantitat, $preu)
-    {
-        $sql = "INSERT INTO Entrades (tipus, preu, idEstatEntrada, idConcert)
-                    VALUES ('Concert', :preu, :idEstatEntrada, :idConcert)";
->>>>>>> 9e3be27345fc8dab74ab7234f78e7f1f83e07d60
-
-        $stmt = $this->pdo->prepare($sql);
-        $idEstatEntrada = 3;
-        $stmt->execute([
-            ':preu' => $preu,
-            ':idEstatEntrada' => $idEstatEntrada,
-            ':idConcert' => $idConcert
-        ]);
-    }
 }

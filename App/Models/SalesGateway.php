@@ -237,17 +237,8 @@ class SalesGateway
 
 
         //var_dump($res);
-<<<<<<< HEAD
-    }
-    public function getAforamentSala($id){
-        $stmt = $this->pdo->prepare("SELECT capacitat FROM Sales WHERE idSala = ? LIMIT 1");
-        $stmt->execute([$id]);
-        $res = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        return $res;
-=======
 
 
->>>>>>> 9e3be27345fc8dab74ab7234f78e7f1f83e07d60
     }
 
 

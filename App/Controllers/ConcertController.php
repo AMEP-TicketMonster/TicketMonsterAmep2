@@ -118,19 +118,6 @@ class ConcertController
             header("Location: /crea-concert");
             exit;
         }
-<<<<<<< HEAD
-        $idDataSala = $this->salesGateway->reservaSalaConcert($idSala, $horaIni, $horaFin, $dia);
-        $aforamentSala = $this->salesGateway->getAforamentSala($idSala)[0]['capacitat'];
-        //var_dump($idDataSala, $aforamentSala);
-        $idConcert = $this->createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $horaIni, $horaFin, $preu, $idGenere, $idDataSala, $aforamentSala);
-        $this->entradaGateway->crearEntradesPerConcert($idConcert, $aforamentSala, $preu);
-        header("location: /conciertos");
-    }
-    // Aquest mètode crea tantes entrades disponibles com capacitat té la sala
-    public function createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora_ini, $hora_fi, $preu, $idGenere, $idDataSala, $aforamentSala)
-    {
-        return $this->concertGateway->createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora_ini, $hora_fi, $preu, $idGenere, $idDataSala, $aforamentSala);
-=======
         $idDataSala = (int)$this->salesGateway->reservaSalaConcert($idSala, $horaIni, $horaFin, $dia);
         $aforamentSala = (int)$this->salesGateway->getAforamentSala($idSala)[0]['capacitat'];
         //var_dump((int)$idDataSala);
@@ -140,7 +127,6 @@ class ConcertController
         $this->entradaGateway->crearEntradesPerConcert($idConcert, $aforamentSala, $preu);
 
         header("location: /conciertos");
->>>>>>> 9e3be27345fc8dab74ab7234f78e7f1f83e07d60
     }
 
     // Aquest mètode actualitza també el preu de totes les entrades disponibles d'aquest concert

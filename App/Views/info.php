@@ -64,13 +64,6 @@
 </head>
 <body>
 
-<!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
-    <div class="container">
-        <a class="navbar-brand fw-bold" href="/">TicketMonster</a>
-    </div>
-</nav>
-
 <!-- CONTENIDO -->
 <div class="container my-5">
     <h1 class="text-center mb-5 fw-bold text-primary display-6">TicketMonster</h1>

@@ -93,17 +93,11 @@ class ConcertGateway
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-<<<<<<< HEAD
-    public function createConcert($idUsuariOrganitzador, $idGrup, $idSala, $nomConcert, $dia, $hora_ini, $hora_fi, $preu, $idGenere, $idDataSala, $aforamentSala)
-    {
-        //he hardcodeado las entradas, hay que hacer la consulta xD
-=======
     public function createConcert($idGrup, $idSala, $nomConcert, $idGenere, $idDataSala, $aforamentSala)
 
     {
 
 
->>>>>>> 9e3be27345fc8dab74ab7234f78e7f1f83e07d60
         $stmt = $this->pdo->prepare("INSERT INTO Concerts (idGrup, idSala, nomConcert, entrades_disponibles, idGenere, idDataSala, imatge) VALUES (?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([(int)$idGrup, (int)$idSala, $nomConcert, (int)$aforamentSala, (int)$idGenere, (int)$idDataSala, '../../public/img/default.png']);
 

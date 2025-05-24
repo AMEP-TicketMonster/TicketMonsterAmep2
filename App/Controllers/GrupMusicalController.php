@@ -162,6 +162,6 @@ class GrupMusicalController
     }
     public function mostraGrups()
     {
-        $_SESSION['grupos'] = $this->GrupMusicalController->getAllGrups();
+        $_SESSION['grupos'] = $this->grupMusicalGateway->getAllGrups();
     }
 }
