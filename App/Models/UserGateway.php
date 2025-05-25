@@ -140,6 +140,6 @@ class UserGateway
         $sql = "SELECT saldo FROM Usuaris WHERE idUsuari = ?";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$idUsuari]);
-        return $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $stmt->fetch(\PDO::FETCH_ASSOC)['saldo'];
     }
 }

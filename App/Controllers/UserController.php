@@ -56,37 +56,37 @@ class UserController
         $_SESSION['bad_registration_data'] = $mensaje;
         header("Location: /register");
         exit;
-    }   
+    }
 
     public function validarCamposRegistro($nom, $cognoms, $email, $contrasenya, $confirma_contrasenya)
     {
         if (empty($nom) || empty($cognoms) || empty($email) || empty($contrasenya) || empty($confirma_contrasenya)) {
             return "Todos los campos son obligatorios.";
         }
-    
+
         if (!preg_match("/^[a-zA-ZÀ-ÿ\s]+$/u", $nom)) {
             return "El nombre contiene caracteres no permitidos.";
         }
-    
+
         if (!preg_match("/^[a-zA-ZÀ-ÿ\s]+$/u", $cognoms)) {
             return "Los apellidos contienen caracteres no permitidos.";
         }
-    
+
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return "El correo electrónico no es válido.";
         }
-    
+
         if (strlen($contrasenya) < 6) {
             return "La contraseña debe tener al menos 6 caracteres.";
         }
-    
+
         if ($contrasenya !== $confirma_contrasenya) {
             return "Las contraseñas no coinciden.";
         }
-    
+
         return null; // Todo OK
     }
-    
+
     public function register()
     {
         $nom = trim($_POST["nom"]);
@@ -209,18 +209,23 @@ class UserController
         $userId = $_SESSION['user']['idUsuari'];
 
         $saldoAnticArray = $this->userGateway->getSaldoByIdUsuari($userId);
-        $saldoAntic = (float) $saldoAnticArray['saldo'] ?? 0;
+        $saldoAntic = (float) $saldoAnticArray ?? 0;
 
         $saldoTotal = $saldoAntic + $nuevoSaldo;
         if ($saldoTotal > 0 && $saldoTotal < 99999999.99) {
             $this->userGateway->actualizarSaldo($userId, $saldoTotal);
-            $_SESSION['user']['saldo'] = $saldoTotal;
+            $_SESSION['user']['saldo'] = (float)$saldoTotal;
         }
         header("Location: /saldo");
         exit;
     }
 
-
+    public function actualitzaSaldo()
+    {
+        $userId = $_SESSION['user']['idUsuari'];
+        $saldo = $this->userGateway->getSaldoByIdUsuari($userId);
+         $_SESSION['user']['saldo'] = (float)$saldo;
+    }
     // Función para validar el correo electrónico
     private function isValidEmail($email)
     {

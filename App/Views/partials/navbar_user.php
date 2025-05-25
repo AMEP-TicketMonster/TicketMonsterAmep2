@@ -23,7 +23,7 @@
             <div class="d-flex flex-column flex-lg-row align-items-center gap-2 w-auto w-sm-100 w-lg-auto">
                 <?php if ($saldo !== null): ?>
                     <a href="/saldo" class="btn btn-outline-success w-100 w-lg-auto">
-                        <?= number_format($saldo, 2) ?>€
+                        <?= $saldo ?>€
                     </a>
                 <?php endif; ?>
                 <a href="/profile" class="btn btn-primary w-100 w-lg-auto">Perfil</a>

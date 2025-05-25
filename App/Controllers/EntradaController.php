@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\EntradaGateway;
 use App\Models\UserGateway;
+use App\Controllers\UserController;
 use Core\Route;
 use Core\Auth;
 use Core\Session;
@@ -15,11 +16,13 @@ class EntradaController
     private string $estat;
     private $entradaGateway;
     private $usuariGateway;
+    private $userController;
 
     public function __construct()
     {
         $this->entradaGateway = new EntradaGateway();
         $this->usuariGateway = new UserGateway();
+        $this->userController = new UserController();
         if (session_status() === PHP_SESSION_NONE) {
             Session::sessionStart("ticketmonster_session");
         }
@@ -76,6 +79,8 @@ class EntradaController
             $this->usuariGateway->actualizarSaldo($idUsuari, $nouSaldo);
             $this->entradaGateway->assignarEntradaAssaig($idEntrada, $idUsuari, "Comprada");
             $this->entradaGateway->decrementarEntradesDisponiblesAssaig($idAssaig);
+            $saldo = new UserController();
+            $saldo->actualitzaSaldo();
         } else {
             $_SESSION['errorCompraEntrades'] = json_encode(['errors' => $errors]);
         }
@@ -127,7 +132,7 @@ class EntradaController
             $this->usuariGateway->actualizarSaldo($idUsuari, $nouSaldo);
             $this->entradaGateway->assignarEntradaConcert($idEntrada, $idUsuari, "Comprada");
             $this->entradaGateway->decrementarEntradesDisponiblesConcert($idConcert);
-
+            $this->userController->actualitzaSaldo();
             $_SESSION['mensaje'] = "Compra realitzada amb èxit.";
         } else {
             $_SESSION['mensaje'] = implode(" ", $errors);
@@ -334,7 +339,8 @@ class EntradaController
         }
     }
     //pasar parámetros... $idConcert, etc.
-    public function creaEntradesConcert($idConcert){
+    public function creaEntradesConcert($idConcert)
+    {
         //to do...
     }
 

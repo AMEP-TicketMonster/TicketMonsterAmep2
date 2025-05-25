@@ -15,15 +15,7 @@ $grups = isset($_SESSION['grupos']) ? $_SESSION['grupos'] : null;
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-<style>
-  .dash {
-    /*display: none;*/
-  }
-  .formulario-valoracion {
-    display: none;
-    flex-direction: column;
-  }
-</style>
+
 
 <div class="container my-5 dash">
   <div class="slider-container">

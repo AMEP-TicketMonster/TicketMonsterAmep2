@@ -98,6 +98,7 @@ class Route
 
 
         if ($requestMethod === 'GET') {
+
             //excepcionalmente, esta URL
             if (str_contains($requestUri, 'delete-grupos')) {
 
@@ -179,6 +180,8 @@ class Route
                     $controller->mostraGrups();
                     $entrades = new EntradaController();
                     $entrades->consultarEntrades();
+                    $saldo = new UserController();
+                    $saldo->actualitzaSaldo();
                 }
 
 
