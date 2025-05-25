@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Models\UserGateway;
 use Core\Route;
-use Core\Auth;
+use App\Core\Auth;
 use Core\Session;
 
 class UserController
@@ -224,11 +224,39 @@ class UserController
     {
         $userId = $_SESSION['user']['idUsuari'];
         $saldo = $this->userGateway->getSaldoByIdUsuari($userId);
-         $_SESSION['user']['saldo'] = (float)$saldo;
+        $_SESSION['user']['saldo'] = (float)$saldo;
     }
     // Función para validar el correo electrónico
     private function isValidEmail($email)
     {
         return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
+    }
+
+
+    public function getUsers()
+    {
+        $users = $this->userGateway->getUsers();
+        $miId = $_SESSION['user']['idUsuari'];
+
+        $usuariosFiltrados = array_filter($users, function ($usuario) use ($miId) {
+            return $usuario['idUsuari'] != $miId;
+        });
+
+        $usuariosFiltrados = array_values($usuariosFiltrados);
+
+        $_SESSION["usuaris"] = json_encode($usuariosFiltrados, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function actualitzaRole()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['usuarios'])) {
+            $usuarios = $_POST['usuarios'];
+            foreach ($usuarios as $usuario) {
+                $id = intval($usuario['idUsuari']);
+                $rol = intval($usuario['idRol']);
+                $this->userGateway->actualitzaRoles($id, $rol);
+            }
+        }
+        header("location: /edita-roles");
     }
 }

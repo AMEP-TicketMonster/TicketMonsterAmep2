@@ -142,4 +142,19 @@ class UserGateway
         $stmt->execute([$idUsuari]);
         return $stmt->fetch(\PDO::FETCH_ASSOC)['saldo'];
     }
+    public function getUsers()
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT * FROM Usuaris;"
+        );
+        $stmt->execute();
+        $users = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return $users;
+    }
+    public function actualitzaRoles($id, $rol)
+    {
+        $stmt = $this->pdo->prepare("UPDATE Usuaris SET idRol = ? WHERE idUsuari = ?");
+        $stmt->execute([$rol, $id]);
+        $stmt->execute();
+    }
 }

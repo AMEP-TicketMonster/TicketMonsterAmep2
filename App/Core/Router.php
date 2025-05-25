@@ -59,7 +59,9 @@ class Route
             'crea-grup-backend',
             'details_admin',
             'eliminar-valoració',
-            'guardarValoracion'
+            'guardarValoracion',
+            'edita-roles',
+            'guardar_roles'
         ];
 
 
@@ -92,13 +94,17 @@ class Route
             'grupos'    => 'grupmusical/grupmusical.php',
             'grupos_admin' => 'grupmusical/grupmusical_admin.php',
             'crea-grup' => 'grupmusical/crea_grup.php',
-            'details_admin' => 'concerts/details_admin.php'
+            'details_admin' => 'concerts/details_admin.php',
+            'edita-roles' => 'users/edita_roles.php'
         ];
 
 
 
         if ($requestMethod === 'GET') {
-
+            if($requestUri == 'edita-roles'){
+                $users = new UserController();
+                $users->getUsers();
+            }
             //excepcionalmente, esta URL
             if (str_contains($requestUri, 'delete-grupos')) {
 
@@ -230,7 +236,10 @@ class Route
 
 
 
-
+            if($requestUri == 'guardar_roles'){
+                $controller = new UserController();
+                $controller->actualitzaRole();
+            }
 
 
 

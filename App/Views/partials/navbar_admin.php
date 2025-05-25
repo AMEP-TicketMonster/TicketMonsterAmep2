@@ -21,6 +21,9 @@
                  <li class="nav-item">
                     <a class="nav-link" href="/crea-grup">NUEVO GRUPO</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/edita-roles">ADMINISTRAR ROLES</a>
+                </li>
             </ul>
 
             <div class="d-flex flex-column flex-lg-row align-items-center gap-2 w-auto w-sm-100 w-lg-auto">
