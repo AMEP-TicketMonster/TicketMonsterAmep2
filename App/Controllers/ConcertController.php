@@ -8,18 +8,22 @@ use Core\Auth;
 use Core\Session;
 use App\Models\EntradaGateway;
 use App\Models\SalesGateway;
+use App\Models\ValoracioGateway;
 
 class ConcertController
 {
     private $concertGateway;
     private $entradaGateway;
     private $salesGateway;
+    private $valoracioGateway;
 
     public function __construct()
     {
         $this->concertGateway = new ConcertGateway();
         $this->entradaGateway = new EntradaGateway();
         $this->salesGateway = new SalesGateway();
+        $this->valoracioGateway = new valoracioGateway();
+
         if (session_status() === PHP_SESSION_NONE) {
             Session::sessionStart("ticketmonster_session");
         }
@@ -82,11 +86,14 @@ class ConcertController
         $entradaGateway = new EntradaGateway();
         $entradaDisponible = $entradaGateway->getEntradaDisponiblePorConcert($id);
 
+        $valoracions = $this->valoracioGateway->obtenirValoracionsConcert($id);
+
         if ($entradaDisponible) {
             $concert['idEntrada'] = $entradaDisponible['idEntrada'];
         }
 
         $_SESSION['concert'] = $concert;
+        $_SESSION['valoracions'] = $valoracions;
         setcookie('concert_id', $id, time() + 3600, '/');
     }
 

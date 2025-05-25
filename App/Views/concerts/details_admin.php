@@ -71,32 +71,36 @@ $valoracions = $_SESSION['valoracions'];
 
 
     //Esto es para las valoraciones ;)
-    const valoracions = <?= json_encode($valoracions, JSON_UNESCAPED_UNICODE) ?>;
-    const valoracionsContainer = document.getElementById("valoracions-container");
+   const valoracions = <?= json_encode($valoracions, JSON_UNESCAPED_UNICODE) ?>;
+const valoracionsContainer = document.getElementById("valoracions-container");
 
-    if (valoracions && valoracions.length > 0) {
-        valoracions.forEach(v => {
-            const card = document.createElement("div");
-            card.className = "col-md-6 col-lg-4";
-            //Esto me lo ha dado chatgpt para hacer las estrellitas.
-            // Generar estrellitas
-            const puntuacio = v.puntuacio || 0;
-            const estrellesPlenes = '★'.repeat(puntuacio);
-            const estrellesBuides = '☆'.repeat(5 - puntuacio);
-            const estrellesHTML = `<span class="estrelles">${estrellesPlenes}${estrellesBuides}</span>`;
+if (valoracions && valoracions.length > 0) {
+    valoracions.forEach(v => {
+        const card = document.createElement("div");
+        card.className = "col-md-6 col-lg-4";
 
-            card.innerHTML = `
-                <div class="card h-100 shadow p-3 valoracio-card">
-                    <h5 class="card-title mb-2">${v.nom} ${v.cognom}</h5>
-                    <p class="mb-1"><strong>Puntuación:</strong> ${estrellesHTML}</p>
-                    <p class="mb-1"><strong>Comentario:</strong> ${v.comentari}</p>
-                    <p class="text-muted small">Fecha: ${v.data}</p>
-                </div>
-            `;
+        const puntuacio = v.puntuacio || 0;
+        const estrellesPlenes = '★'.repeat(puntuacio);
+        const estrellesBuides = '☆'.repeat(5 - puntuacio);
+        const estrellesHTML = `<span class="estrelles">${estrellesPlenes}${estrellesBuides}</span>`;
 
-            valoracionsContainer.appendChild(card);
-        });
-    } else {
-        valoracionsContainer.innerHTML = '<p class="text-muted text-center">No hay valoraciones disponibles para este concierto.</p>';
-    }
+        card.innerHTML = `
+            <div class="card h-100 shadow p-3 valoracio-card position-relative">
+                <form method="POST" action="/eliminar-valoracio" class="delete-form">
+                    <input type="hidden" name="idValoracio" value="${v.idValoracio}">
+                    <button type="submit" class="btn btn-sm btn-danger btn-delete" title="Eliminar valoración">X</button>
+                </form>
+                <h5 class="card-title mb-2">${v.nom} ${v.cognom}</h5>
+                <p class="mb-1"><strong>Puntuación:</strong> ${estrellesHTML}</p>
+                <p class="mb-1"><strong>Comentario:</strong> ${v.comentari}</p>
+                <p class="text-muted small">Fecha: ${v.data}</p>
+            </div>
+        `;
+
+        valoracionsContainer.appendChild(card);
+    });
+} else {
+    valoracionsContainer.innerHTML = '<p class="text-muted text-center">No hay valoraciones disponibles para este concierto.</p>';
+}
+
 </script>
