@@ -236,7 +236,7 @@ class Route
 
 
 
-            if($requestUri == 'guardar_roles'){
+            if($requestUri == 'guardar_roles' && Auth::isAdmin()){
                 $controller = new UserController();
                 $controller->actualitzaRole();
             }
