@@ -86,7 +86,7 @@ class ConcertController
         $entradaGateway = new EntradaGateway();
         $entradaDisponible = $entradaGateway->getEntradaDisponiblePorConcert($id);
 
-        $valoracions = $this->valoracioGateway->obtenirValoracionsConcert($id);
+        $valoracions = $this->valoracioGateway->obtenirValoracionsGrup($id);
 
         if ($entradaDisponible) {
             $concert['idEntrada'] = $entradaDisponible['idEntrada'];

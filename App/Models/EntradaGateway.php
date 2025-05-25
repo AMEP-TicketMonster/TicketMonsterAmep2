@@ -27,6 +27,7 @@ class EntradaGateway
         Entrades.preu,
         Entrades.tipus,
         Concerts.nomConcert,
+        Concerts.idConcert,
         GrupsMusicals.nomGrup,
         DataSala.dia,
         DataSala.hora_inici,

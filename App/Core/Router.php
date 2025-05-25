@@ -58,7 +58,8 @@ class Route
             'crea-grup',
             'crea-grup-backend',
             'details_admin',
-            'eliminar-valoració'
+            'eliminar-valoració',
+            'guardarValoracion'
         ];
 
 
@@ -176,6 +177,8 @@ class Route
                 if ($requestUri == 'dashboard') {
                     $controller = new GrupMusicalController();
                     $controller->mostraGrups();
+                    $entrades = new EntradaController();
+                    $entrades->consultarEntrades();
                 }
 
 
@@ -275,13 +278,13 @@ class Route
                 $controller->guardarEdicion();
                 exit();
             }
-        
 
 
-               if ($requestUri == 'eliminar-valoracio') {
+
+            if ($requestUri == 'eliminar-valoracio') {
                 if (isset($_POST['idValoracio']) && !empty($_POST['idValoracio'])) {
                     $id = $_POST['idValoracio'];
-                   
+
                     $controller = new ValoracioController();
                     $controller->eliminar($id);
                 } else {
@@ -290,8 +293,10 @@ class Route
                 }
             }
 
-
-
+            if ($requestUri == 'guardarValoracion') {
+                $controller = new ValoracioController();
+                $controller->crear();
+            }
         }
 
         return __DIR__ . '/../Views/404.php'; // Si la ruta no está en la lista, mostrar 404
