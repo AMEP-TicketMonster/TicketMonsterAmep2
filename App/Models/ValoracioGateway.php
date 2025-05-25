@@ -13,7 +13,7 @@ class ValoracioGateway
         $this->pdo = Database::getConnection();
     }
 
-    // 1. Crear valoració
+    // Crear valoració
     public function crearValoracio($idUsuari, $tipus, $idObjecte, $puntuacio, $comentari)
     {
         $stmt = $this->pdo->prepare("
@@ -24,14 +24,14 @@ class ValoracioGateway
         return $stmt->execute([$idUsuari, $tipus, $idObjecte, $puntuacio, $comentari]);
     }
 
-    // 2. Eliminar valoració
+    // Eliminar valoració
     public function eliminarValoracio($idUsuari, $tipus, $idObjecte)
     {
         $stmt = $this->pdo->prepare("DELETE FROM Valoracions WHERE idUsuariClient = ? AND tipus = ? AND idObjecte = ?");
         return $stmt->execute([$idUsuari, $tipus, $idObjecte]);
     }
 
-    // 3. Consultar totes les valoracions d’un concert o sala
+    // Consultar totes les valoracions d’un concert o sala
     public function obtenirValoracions($tipus, $idObjecte)
     {
         $stmt = $this->pdo->prepare("
@@ -45,7 +45,7 @@ class ValoracioGateway
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    // 4. Verificar si ja ha valorat
+    // Verificar si ja ha valorat
     public function haValorat($idUsuari, $tipus, $idObjecte)
     {
         $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM Valoracions WHERE idUsuariClient = ? AND tipus = ? AND idObjecte = ?");
