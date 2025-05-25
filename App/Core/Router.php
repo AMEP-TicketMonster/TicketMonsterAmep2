@@ -7,7 +7,7 @@ use App\Controllers\ConcertController;
 use App\Controllers\EntradaController;
 use App\Controllers\GrupMusicalController;
 use App\Controllers\SalaController;
-
+use App\Controllers\ValoracioController;
 use App\Core\Auth;
 
 class Route
@@ -56,7 +56,9 @@ class Route
             'grupos',
             'delete-grupos',
             'crea-grup',
-            'crea-grup-backend'
+            'crea-grup-backend',
+            'details_admin',
+            'eliminar-valoració'
         ];
 
 
@@ -88,7 +90,8 @@ class Route
             'info'       => 'info.php',
             'grupos'    => 'grupmusical/grupmusical.php',
             'grupos_admin' => 'grupmusical/grupmusical_admin.php',
-            'crea-grup' => 'grupmusical/crea_grup.php'
+            'crea-grup' => 'grupmusical/crea_grup.php',
+            'details_admin' => 'concerts/details_admin.php'
         ];
 
 
@@ -118,6 +121,9 @@ class Route
                         setcookie('concert_id', $id, time() + 3600, "/");
                         $concertController = new ConcertController();
                         $concertController->showConcert($id);
+                        if (Auth::isAdmin()) {
+                            $requestUri = 'details_admin';
+                        }
                     }
                 }
                 if ($requestUri == 'filtroConciertos') {
@@ -269,6 +275,23 @@ class Route
                 $controller->guardarEdicion();
                 exit();
             }
+        
+
+
+               if ($requestUri == 'eliminar-valoracio') {
+                if (isset($_POST['idValoracio']) && !empty($_POST['idValoracio'])) {
+                    $id = $_POST['idValoracio'];
+                   
+                    $controller = new ValoracioController();
+                    $controller->eliminar($id);
+                } else {
+                    header("Location: /concerts");
+                    exit();
+                }
+            }
+
+
+
         }
 
         return __DIR__ . '/../Views/404.php'; // Si la ruta no está en la lista, mostrar 404

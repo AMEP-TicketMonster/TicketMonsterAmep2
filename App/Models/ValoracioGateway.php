@@ -25,12 +25,20 @@ class ValoracioGateway
     }
 
     // Eliminar valoració
-    public function eliminarValoracio($idUsuari, $tipus, $idObjecte)
+    public function eliminarValoracio($idUsuari, $idValoracio)
     {
-        $stmt = $this->pdo->prepare("DELETE FROM Valoracions WHERE idUsuariClient = ? AND tipus = ? AND idObjecte = ?");
-        return $stmt->execute([$idUsuari, $tipus, $idObjecte]);
+      
+        $stmt = $this->pdo->prepare("DELETE FROM Valoracions WHERE idValoracio = ? and idUsuariClient = ? ");
+
+        return $stmt->execute([(int)$idValoracio, (int)$idUsuari]);
     }
 
+    public function getIdUsuariValoracio($idValoracio)
+    {
+        $stmt = $this->pdo->prepare("SELECT idUsuariClient FROM Valoracions WHERE idValoracio = ? ");
+        $stmt->execute([$idValoracio]);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
     // Consultar totes les valoracions d’un concert o sala
     public function obtenirValoracions($tipus, $idObjecte)
     {

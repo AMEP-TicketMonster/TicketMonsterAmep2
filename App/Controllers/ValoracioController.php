@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\ValoracioGateway;
 use Core\Session;
+use App\Core\Auth;
 
 class ValoracioController
 {
@@ -12,7 +13,9 @@ class ValoracioController
     public function __construct()
     {
         $this->valoracioGateway = new ValoracioGateway();
-        Session::sessionStart("ticketmonster_session");
+        if (session_status() === PHP_SESSION_NONE) {
+            Session::sessionStart("ticketmonster_session");
+        }
     }
 
     public function crear()
@@ -40,14 +43,20 @@ class ValoracioController
         header("Location: /valoracions?tipus=$tipus&id=$idObjecte");
     }
 
-    public function eliminar()
+    public function eliminar($idValoracio)
     {
-        $usuariId = $_SESSION['user']['idUsuari'] ?? null;
-        $tipus = $_POST['tipus'] ?? null;
-        $idObjecte = $_POST['id'] ?? null;
 
-        $this->valoracioGateway->eliminarValoracio($usuariId, $tipus, $idObjecte);
-        header("Location: /valoracions?tipus=$tipus&id=$idObjecte");
+        $idUsuari = $_SESSION['user']['idUsuari'] ?? null;
+        //comprova si la valoració pertany a aquest usuari o qui ho está intentant eliminar es admin
+        $id = $this->valoracioGateway->getIdUsuariValoracio($idValoracio)[0]['idUsuariClient'];
+        if ($idUsuari == $id or Auth::isAdmin()) {
+
+            $this->valoracioGateway->eliminarValoracio($idUsuari, $idValoracio);
+        }
+        header('location: /conciertos');
+
+
+        // header("Location: /valoracions?tipus=$tipus&id=$idObjecte");
     }
 
     public function consultar()
