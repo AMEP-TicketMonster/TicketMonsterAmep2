@@ -1,6 +1,6 @@
 <?php
 $concert = $_SESSION['concert'] ?? null;
-
+$valoracions = $_SESSION['valoracions'];
 ?>
 
 <div class="container my-5">
@@ -45,6 +45,11 @@ $concert = $_SESSION['concert'] ?? null;
         </div>
     </div>
 </div>
+<div class="container my-5">
+    <h3 class="text-center mb-4">Valoraciones de conciertos anteriores</h3>
+    <div id="valoracions-container" class="row g-3 justify-content-center"></div>
+</div>
+
 
 <script>
     const concert = <?= json_encode($concert, JSON_UNESCAPED_UNICODE) ?>;
@@ -62,6 +67,36 @@ $concert = $_SESSION['concert'] ?? null;
         bannerDiv.appendChild(img);
         placeholder.appendChild(bannerDiv);
     }
+
+
+
+    //Esto es para las valoraciones ;)
+    const valoracions = <?= json_encode($valoracions, JSON_UNESCAPED_UNICODE) ?>;
+    const valoracionsContainer = document.getElementById("valoracions-container");
+
+    if (valoracions && valoracions.length > 0) {
+        valoracions.forEach(v => {
+            const card = document.createElement("div");
+            card.className = "col-md-6 col-lg-4";
+            //Esto me lo ha dado chatgpt para hacer las estrellitas.
+            // Generar estrellitas
+            const puntuacio = v.puntuacio || 0;
+            const estrellesPlenes = '★'.repeat(puntuacio);
+            const estrellesBuides = '☆'.repeat(5 - puntuacio);
+            const estrellesHTML = `<span class="estrelles">${estrellesPlenes}${estrellesBuides}</span>`;
+
+            card.innerHTML = `
+                <div class="card h-100 shadow p-3 valoracio-card">
+                    <h5 class="card-title mb-2">${v.nom} ${v.cognom}</h5>
+                    <p class="mb-1"><strong>Puntuación:</strong> ${estrellesHTML}</p>
+                    <p class="mb-1"><strong>Comentario:</strong> ${v.comentari}</p>
+                    <p class="text-muted small">Fecha: ${v.data}</p>
+                </div>
+            `;
+
+            valoracionsContainer.appendChild(card);
+        });
+    } else {
+        valoracionsContainer.innerHTML = '<p class="text-muted text-center">No hay valoraciones disponibles para este concierto.</p>';
+    }
 </script>
-
-
