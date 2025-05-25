@@ -5,6 +5,7 @@ namespace Core;
 use App\Controllers\UserController;
 use App\Controllers\ConcertController;
 use App\Controllers\EntradaController;
+use App\Controllers\ValoracioController;
 use App\Core\Auth;
 
 class Route
@@ -102,6 +103,11 @@ class Route
                     $concertDades = new ConcertController();
                     $concertDades->getDadesCreaConcerts();
                 }
+                
+                if ($requestUri === 'valoracions') {
+                $controller = new ValoracioController();
+                $controller->consultar();
+                }
 
 
 
@@ -143,6 +149,17 @@ class Route
         $controller->valorar();
         exit();
              }
+
+            if ($requestUri === 'crear-valoracio') {
+            $controller = new ValoracioController();
+            $controller->crear();
+            }
+
+            if ($requestUri === 'eliminar-valoracio') {
+            $controller = new ValoracioController();
+            $controller->eliminar();
+            }
+            
             if ($requestUri == 'delete-user') {
                 if (isset($_POST['idUsuari']) && !empty($_POST['idUsuari'])) {
                     $id = $_POST['idUsuari'];
