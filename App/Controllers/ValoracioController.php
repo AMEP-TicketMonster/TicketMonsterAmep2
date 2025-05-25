@@ -27,20 +27,21 @@ class ValoracioController
             exit;
         }
 
-        $tipus = $_POST['tipus'] ?? null;  // 'concert' o 'sala'
-        $idObjecte = $_POST['id'] ?? null;
-        $puntuacio = $_POST['puntuacio'] ?? null;
-        $comentari = $_POST['comentari'] ?? '';
+        // $tipus = $_POST['tipus'] ?? null;  // 'concert' o 'sala'
+        $idConcert = $_POST['idConcert'] ?? null;
+        $puntuacio = $_POST['puntuacion'] ?? null;
+        $comentari = $_POST['comentario'] ?? '';
 
-        if (!$tipus || !$idObjecte || !$puntuacio) {
+        if (!$idConcert || !$puntuacio) {
             $_SESSION['error'] = "Falten camps obligatoris.";
-            header("Location: /valoracio-form");
+            header("Location: /dashboard");
             exit;
         }
 
-        $this->valoracioGateway->crearValoracio($usuariId, $tipus, $idObjecte, $puntuacio, $comentari);
-        $_SESSION['missatge'] = "Valoració guardada correctament.";
-        header("Location: /valoracions?tipus=$tipus&id=$idObjecte");
+        $this->valoracioGateway->crearValoracio($usuariId, $idConcert, $comentari, $puntuacio);
+       // $_SESSION['missatge'] = "Valoració guardada correctament.";
+        //header("Location: /valoracions?tipus=$tipus&id=$idObjecte");
+        header('location: /dashboard');
     }
 
     public function eliminar($idValoracio)
@@ -79,7 +80,8 @@ class ValoracioController
 
     public function consultar_valoracions_concert($idConcert)
     {
-        $valoracions = $this->valoracioGateway->obtenirValoracionsConcert($idConcert);
+        $valoracions = $this->valoracioGateway->obtenirValoracionsGrup($idConcert);
+      
         $_SESSION['valoracions'] = $valoracions;
     }
 }

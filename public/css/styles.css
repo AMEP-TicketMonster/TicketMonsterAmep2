@@ -165,6 +165,55 @@
     }
 
 
+    /*Tema de hacer las valoraciones :) */
+    .valoracion-estrellas {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: flex-start;
+    }
+
+    .valoracion-estrellas input {
+      display: none;
+    }
+
+    .valoracion-estrellas label {
+      font-size: 2rem;
+      color: #ccc;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .valoracion-estrellas input:checked ~ label {
+      color: #FFD700;
+    }
+
+    .valoracion-estrellas label:hover,
+    .valoracion-estrellas label:hover ~ label {
+      color: #FFD700;
+    }
+
+    .valoracion-textarea {
+      width: 100%;
+      min-height: 100px;
+      margin-bottom: 1rem;
+    }
+
+    .valoracion-boton {
+      background-color: #624DE3;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      transition: background-color 0.2s;
+    }
+
+    .valoracion-boton:hover {
+      background-color: #513bd1;
+    }
+    .formulario-valoracion{
+      display:none;
+    }
+
 @keyframes scroll {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }

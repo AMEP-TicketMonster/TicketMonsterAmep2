@@ -14,20 +14,22 @@ class ValoracioGateway
     }
 
     // Crear valoració
-    public function crearValoracio($idUsuari, $tipus, $idObjecte, $puntuacio, $comentari)
+    public function crearValoracio($idUsuari, $idConcert, $comentari, $puntuacio)
     {
         $stmt = $this->pdo->prepare("
-            INSERT INTO Valoracions (idUsuariClient, tipus, idObjecte, puntuacio, comentari, data)
-            VALUES (?, ?, ?, ?, ?, CURDATE())
-            ON DUPLICATE KEY UPDATE puntuacio = VALUES(puntuacio), comentari = VALUES(comentari), data = CURDATE()
+            INSERT INTO Valoracions (idUsuariClient, idConcert, puntuacio, comentari, data)
+            VALUES (?, ?, ?, ?, CURDATE())
         ");
-        return $stmt->execute([$idUsuari, $tipus, $idObjecte, $puntuacio, $comentari]);
+        $stmt->execute([$idUsuari, $idConcert, $puntuacio, $comentari]);
+
+        // ON DUPLICATE KEY UPDATE puntuacio = VALUES(puntuacio), comentari = VALUES(comentari), data = CURDATE()
+        header("location:/dashboard");
     }
 
     // Eliminar valoració
     public function eliminarValoracio($idUsuari, $idValoracio)
     {
-      
+
         $stmt = $this->pdo->prepare("DELETE FROM Valoracions WHERE idValoracio = ? and idUsuariClient = ? ");
 
         return $stmt->execute([(int)$idValoracio, (int)$idUsuari]);
@@ -64,6 +66,34 @@ class ValoracioGateway
             WHERE Valoracions.idConcert = ?
             ORDER BY Valoracions.data DESC
         ");
+        $stmt->execute([$idConcert]);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    public function obtenirValoracionsGrup($idConcert)
+    {
+        $stmt = $this->pdo->prepare("
+
+   SELECT 
+    V.*, 
+    U.nom, 
+    U.cognom,
+    C.idGrup
+FROM 
+    Valoracions V
+JOIN 
+    Usuaris U ON V.idUsuariClient = U.idUsuari
+        
+    JOIN 
+    Concerts C ON V.idConcert = C.idConcert
+WHERE 
+    C.idGrup = (SELECT idGrup FROM Concerts WHERE idConcert = ?)
+
+ORDER BY 
+    V.data DESC;
+
+        ");
+
         $stmt->execute([$idConcert]);
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
