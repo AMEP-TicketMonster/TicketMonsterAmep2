@@ -212,9 +212,15 @@ class ConcertGateway
             $params[':idSala'] = (int) $filtres['sala'];
         }
 
+
         if (!empty($filtres['entradas'])) {
             $sql .= " AND c.entrades_disponibles >= :entrades_disponibles";
             $params[':entrades_disponibles'] = (int) $filtres['entradas'];
+        }
+
+            if (!empty($filtres['grup'])) {
+            $sql .= " AND c.idGrup = :idGrup";
+            $params[':idGrup'] = (int) $filtres['grup'];
         }
 
 
