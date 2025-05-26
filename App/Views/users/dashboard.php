@@ -71,19 +71,19 @@ $grups = isset($_SESSION['grupos']) ? $_SESSION['grupos'] : null;
     </div>
   </div>
 
-<script>
-let entradas = <?php echo json_encode($_SESSION['entrades_usuari']) ?>;
-let fechaActual = new Date();
+  <script>
+    let entradas = <?php echo json_encode($_SESSION['entrades_usuari']) ?>;
+    let fechaActual = new Date();
 
-const tbody = document.getElementById("entradas-body");
-const tbody2 = document.getElementById("entradas-body2");
+    const tbody = document.getElementById("entradas-body");
+    const tbody2 = document.getElementById("entradas-body2");
 
-entradas.forEach(entrada => {
-  const row = document.createElement("tr");
-  let compareData = new Date(entrada.dia);
+    entradas.forEach(entrada => {
+      const row = document.createElement("tr");
+      let compareData = new Date(entrada.dia);
 
-  if (compareData > fechaActual) {
-    row.innerHTML = `
+      if (compareData > fechaActual) {
+        row.innerHTML = `
       <td>${entrada.nomConcert}</td>
       <td>${entrada.tipus}</td>
       <td>${entrada.nomGrup}</td>
@@ -92,9 +92,9 @@ entradas.forEach(entrada => {
       <td>€${parseFloat(entrada.preu).toFixed(2)}</td>
       <td>${entrada.data_transaccio}</td>
     `;
-    tbody.appendChild(row);
-  } else {
-    row.innerHTML = `
+        tbody.appendChild(row);
+      } else {
+        row.innerHTML = `
       <td>${entrada.nomConcert}</td>
       <td>${entrada.tipus}</td>
       <td>${entrada.nomGrup}</td>
@@ -138,17 +138,94 @@ entradas.forEach(entrada => {
         </div>
       </td>
     `;
-    tbody2.appendChild(row);
-  }
-});
+        tbody2.appendChild(row);
+      }
+    });
 
-// Mostrar/ocultar el formulario al hacer click
-document.querySelectorAll('.formulario-valoracion-boton').forEach(boton => {
-  boton.addEventListener('click', () => {
-    let td = boton.closest('td');
-    let form = td.querySelector('.formulario-valoracion');
-    form.style.display = 'flex';
-    boton.style.display = 'none';
-  });
-});
-</script>
+    // Mostrar/ocultar el formulario al hacer click
+    document.querySelectorAll('.formulario-valoracion-boton').forEach(boton => {
+      boton.addEventListener('click', () => {
+        let td = boton.closest('td');
+        let form = td.querySelector('.formulario-valoracion');
+        form.style.display = 'flex';
+        boton.style.display = 'none';
+      });
+    });
+
+
+
+    const swiper = new Swiper(".mySwiper", {
+
+
+
+      slidesPerView: 2.5,
+
+
+      spaceBetween: 20,
+
+
+      loop: true,
+
+
+      speed: 4000,
+
+
+      autoplay: {
+
+
+        delay: 0,
+
+
+        disableOnInteraction: false,
+
+
+      },
+
+
+      freeMode: true,
+
+
+      freeModeMomentum: false,
+
+
+      grabCursor: true,
+
+
+      breakpoints: {
+
+
+        768: {
+
+
+          slidesPerView: 3.5
+
+
+        },
+
+
+        1024: {
+
+
+          slidesPerView: 4.5
+
+
+        },
+
+
+      },
+
+
+    });
+
+
+
+
+
+    document.querySelector('.slider-container').addEventListener('click', function() {
+
+
+      window.location.href = '/grupos'; // Aquí pon la URL a la que quieres redirigir
+
+
+    });
+  </script>

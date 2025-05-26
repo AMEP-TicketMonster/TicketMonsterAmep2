@@ -212,18 +212,26 @@ class ConcertGateway
             $params[':idSala'] = (int) $filtres['sala'];
         }
 
+
         if (!empty($filtres['entradas'])) {
             $sql .= " AND c.entrades_disponibles >= :entrades_disponibles";
-            $params[':entrades_disponibles'] = (int) $filtres['entradas'];
+            $params[':entrades_disponibles'] = 0;
         }
 
+        
+            if (!empty($filtres['grup'])) {
+            $sql .= " AND c.idGrup = :idGrup";
+            $params[':idGrup'] = (int) $filtres['grup'];
+        }
 
+       
         if (empty($params)) {
 
             return [];
         }
 
         $stmt = $this->pdo->prepare($sql);
+       
         $stmt->execute($params);
 
 
