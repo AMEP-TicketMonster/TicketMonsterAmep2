@@ -1,3 +1,4 @@
+
 # Proyecto Grupo Amep
 
 Instrucciones para preparar el entorno de trabajo
@@ -68,6 +69,7 @@ php -S localhost:8000
 ```
 
 Desde el navegador, acceder a http://localhost:8000
+
 
 
 
