@@ -3,6 +3,7 @@ $concerts = $_SESSION['concerts'] ?? [];
 $sales = $_SESSION['datosConcierto_Salas'];
 $generes = $_SESSION['datosConciert_Genero'];
 $grups = $_SESSION['datosConcierto_Grups'];
+$filtros = $_SESSION['eliminar-filtros'];
 ?>
 
 <div class="container my-5">
@@ -44,7 +45,13 @@ $grups = $_SESSION['datosConcierto_Grups'];
             </div>
         </div>
     </form>
-
+    <?php
+    if($filtros){
+        echo '
+          <div class="col-12 col-md-2"> <a href="/conciertos"type="submit" class="btn btn-primary w-100" style="background-color:#624DE3;">Eliminar Filtros</a> </div><br>';
+            
+    }
+    ?>
     <div id="concert-container" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4"></div>
 </div>
 
