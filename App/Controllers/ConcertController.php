@@ -165,6 +165,7 @@ class ConcertController
         $sala = $_GET['sala'] ?? $_POST['sala'] ?? '';
         $grup = $_GET['grupo_musical'] ?? $_POST['grupo_musical'] ?? '';
         $entradas = $_GET['entradas'] ?? $_POST['entradas'] ?? '';
+     
         if ($search != '' or $genere != '' or $sala != '' or $entradas != '' or $grup != '') {
 
             $res = $this->concertGateway->concertFiltre([
