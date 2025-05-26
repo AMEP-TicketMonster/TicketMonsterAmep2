@@ -186,8 +186,10 @@ class Route
                     $controller->mostraGrups();
                     $entrades = new EntradaController();
                     $entrades->consultarEntrades();
+                    /*
                     $saldo = new UserController();
                     $saldo->actualitzaSaldo();
+                    */
                 }
 
 
