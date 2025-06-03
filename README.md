@@ -1,5 +1,5 @@
 
-# Proyecto Grupo Amep
+# Proyecto TicketMonster Amep
 
 Instrucciones para preparar el entorno de trabajo
 
